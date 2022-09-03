@@ -3,22 +3,22 @@
 module Rucoa
   class SelectionRangeProvider
     class << self
-      # @param text [String]
+      # @param source [Rucoa::Source]
       # @param position [Rucoa::Position]
       # @return [Hash, nil]
-      def call(position:, text:)
+      def call(position:, source:)
         new(
           position: position,
-          text: text
+          source: source
         ).call
       end
     end
 
     # @param position [Rucoa::Position]
-    # @param text [String]
-    def initialize(position:, text:)
+    # @param source [Rucoa::Source]
+    def initialize(position:, source:)
       @position = position
-      @text = text
+      @source = source
     end
 
     # @return [Hash, nil]
@@ -38,7 +38,7 @@ module Rucoa
       if instance_variable_defined?(:@node_at_position)
         @node_at_position
       else
-        @node_at_position = source.node_at(@position)
+        @node_at_position = @source.node_at(@position)
       end
     end
 
@@ -49,11 +49,6 @@ module Rucoa
       [node_at_position, *node_at_position.ancestors].flat_map do |node|
         NodeToRangesMapper.call(node)
       end
-    end
-
-    # @return [Rucoa::Source]
-    def source
-      Source.new(content: @text)
     end
 
     class NodeToRangesMapper

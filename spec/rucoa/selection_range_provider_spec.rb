@@ -5,16 +5,20 @@ RSpec.describe Rucoa::SelectionRangeProvider do
     subject do
       described_class.call(
         position: position,
-        text: text
+        source: source
       )
     end
 
-    let(:text) do
+    let(:source) do
+      Rucoa::Source.new(content: content)
+    end
+
+    let(:content) do
       raise NotImplementedError
     end
 
     context 'with String node' do
-      let(:text) do
+      let(:content) do
         <<~RUBY
           'foo'
         RUBY
@@ -59,7 +63,7 @@ RSpec.describe Rucoa::SelectionRangeProvider do
     end
 
     context 'without node' do
-      let(:text) do
+      let(:content) do
         <<~RUBY
           'foo'
         RUBY

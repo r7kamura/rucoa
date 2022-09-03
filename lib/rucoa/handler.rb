@@ -3,7 +3,7 @@
 module Rucoa
   class Handler
     def initialize
-      @document_store = DocumentStore.new
+      @source_store = SourceStore.new
     end
 
     # @param request [Hash]
@@ -41,7 +41,7 @@ module Rucoa
     # @param request [Hash]
     # @return [nil]
     def on_text_document_did_change(request)
-      @document_store.set(
+      @source_store.set(
         request.dig('params', 'textDocument', 'uri'),
         request.dig('params', 'contentChanges')[0]['text']
       )
@@ -51,7 +51,7 @@ module Rucoa
     # @param request [Hash]
     # @return [nil]
     def on_text_document_did_open(request)
-      @document_store.set(
+      @source_store.set(
         request.dig('params', 'textDocument', 'uri'),
         request.dig('params', 'textDocument', 'text')
       )
@@ -61,15 +61,15 @@ module Rucoa
     # @param request [Hash]
     # @return [Array<Hash>, nil]
     def on_text_document_selection_range(request)
-      text = @document_store.get(
+      source = @source_store.get(
         request.dig('params', 'textDocument', 'uri')
       )
-      return unless text
+      return unless source
 
       request.dig('params', 'positions').filter_map do |position|
         SelectionRangeProvider.call(
           position: Position.from_vscode_position(position),
-          text: text
+          source: source
         )
       end
     end

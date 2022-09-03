@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module Rucoa
-  # Stores text documents per document URI.
-  class DocumentStore
+  class SourceStore
     def initialize
       @data = {}
     end
@@ -14,10 +13,10 @@ module Rucoa
     end
 
     # @param uri [String]
-    # @param text [String]
+    # @param content [String]
     # @return [void]
-    def set(uri, text)
-      @data[uri] = text
+    def set(uri, content)
+      @data[uri] = Source.new(content: content)
     end
   end
 end

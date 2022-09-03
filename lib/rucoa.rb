@@ -4,7 +4,6 @@ require_relative 'rucoa/version'
 
 module Rucoa
   autoload :Cli, 'rucoa/cli'
-  autoload :DocumentStore, 'rucoa/document_store'
   autoload :Errors, 'rucoa/errors'
   autoload :Handler, 'rucoa/handler'
   autoload :MessageReader, 'rucoa/message_reader'
@@ -17,4 +16,5 @@ module Rucoa
   autoload :SelectionRangeProvider, 'rucoa/selection_range_provider'
   autoload :Server, 'rucoa/server'
   autoload :Source, 'rucoa/source'
+  autoload :SourceStore, 'rucoa/source_store'
 end
