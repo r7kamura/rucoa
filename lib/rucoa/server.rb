@@ -19,9 +19,41 @@ module Rucoa
 
     # @return [void]
     def start
-      @reader.read do |message|
-        @handler.call(message)
+      read do |request|
+        result = handle(request)
+        if result
+          write(
+            request: request,
+            reuslt: result
+          )
+        end
       end
+    end
+
+    private
+
+    # @param request [Hash{Symbol => Object}]
+    # @return [Object]
+    def handle(request)
+      @handler.call(request)
+    end
+
+    # @yieldparam request [Hash{Symbol => Object}]
+    # @return [void]
+    def read(&block)
+      @reader.read(&block)
+    end
+
+    # @param request [Hash{Symbol => Object}]
+    # @param result [Object]
+    # @return [void]
+    def write(request:, result:)
+      @writer.write(
+        {
+          id: request[:id],
+          result: result
+        }
+      )
     end
   end
 end
