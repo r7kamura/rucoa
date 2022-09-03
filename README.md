@@ -1,5 +1,7 @@
 # Rucoa
 
+[![test](https://github.com/r7kamura/rucoa/actions/workflows/test.yml/badge.svg)](https://github.com/r7kamura/rucoa/actions/workflows/test.yml)
+
 Ruby code analyzer for better editor support.
 
 This gem has an implementation as a Language Server and provides features such as Suggestion, Completion, and Go to Definition.
