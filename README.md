@@ -6,22 +6,33 @@ This gem has an implementation as a Language Server and provides features such a
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
+If you are in bundler environment, add to your Gemfile:
 
-```
-bundle add rucoa
+```ruby
+# Gemfile
+gem 'rucoa'
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+or in Rails application, we'll recommend you to do like this:
 
+```ruby
+# Gemfile
+group :development do
+  gem 'rucoa', require: false
+end
 ```
+
+If bundler is not being used to manage dependencies, simply install the gem:
+
+```bash
 gem install rucoa
 ```
 
 ## Usage
 
-Currently, only an extension for Visual Studio Code is available.
+This gem is intended to be called from editor extensions.
 
-- [vscode-rucoa](https://github.com/r7kamura/vscode-rucoa).
+- [vscode-rucoa](https://github.com/r7kamura/vscode-rucoa)
 
+Currently, there is only an extension for Visual Studio Code.
 If there is a request, we will prepare extensions for other editors as well.
