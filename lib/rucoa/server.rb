@@ -4,22 +4,16 @@ require 'language_server/protocol'
 
 module Rucoa
   class Server
-    class << self
-      # @return [void]
-      def start
-        new.start
-      end
-    end
-
-    def initialize
+    # @param reader [IO]
+    # @param writer [IO]
+    def initialize(reader:, writer:)
       @handler = Handler.new
-      @reader = ::LanguageServer::Protocol::Transport::Stdio::Reader.new
-      @writer = ::LanguageServer::Protocol::Transport::Stdio::Writer.new
+      @reader = ::LanguageServer::Protocol::Transport::Io::Reader.new(reader)
+      @writer = ::LanguageServer::Protocol::Transport::Io::Writer.new(writer)
     end
 
     # @return [void]
     def start
-      warn 'rucoa server started.'
       read do |request|
         result = handle(request)
         if result

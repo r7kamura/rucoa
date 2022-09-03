@@ -10,10 +10,13 @@ AllCops:
 Metrics:
   Enabled: false
 
+RSpec/ExampleLength:
+  Enabled: false
+
 RSpec/ImplicitSubject:
   Enabled: false
 
-RSpec/ExampleLength:
+RSpec/NamedSubject:
   Enabled: false
 
 Style/Documentation:
