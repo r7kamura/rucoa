@@ -11,6 +11,15 @@ module Rucoa
           Position.from_parser_range_beginning(range.end)
         )
       end
+
+      # @param offense [RuboCop::Cop::Offense]
+      # @return [Rucoa::Range]
+      def from_rubocop_offense(offense)
+        new(
+          Position.from_parser_range_beginning(offense.location),
+          Position.from_parser_range_ending(offense.location)
+        )
+      end
     end
 
     # @param beginning [Rucoa::Position]

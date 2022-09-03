@@ -32,12 +32,12 @@ gem install rucoa
 
 ## Features
 
-- Selection Ranges
+- Diagnostics
+- Selection Ranges (experimental)
 
 ### Coming soon
 
 - Completion
-- Diagnostics
 - Documentation
 - Formatting
 - Highlight
