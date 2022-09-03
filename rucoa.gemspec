@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ['Ryo Nakamura']
   spec.email = ['r7kamura@gmail.com']
 
-  spec.summary = 'Ruby code analyzer for better editor support.'
+  spec.summary = 'Language server for Ruby.'
   spec.homepage = 'https://github.com/r7kamura/rucoa'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 2.7'

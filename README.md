@@ -2,13 +2,13 @@
 
 [![test](https://github.com/r7kamura/rucoa/actions/workflows/test.yml/badge.svg)](https://github.com/r7kamura/rucoa/actions/workflows/test.yml)
 
-Ruby code analyzer for better editor support.
+Language server for Ruby.
 
-This gem has an implementation as a Language Server and provides features such as Suggestion, Completion, and Go to Definition.
+## Usage
 
-## Installation
+Install both rucoa gem and [vscode-rucoa](https://github.com/r7kamura/vscode-rucoa) extension, then open your Ruby project in VSCode.
 
-If you are in bundler environment, add to your Gemfile:
+To install rucoa gem, if you project is managed by bundler, add to your Gemfile:
 
 ```ruby
 # Gemfile
@@ -30,11 +30,15 @@ If bundler is not being used to manage dependencies, simply install the gem:
 gem install rucoa
 ```
 
-## Usage
+## Features
 
-This gem is intended to be called from editor extensions.
+- Selection Ranges
 
-- [vscode-rucoa](https://github.com/r7kamura/vscode-rucoa)
+### Coming soon
 
-Currently, there is only an extension for Visual Studio Code.
-If there is a request, we will prepare extensions for other editors as well.
+- Code Completion
+- Diagnostics
+- Documentation
+- Formatting
+- Highlight
+- Intellisense
