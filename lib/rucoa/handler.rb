@@ -7,8 +7,8 @@ module Rucoa
     end
 
     # @param request [Hash{Symbol => Object}]
-    # @return [nil] If no response is prepared by handler.
-    # @return [#to_hash] If response is prepared by handler.
+    # @return [nil] If no response is provided by handler.
+    # @return [#to_hash] If response is provided by handler.
     def call(request)
       case request[:method]
       when 'initialize'
