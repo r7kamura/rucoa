@@ -12,6 +12,7 @@ module Rucoa
     end
 
     def initialize
+      @handler = Handler.new
       @reader = ::LanguageServer::Protocol::Transport::Stdio::Reader.new
       @writer = ::LanguageServer::Protocol::Transport::Stdio::Writer.new
     end
@@ -19,7 +20,7 @@ module Rucoa
     # @return [void]
     def start
       @reader.read do |message|
-        p message
+        @handler.call(message)
       end
     end
   end
