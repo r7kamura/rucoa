@@ -1,11 +1,20 @@
 # frozen_string_literal: true
 
 require 'stringio'
+require 'tmpdir'
 
 RSpec.describe Rucoa::Server do
   describe '#start' do
     subject do
       instance.start
+    end
+
+    before do
+      File.write(file_path, content)
+    end
+
+    after do
+      File.delete(file_path)
     end
 
     let(:instance) do
@@ -23,6 +32,93 @@ RSpec.describe Rucoa::Server do
       StringIO.new
     end
 
+    let(:source) do
+      Rucoa::Source.new(
+        content: content,
+        path: file_path
+      )
+    end
+
+    let(:content) do
+      <<~RUBY
+        # frozen_string_literal: true
+
+        'foo'
+      RUBY
+    end
+
+    let(:file_path) do
+      "#{Dir.tmpdir}/example.rb"
+    end
+
+    context 'when diagnostics are found' do
+      before do
+        reader << Rucoa::MessageWriter.pack(
+          id: 1,
+          method: 'textDocument/didOpen',
+          params: {
+            textDocument: {
+              uri: "file://#{file_path}",
+              text: content
+            }
+          }
+        )
+        reader.rewind
+      end
+
+      let(:content) do
+        <<~RUBY
+          'foo'
+        RUBY
+      end
+
+      it 'writes diagnostics' do
+        subject
+        expect(writer.string).to eq(
+          Rucoa::MessageWriter.pack(
+            jsonrpc: '2.0',
+            method: 'textDocument/publishDiagnostics',
+            params: {
+              diagnostics: [
+                {
+                  code: 'Style/FrozenStringLiteralComment',
+                  data: {
+                    cop_name: 'Style/FrozenStringLiteralComment',
+                    correctable: true,
+                    path: file_path,
+                    range: {
+                      end: {
+                        character: 1,
+                        line: 0
+                      },
+                      start: {
+                        character: 0,
+                        line: 0
+                      }
+                    }
+                  },
+                  message: 'Missing frozen string literal comment.',
+                  range: {
+                    end: {
+                      character: 1,
+                      line: 0
+                    },
+                    start: {
+                      character: 0,
+                      line: 0
+                    }
+                  },
+                  severity: 3,
+                  source: 'RuboCop'
+                }
+              ],
+              uri: "file://#{file_path}"
+            }
+          )
+        )
+      end
+    end
+
     context 'when selection ranges are requested' do
       before do
         reader << Rucoa::MessageWriter.pack(
@@ -30,10 +126,8 @@ RSpec.describe Rucoa::Server do
           method: 'textDocument/didOpen',
           params: {
             textDocument: {
-              uri: 'file:///foo.rb',
-              text: <<~RUBY
-                'foo'
-              RUBY
+              uri: "file://#{file_path}",
+              text: content
             }
           }
         )
@@ -42,11 +136,11 @@ RSpec.describe Rucoa::Server do
           method: 'textDocument/selectionRange',
           params: {
             textDocument: {
-              uri: 'file:///foo.rb'
+              uri: "file://#{file_path}"
             },
             positions: [
               {
-                line: 0,
+                line: 2,
                 character: 0
               }
             ]
@@ -55,7 +149,7 @@ RSpec.describe Rucoa::Server do
         reader.rewind
       end
 
-      it 'behaves as expected' do
+      it 'writes selection ranges' do
         subject
         expect(writer.string).to eq(
           Rucoa::MessageWriter.pack(
@@ -67,22 +161,22 @@ RSpec.describe Rucoa::Server do
                   range: {
                     end: {
                       character: 5,
-                      line: 0
+                      line: 2
                     },
                     start: {
                       character: 0,
-                      line: 0
+                      line: 2
                     }
                   }
                 },
                 range: {
                   end: {
                     character: 4,
-                    line: 0
+                    line: 2
                   },
                   start: {
                     character: 1,
-                    line: 0
+                    line: 2
                   }
                 }
               }

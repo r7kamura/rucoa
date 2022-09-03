@@ -6,13 +6,13 @@ module Rucoa
     attr_reader :content
 
     # @return [String]
-    attr_reader :file_path
+    attr_reader :path
 
     # @param content [String]
-    # @param file_path [String, nil]
-    def initialize(content:, file_path: nil)
+    # @param path [String, nil]
+    def initialize(content:, path: nil)
       @content = content
-      @file_path = file_path
+      @path = path
     end
 
     # @param position [Rucoa::Position]

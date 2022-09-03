@@ -7,6 +7,9 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 2.7
 
+Layout/LineLength:
+  Enabled: false
+
 Metrics:
   Enabled: false
 
@@ -14,6 +17,9 @@ RSpec/ExampleLength:
   Enabled: false
 
 RSpec/ImplicitSubject:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
   Enabled: false
 
 RSpec/NamedSubject:
