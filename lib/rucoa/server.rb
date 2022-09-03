@@ -24,7 +24,7 @@ module Rucoa
         if result
           write(
             request: request,
-            reuslt: result
+            result: result
           )
         end
       end
