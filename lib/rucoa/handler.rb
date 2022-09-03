@@ -64,6 +64,8 @@ module Rucoa
       text = @document_store.get(
         request.dig(:params, :textDocument, :uri)
       )
+      return unless text
+
       request.dig(:params, :positions).filter_map do |position|
         SelectionRangeProvider.call(
           position: Position.from_vscode_position(position),

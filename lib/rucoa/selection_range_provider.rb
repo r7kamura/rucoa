@@ -5,7 +5,7 @@ module Rucoa
     class << self
       # @param text [String]
       # @param position [Rucoa::Position]
-      # @return [Array<Rucoa::Range>]
+      # @return [Hash, nil]
       def call(position:, text:)
         new(
           position: position,
@@ -47,7 +47,7 @@ module Rucoa
       return [] unless node_at_position
 
       [node_at_position, *node_at_position.ancestors].flat_map do |node|
-        to_range(node)
+        NodeToRangesMapper.call(node)
       end
     end
 
@@ -56,26 +56,52 @@ module Rucoa
       Source.new(content: @text)
     end
 
-    # @param node [Rucoa::Nodes::Base]
-    # @return [Array<Rucoa::Range>]
-    def to_range(node)
-      case node
-      when Nodes::StrNode
-        [
-          Range.new(
-            Position.new(
-              column: node.location.begin.last_column,
-              line: node.location.begin.last_line
-            ),
-            Position.new(
-              column: node.location.end.column,
-              line: node.location.end.line
-            )
+    class NodeToRangesMapper
+      class << self
+        # @param node [Rucoa::Nodes::Base]
+        # @return [Array<Rucoa::Range>]
+        def call(node)
+          new(node).call
+        end
+      end
+
+      # @param node [Rucoa::Nodes::Base]
+      def initialize(node)
+        @node = node
+      end
+
+      # @return [Array<Rucoa::Range>]
+      def call
+        case @node
+        when Nodes::StrNode
+          [
+            inner_range,
+            expression_range
+          ]
+        else
+          []
+        end
+      end
+
+      private
+
+      # @return [Rucoa::Range]
+      def inner_range
+        Range.new(
+          Position.new(
+            column: @node.location.begin.last_column,
+            line: @node.location.begin.last_line
           ),
-          Range.from_parser_range(node.location.expression)
-        ]
-      else
-        []
+          Position.new(
+            column: @node.location.end.column,
+            line: @node.location.end.line
+          )
+        )
+      end
+
+      # @return [Rucoa::Range]
+      def expression_range
+        Range.from_parser_range(@node.location.expression)
       end
     end
   end
