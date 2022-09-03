@@ -7,8 +7,8 @@ module Rucoa
       # @return [Rucoa::Range]
       def from_parser_range(range)
         new(
-          Position.from_parser_range(range.begin),
-          Position.from_parser_range(range.end)
+          Position.from_parser_range_beginning(range.begin),
+          Position.from_parser_range_beginning(range.end)
         )
       end
     end

@@ -5,10 +5,19 @@ module Rucoa
     class << self
       # @param range [Parser::Source::Range]
       # @return [Rucoa::Position]
-      def from_parser_range(range)
+      def from_parser_range_beginning(range)
         new(
           column: range.column,
           line: range.line
+        )
+      end
+
+      # @param range [Parser::Source::Range]
+      # @return [Rucoa::Position]
+      def from_parser_range_ending(range)
+        new(
+          column: range.last_column,
+          line: range.last_line
         )
       end
 

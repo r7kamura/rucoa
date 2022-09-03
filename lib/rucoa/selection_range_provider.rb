@@ -88,14 +88,8 @@ module Rucoa
       # @return [Rucoa::Range]
       def inner_range
         Range.new(
-          Position.new(
-            column: @node.location.begin.last_column,
-            line: @node.location.begin.last_line
-          ),
-          Position.new(
-            column: @node.location.end.column,
-            line: @node.location.end.line
-          )
+          Position.from_parser_range_ending(@node.location.begin),
+          Position.from_parser_range_beginning(@node.location.end)
         )
       end
 
