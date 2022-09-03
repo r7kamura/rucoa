@@ -36,9 +36,9 @@ gem install rucoa
 
 ### Coming soon
 
-- Code Completion
+- Completion
 - Diagnostics
 - Documentation
 - Formatting
 - Highlight
-- Intellisense
+- Go to Definition
