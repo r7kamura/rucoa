@@ -14,6 +14,8 @@ module Rucoa
     end
 
     # @return [void]
-    def call; end
+    def call
+      Server.new.start
+    end
   end
 end
