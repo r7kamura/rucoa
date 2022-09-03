@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "rucoa/version"
+require_relative 'rucoa/version'
 
 module Rucoa
   class Error < StandardError; end
