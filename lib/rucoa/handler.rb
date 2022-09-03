@@ -25,12 +25,12 @@ module Rucoa
     private
 
     # @param _request [Hash]
-    # @return [#to_hash]
+    # @return [Hash]
     def on_initialize(_request)
       {
         capabilities: {
           textDocumentSync: {
-            change: 1,
+            change: 1, # Full
             openClose: true
           },
           selectionRangeProvider: true
@@ -59,7 +59,7 @@ module Rucoa
     end
 
     # @param request [Hash]
-    # @return [Hash]
+    # @return [Array<Hash>, nil]
     def on_text_document_selection_range(request)
       text = @document_store.get(
         request.dig('params', 'textDocument', 'uri')
