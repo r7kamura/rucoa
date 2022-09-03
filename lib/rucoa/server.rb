@@ -19,6 +19,7 @@ module Rucoa
 
     # @return [void]
     def start
+      warn 'rucoa server started.'
       read do |request|
         result = handle(request)
         if result

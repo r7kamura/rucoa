@@ -3,6 +3,7 @@ PATH
   specs:
     rucoa (0.1.0)
       language_server-protocol
+      parser
 
 GEM
   remote: https://rubygems.org/

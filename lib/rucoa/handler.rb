@@ -2,24 +2,74 @@
 
 module Rucoa
   class Handler
+    def initialize
+      @document_store = DocumentStore.new
+    end
+
     # @param request [Hash{Symbol => Object}]
     # @return [nil] If no response is prepared by handler.
-    # @return [Hash{Symbol => Object}] If response is prepared by handler.
+    # @return [#to_hash] If response is prepared by handler.
     def call(request)
       case request[:method]
-      when :initialize
+      when 'initialize'
         on_initialize(request)
+      when 'textDocument/didChange'
+        on_text_document_did_change(request)
+      when 'textDocument/didOpen'
+        on_text_document_did_open(request)
+      when 'textDocument/selectionRange'
+        on_text_document_selection_range(request)
       end
     end
 
     private
 
-    # @param request [Hash{Symbol => Object}]
-    # @return [void]
+    # @param _request [Hash{Symbol => Object}]
+    # @return [#to_hash]
     def on_initialize(_request)
-      ::LanguageServer::Protocol::Interface::InitializeResult.new(
-        capabilities: {}
+      {
+        capabilities: {
+          textDocumentSync: {
+            change: 1,
+            openClose: true
+          },
+          selectionRangeProvider: true
+        }
+      }
+    end
+
+    # @param request [Hash{Symbol => Object}]
+    # @return [nil]
+    def on_text_document_did_change(request)
+      @document_store.set(
+        request.dig(:params, :textDocument, :uri),
+        request.dig(:params, :contentChanges)[0][:text]
       )
+      nil
+    end
+
+    # @param request [Hash{Symbol => Object}]
+    # @return [nil]
+    def on_text_document_did_open(request)
+      @document_store.set(
+        request.dig(:params, :textDocument, :uri),
+        request.dig(:params, :textDocument, :text)
+      )
+      nil
+    end
+
+    # @param request [Hash{Symbol => Object}]
+    # @return [Hash]
+    def on_text_document_selection_range(request)
+      text = @document_store.get(
+        request.dig(:params, :textDocument, :uri)
+      )
+      request.dig(:params, :positions).filter_map do |position|
+        SelectionRangeProvider.call(
+          position: Position.from_vscode_position(position),
+          text: text
+        )
+      end
     end
   end
 end

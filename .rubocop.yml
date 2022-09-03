@@ -5,10 +5,19 @@ require:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
 
 Metrics:
   Enabled: false
 
+RSpec/ImplicitSubject:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
 Style/Documentation:
+  Enabled: false
+
+Style/MultilineBlockChain:
   Enabled: false
