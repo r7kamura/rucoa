@@ -16,8 +16,8 @@ module Rucoa
       # @return [Rucoa::Position]
       def from_vscode_position(hash)
         new(
-          column: hash[:character],
-          line: hash[:line] + 1
+          column: hash['character'],
+          line: hash['line'] + 1
         )
       end
     end

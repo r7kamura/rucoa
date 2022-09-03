@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'language_server/protocol'
-
 module Rucoa
   class Server
     # @param reader [IO]
     # @param writer [IO]
     def initialize(reader:, writer:)
       @handler = Handler.new
-      @reader = ::LanguageServer::Protocol::Transport::Io::Reader.new(reader)
-      @writer = ::LanguageServer::Protocol::Transport::Io::Writer.new(writer)
+      @reader = MessageReader.new(reader)
+      @writer = MessageWriter.new(writer)
     end
 
     # @return [void]
@@ -27,25 +25,25 @@ module Rucoa
 
     private
 
-    # @param request [Hash{Symbol => Object}]
+    # @param request [Hash]
     # @return [Object]
     def handle(request)
       @handler.call(request)
     end
 
-    # @yieldparam request [Hash{Symbol => Object}]
+    # @yieldparam request [Hash]
     # @return [void]
     def read(&block)
       @reader.read(&block)
     end
 
-    # @param request [Hash{Symbol => Object}]
+    # @param request [Hash]
     # @param result [Object]
     # @return [void]
     def write(request:, result:)
       @writer.write(
         {
-          id: request[:id],
+          id: request['id'],
           result: result
         }
       )

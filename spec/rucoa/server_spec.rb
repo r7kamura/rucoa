@@ -23,20 +23,9 @@ RSpec.describe Rucoa::Server do
       StringIO.new
     end
 
-    # @param hash [Hash]
-    # @return [String]
-    def to_language_server_message(hash)
-      body = hash.to_json
-      message = +''
-      message << "Content-Length: #{body.bytesize}\r\n"
-      message << "\r\n"
-      message << body
-      message
-    end
-
     context 'when selection ranges are requested' do
       before do
-        reader << to_language_server_message(
+        reader << Rucoa::MessageWriter.pack(
           id: 1,
           method: 'textDocument/didOpen',
           params: {
@@ -48,7 +37,7 @@ RSpec.describe Rucoa::Server do
             }
           }
         )
-        reader << to_language_server_message(
+        reader << Rucoa::MessageWriter.pack(
           id: 2,
           method: 'textDocument/selectionRange',
           params: {
@@ -69,7 +58,7 @@ RSpec.describe Rucoa::Server do
       it 'behaves as expected' do
         subject
         expect(writer.string).to eq(
-          to_language_server_message(
+          Rucoa::MessageWriter.pack(
             id: 2,
             result: [
               {
