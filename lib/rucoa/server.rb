@@ -37,6 +37,8 @@ module Rucoa
         on_text_document_did_change(request)
       when 'textDocument/didOpen'
         on_text_document_did_open(request)
+      when 'textDocument/formatting'
+        on_text_document_formatting(request)
       when 'textDocument/selectionRange'
         on_text_document_selection_range(request)
       end
@@ -63,16 +65,13 @@ module Rucoa
     # @param uri [String]
     # @return [void]
     def investigate_diagnostics(uri:)
-      diagnostics = DiagnosticProvider.call(
-        source: @source_store.get(uri),
-        uri: uri
-      )
-      return if diagnostics.empty?
-
       @writer.write(
         method: 'textDocument/publishDiagnostics',
         params: {
-          diagnostics: diagnostics,
+          diagnostics: DiagnosticProvider.call(
+            source: @source_store.get(uri),
+            uri: uri
+          ),
           uri: uri
         }
       )
@@ -84,6 +83,7 @@ module Rucoa
       {
         capabilities: {
           codeActionProvider: true,
+          documentFormattingProvider: true,
           selectionRangeProvider: true,
           textDocumentSync: {
             change: 1, # Full
@@ -126,6 +126,18 @@ module Rucoa
       )
       investigate_diagnostics(uri: uri)
       nil
+    end
+
+    # @param request [Hash]
+    # @return [Array<Hash>, nil]
+    def on_text_document_formatting(request)
+      uri = request.dig('params', 'textDocument', 'uri')
+      source = @source_store.get(uri)
+      return unless source
+
+      FormattingProvider.call(
+        source: source
+      )
     end
 
     # @param request [Hash]

@@ -33,6 +33,7 @@ gem install rucoa
 ## Features
 
 - Diagnostics
+- Formatting
 - Quick Fix
 - Selection Ranges (experimental)
 
@@ -40,6 +41,5 @@ gem install rucoa
 
 - Completion
 - Documentation
-- Formatting
 - Highlight
 - Go to Definition

@@ -15,7 +15,14 @@ RSpec.describe Rucoa::Server do
     end
 
     after do
-      FileUtils.rm_rf(temporary_direcotry_path)
+      FileUtils.rm_rf(temporary_directory_path)
+    end
+
+    # To avoid loading rucoa's .rubocop.yml in testing at `RuboCop::ConfigStore#for_pwd`.
+    around do |example|
+      Dir.chdir(temporary_directory_path) do
+        example.run
+      end
     end
 
     let(:instance) do
@@ -49,12 +56,14 @@ RSpec.describe Rucoa::Server do
     end
 
     let(:file_path) do
-      "#{temporary_direcotry_path}/example.rb"
+      "#{temporary_directory_path}/example.rb"
     end
 
-    let(:temporary_direcotry_path) do
+    # To avoid loading rucoa's .at `testing via #for_pwd`.
+    let(:temporary_directory_path) do
       Dir.mktmpdir
     end
+    # To avoid loading rucoa's .at `testing via #for_pwd`.
 
     context 'when RuboCop is configured and diagnostics are found' do
       before do
@@ -71,9 +80,10 @@ RSpec.describe Rucoa::Server do
         reader.rewind
 
         File.write(
-          "#{temporary_direcotry_path}/.rubocop.yml",
+          "#{temporary_directory_path}/.rubocop.yml",
           <<~YAML
             AllCops:
+            # To avoid loading rucoa's .at `testing via #for_pwd`.
               NewCops: enable
           YAML
         )
@@ -180,6 +190,14 @@ RSpec.describe Rucoa::Server do
       it 'writes selection ranges' do
         subject
         expect(writer.string).to eq(
+          Rucoa::MessageWriter.pack(
+            jsonrpc: '2.0',
+            method: 'textDocument/publishDiagnostics',
+            params: {
+              diagnostics: [],
+              uri: "file://#{file_path}"
+            }
+          ) +
           Rucoa::MessageWriter.pack(
             id: 2,
             jsonrpc: '2.0',
