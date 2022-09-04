@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pathname'
+
 module Rucoa
   class DiagnosticProvider
     # @param source [Rucoa::Source]
@@ -15,6 +17,8 @@ module Rucoa
 
     # @return [Array<Hash>]
     def call
+      return [] unless rubocop_configured?
+
       offenses.map do |offense|
         OffenseToDiagnosticMapper.call(offense: offense)
       end
@@ -25,6 +29,26 @@ module Rucoa
     # @return [Array<RuboCop::Cop::Offense>]
     def offenses
       RubocopRunner.call(path: @source.path)
+    end
+
+    # @return [Boolean]
+    def rubocop_configured?
+      each_ancestor_pathname.any? do |pathname|
+        pathname.join('.rubocop.yml').exist?
+      end
+    end
+
+    # @return [Enumerable<Pathname>]
+    def each_ancestor_pathname
+      return to_enum(__method__) unless block_given?
+
+      pathname = ::Pathname.new(@source.path)
+      loop do
+        pathname = pathname.parent
+        yield pathname
+        break if pathname.root?
+      end
+      self
     end
 
     class OffenseToDiagnosticMapper
