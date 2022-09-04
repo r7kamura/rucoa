@@ -97,7 +97,21 @@ RSpec.describe Rucoa::Server do
                   code: 'Style/FrozenStringLiteralComment',
                   data: {
                     cop_name: 'Style/FrozenStringLiteralComment',
-                    correctable: true,
+                    edits: [
+                      {
+                        newText: "# frozen_string_literal: true\n",
+                        range: {
+                          end: {
+                            character: 0,
+                            line: 0
+                          },
+                          start: {
+                            character: 0,
+                            line: 0
+                          }
+                        }
+                      }
+                    ],
                     path: file_path,
                     range: {
                       end: {
@@ -108,7 +122,8 @@ RSpec.describe Rucoa::Server do
                         character: 0,
                         line: 0
                       }
-                    }
+                    },
+                    uri: "file://#{file_path}"
                   },
                   message: 'Missing frozen string literal comment.',
                   range: {

@@ -5,14 +5,20 @@ require 'pathname'
 module Rucoa
   class DiagnosticProvider
     # @param source [Rucoa::Source]
+    # @param uri [String]
     # @return [Array<Hash>]
-    def self.call(source:)
-      new(source: source).call
+    def self.call(source:, uri:)
+      new(
+        source: source,
+        uri: uri
+      ).call
     end
 
     # @param source [Rucoa::Source]
-    def initialize(source:)
+    # @param uri [String]
+    def initialize(source:, uri:)
       @source = source
+      @uri = uri
     end
 
     # @return [Array<Hash>]
@@ -20,7 +26,10 @@ module Rucoa
       return [] unless rubocop_configured?
 
       offenses.map do |offense|
-        OffenseToDiagnosticMapper.call(offense)
+        OffenseToDiagnosticMapper.call(
+          offense,
+          uri: @uri
+        )
       end
     end
 
@@ -72,15 +81,18 @@ module Rucoa
 
       class << self
         # @param offense [RuboCop::Cop::Offense]
+        # @param uri [String]
         # @return [Hash]
-        def call(offense)
-          new(offense).call
+        def call(offense, uri:)
+          new(offense, uri: uri).call
         end
       end
 
       # @param offense [RuboCop::Cop::Offense]
-      def initialize(offense)
+      # @param uri [String]
+      def initialize(offense, uri:)
         @offense = offense
+        @uri = uri
       end
 
       # @return [Hash]
@@ -106,10 +118,23 @@ module Rucoa
       def data
         {
           cop_name: @offense.cop_name,
-          correctable: @offense.correctable?,
+          edits: edits,
           path: @offense.location.source_buffer.name,
-          range: range
+          range: range,
+          uri: @uri
         }
+      end
+
+      # @return [Array<Hash>, nil]
+      def edits
+        return unless @offense.correctable?
+
+        @offense.corrector.as_replacements.map do |range, replacement|
+          {
+            newText: replacement,
+            range: Range.from_parser_range(range).to_vscode_range
+          }
+        end
       end
 
       # @return [String]
@@ -119,7 +144,7 @@ module Rucoa
 
       # @return [Hash]
       def range
-        Range.from_rubocop_offense(@offense).to_vscode_range
+        Range.from_parser_range(@offense.location).to_vscode_range
       end
 
       # @return [Integer]

@@ -7,7 +7,8 @@ RSpec.describe Rucoa::DiagnosticProvider do
   describe '.call' do
     subject do
       described_class.call(
-        source: source
+        source: source,
+        uri: uri
       )
     end
 
@@ -40,6 +41,10 @@ RSpec.describe Rucoa::DiagnosticProvider do
 
     let(:temporary_direcotry_path) do
       Dir.mktmpdir
+    end
+
+    let(:uri) do
+      "file://#{file_path}"
     end
 
     shared_context 'when RuboCop is configured' do
@@ -91,9 +96,24 @@ RSpec.describe Rucoa::DiagnosticProvider do
               code: 'Style/StringLiterals',
               data: {
                 cop_name: 'Style/StringLiterals',
-                correctable: true,
+                edits: [
+                  {
+                    newText: "'foo'",
+                    range: {
+                      end: {
+                        character: 5,
+                        line: 2
+                      },
+                      start: {
+                        character: 0,
+                        line: 2
+                      }
+                    }
+                  }
+                ],
                 path: file_path,
-                range: a_kind_of(Hash)
+                range: a_kind_of(Hash),
+                uri: uri
               },
               message: /\APrefer single-quoted strings/,
               range: {
