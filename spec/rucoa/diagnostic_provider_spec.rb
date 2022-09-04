@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'fileutils'
 require 'tmpdir'
 
 RSpec.describe Rucoa::DiagnosticProvider do
@@ -15,7 +16,7 @@ RSpec.describe Rucoa::DiagnosticProvider do
     end
 
     after do
-      File.delete(file_path)
+      FileUtils.rm_rf(temporary_direcotry_path)
     end
 
     let(:source) do
@@ -26,28 +27,34 @@ RSpec.describe Rucoa::DiagnosticProvider do
     end
 
     let(:content) do
-      raise NotImplementedError
+      <<~RUBY
+        # frozen_string_literal: true
+
+        'foo'
+      RUBY
     end
 
     let(:file_path) do
-      "#{Dir.tmpdir}/example.rb"
+      "#{temporary_direcotry_path}/example.rb"
     end
 
-    context 'with no offense' do
-      let(:content) do
-        <<~RUBY
-          # frozen_string_literal: true
+    let(:temporary_direcotry_path) do
+      Dir.mktmpdir
+    end
 
-          'foo'
-        RUBY
-      end
-
-      it 'returns expected diagnostics' do
-        is_expected.to eq([])
+    shared_context 'when RuboCop is configured' do
+      before do
+        File.write(
+          "#{temporary_direcotry_path}/.rubocop.yml",
+          <<~YAML
+            AllCops:
+              NewCops: enable
+          YAML
+        )
       end
     end
 
-    context 'with some offenses' do
+    shared_context 'with some offenses' do
       let(:content) do
         <<~RUBY
           # frozen_string_literal: true
@@ -55,8 +62,29 @@ RSpec.describe Rucoa::DiagnosticProvider do
           "foo"
         RUBY
       end
+    end
 
-      it 'returns expected diagnostics' do
+    context 'when RuboCop is not configured' do
+      include_context 'with some offenses'
+
+      it 'returns empty diagnostics' do
+        is_expected.to eq([])
+      end
+    end
+
+    context 'with no offense' do
+      include_context 'when RuboCop is configured'
+
+      it 'returns empty diagnostics' do
+        is_expected.to eq([])
+      end
+    end
+
+    context 'with some offenses' do
+      include_context 'when RuboCop is configured'
+      include_context 'with some offenses'
+
+      it 'returns some diagnostics' do
         is_expected.to match(
           [
             {

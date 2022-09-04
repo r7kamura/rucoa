@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'fileutils'
 require 'stringio'
 require 'tmpdir'
 
@@ -14,7 +15,7 @@ RSpec.describe Rucoa::Server do
     end
 
     after do
-      File.delete(file_path)
+      FileUtils.rm_rf(temporary_direcotry_path)
     end
 
     let(:instance) do
@@ -48,10 +49,14 @@ RSpec.describe Rucoa::Server do
     end
 
     let(:file_path) do
-      "#{Dir.tmpdir}/example.rb"
+      "#{temporary_direcotry_path}/example.rb"
     end
 
-    context 'when diagnostics are found' do
+    let(:temporary_direcotry_path) do
+      Dir.mktmpdir
+    end
+
+    context 'when RuboCop is configured and diagnostics are found' do
       before do
         reader << Rucoa::MessageWriter.pack(
           id: 1,
@@ -64,6 +69,14 @@ RSpec.describe Rucoa::Server do
           }
         )
         reader.rewind
+
+        File.write(
+          "#{temporary_direcotry_path}/.rubocop.yml",
+          <<~YAML
+            AllCops:
+              NewCops: enable
+          YAML
+        )
       end
 
       let(:content) do
