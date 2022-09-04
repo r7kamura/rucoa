@@ -31,6 +31,8 @@ module Rucoa
       case request['method']
       when 'initialize'
         on_initialize(request)
+      when 'textDocument/codeAction'
+        on_text_document_code_action(request)
       when 'textDocument/didChange'
         on_text_document_did_change(request)
       when 'textDocument/didOpen'
@@ -62,7 +64,8 @@ module Rucoa
     # @return [void]
     def investigate_diagnostics(uri:)
       diagnostics = DiagnosticProvider.call(
-        source: @source_store.get(uri)
+        source: @source_store.get(uri),
+        uri: uri
       )
       return if diagnostics.empty?
 
@@ -80,6 +83,7 @@ module Rucoa
     def on_initialize(_request)
       {
         capabilities: {
+          codeActionProvider: true,
           selectionRangeProvider: true,
           textDocumentSync: {
             change: 1, # Full
@@ -90,7 +94,18 @@ module Rucoa
     end
 
     # @param request [Hash]
-    # @return [Array<Hash>]
+    # @return [Array<Hash>, nil]
+    def on_text_document_code_action(request)
+      diagnostics = request.dig('params', 'context', 'diagnostics')
+      return unless diagnostics
+
+      CodeActionProvider.call(
+        diagnostics: diagnostics
+      )
+    end
+
+    # @param request [Hash]
+    # @return [nil]
     def on_text_document_did_change(request)
       uri = request.dig('params', 'textDocument', 'uri')
       @source_store.set(
@@ -102,7 +117,7 @@ module Rucoa
     end
 
     # @param request [Hash]
-    # @return [Array<Hash>]
+    # @return [nil]
     def on_text_document_did_open(request)
       uri = request.dig('params', 'textDocument', 'uri')
       @source_store.set(

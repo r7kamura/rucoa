@@ -4,6 +4,7 @@ require_relative 'rucoa/version'
 
 module Rucoa
   autoload :Cli, 'rucoa/cli'
+  autoload :CodeActionProvider, 'rucoa/code_action_provider'
   autoload :DiagnosticProvider, 'rucoa/diagnostic_provider'
   autoload :Errors, 'rucoa/errors'
   autoload :MessageReader, 'rucoa/message_reader'

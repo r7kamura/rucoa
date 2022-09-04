@@ -7,17 +7,8 @@ module Rucoa
       # @return [Rucoa::Range]
       def from_parser_range(range)
         new(
-          Position.from_parser_range_beginning(range.begin),
-          Position.from_parser_range_beginning(range.end)
-        )
-      end
-
-      # @param offense [RuboCop::Cop::Offense]
-      # @return [Rucoa::Range]
-      def from_rubocop_offense(offense)
-        new(
-          Position.from_parser_range_beginning(offense.location),
-          Position.from_parser_range_ending(offense.location)
+          Position.from_parser_range_beginning(range),
+          Position.from_parser_range_ending(range)
         )
       end
     end
