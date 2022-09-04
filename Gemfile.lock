@@ -51,6 +51,8 @@ GEM
     rubocop-rspec (2.12.1)
       rubocop (~> 1.31)
     ruby-progressbar (1.11.0)
+    sevencop (0.9.3)
+      rubocop
     unicode-display_width (2.2.0)
 
 PLATFORMS
@@ -64,6 +66,7 @@ DEPENDENCIES
   rubocop-rake
   rubocop-rspec
   rucoa!
+  sevencop
 
 BUNDLED WITH
    2.3.21

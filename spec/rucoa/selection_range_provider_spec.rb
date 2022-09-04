@@ -26,8 +26,8 @@ RSpec.describe Rucoa::SelectionRangeProvider do
 
       let(:position) do
         Rucoa::Position.new(
-          line: 1,
-          column: 0
+          column: 0,
+          line: 1
         )
       end
 
@@ -71,8 +71,8 @@ RSpec.describe Rucoa::SelectionRangeProvider do
 
       let(:position) do
         Rucoa::Position.new(
-          line: 1,
-          column: 5
+          column: 5,
+          line: 1
         )
       end
 

@@ -2,6 +2,7 @@ require:
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
+  - sevencop
 
 AllCops:
   NewCops: enable
@@ -24,6 +25,9 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/NamedSubject:
   Enabled: false
+
+Sevencop/HashLiteralOrder:
+  Enabled: true
 
 Style/Documentation:
   Enabled: false

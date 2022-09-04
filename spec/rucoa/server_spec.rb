@@ -63,8 +63,8 @@ RSpec.describe Rucoa::Server do
           method: 'textDocument/didOpen',
           params: {
             textDocument: {
-              uri: "file://#{file_path}",
-              text: content
+              text: content,
+              uri: "file://#{file_path}"
             }
           }
         )
@@ -139,8 +139,8 @@ RSpec.describe Rucoa::Server do
           method: 'textDocument/didOpen',
           params: {
             textDocument: {
-              uri: "file://#{file_path}",
-              text: content
+              text: content,
+              uri: "file://#{file_path}"
             }
           }
         )
@@ -148,15 +148,15 @@ RSpec.describe Rucoa::Server do
           id: 2,
           method: 'textDocument/selectionRange',
           params: {
-            textDocument: {
-              uri: "file://#{file_path}"
-            },
             positions: [
               {
-                line: 2,
-                character: 0
+                character: 0,
+                line: 2
               }
-            ]
+            ],
+            textDocument: {
+              uri: "file://#{file_path}"
+            }
           }
         )
         reader.rewind
@@ -167,6 +167,7 @@ RSpec.describe Rucoa::Server do
         expect(writer.string).to eq(
           Rucoa::MessageWriter.pack(
             id: 2,
+            jsonrpc: '2.0',
             result: [
               {
                 parent: {
@@ -193,8 +194,7 @@ RSpec.describe Rucoa::Server do
                   }
                 }
               }
-            ],
-            jsonrpc: '2.0'
+            ]
           )
         )
       end

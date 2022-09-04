@@ -80,11 +80,11 @@ module Rucoa
     def on_initialize(_request)
       {
         capabilities: {
+          selectionRangeProvider: true,
           textDocumentSync: {
             change: 1, # Full
             openClose: true
-          },
-          selectionRangeProvider: true
+          }
         }
       }
     end

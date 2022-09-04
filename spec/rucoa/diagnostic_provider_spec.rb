@@ -97,13 +97,13 @@ RSpec.describe Rucoa::DiagnosticProvider do
               },
               message: /\APrefer single-quoted strings/,
               range: {
-                start: {
-                  line: 2,
-                  character: 0
-                },
                 end: {
-                  line: 2,
-                  character: 5
+                  character: 5,
+                  line: 2
+                },
+                start: {
+                  character: 0,
+                  line: 2
                 }
               },
               severity: 3,
