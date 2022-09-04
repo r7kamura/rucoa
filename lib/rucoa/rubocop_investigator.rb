@@ -3,18 +3,18 @@
 require 'rubocop'
 
 module Rucoa
-  class RubocopRunner < ::RuboCop::Runner
+  class RubocopInvestigator < ::RuboCop::Runner
     class << self
-      # @param path [String]
+      # @param source [Rucoa::Source]
       # @return [Array<RuboCop::Cop::Offense>]
-      def call(path:)
-        new(path: path).call
+      def call(source:)
+        new(source: source).call
       end
     end
 
-    # @param path [String]
-    def initialize(path:)
-      @path = path
+    # @param source [Rucoa::Source]
+    def initialize(source:)
+      @source = source
       @offenses = []
       super(
         ::RuboCop::Options.new.parse(
@@ -30,7 +30,8 @@ module Rucoa
 
     # @return [Array<RuboCop::Cop::Offense>]
     def call
-      run([@path])
+      @options[:stdin] = @source.content
+      run([@source.path])
       @offenses
     end
 

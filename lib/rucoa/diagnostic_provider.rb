@@ -37,7 +37,7 @@ module Rucoa
 
     # @return [Array<RuboCop::Cop::Offense>]
     def offenses
-      RubocopRunner.call(path: @source.path)
+      RubocopInvestigator.call(source: @source)
     end
 
     # @return [Boolean]
@@ -127,9 +127,7 @@ module Rucoa
 
       # @return [Array<Hash>, nil]
       def edits
-        return unless @offense.correctable?
-
-        @offense.corrector.as_replacements.map do |range, replacement|
+        @offense.corrector&.as_replacements&.map do |range, replacement|
           {
             newText: replacement,
             range: Range.from_parser_range(range).to_vscode_range

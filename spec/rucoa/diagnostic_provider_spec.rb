@@ -12,12 +12,18 @@ RSpec.describe Rucoa::DiagnosticProvider do
       )
     end
 
+    around do |example|
+      Dir.chdir(temporary_directory_path) do
+        example.run
+      end
+    end
+
     before do
       File.write(file_path, content)
     end
 
     after do
-      FileUtils.rm_rf(temporary_direcotry_path)
+      FileUtils.rm_rf(temporary_directory_path)
     end
 
     let(:source) do
@@ -36,10 +42,10 @@ RSpec.describe Rucoa::DiagnosticProvider do
     end
 
     let(:file_path) do
-      "#{temporary_direcotry_path}/example.rb"
+      "#{temporary_directory_path}/example.rb"
     end
 
-    let(:temporary_direcotry_path) do
+    let(:temporary_directory_path) do
       Dir.mktmpdir
     end
 
@@ -50,7 +56,7 @@ RSpec.describe Rucoa::DiagnosticProvider do
     shared_context 'when RuboCop is configured' do
       before do
         File.write(
-          "#{temporary_direcotry_path}/.rubocop.yml",
+          "#{temporary_directory_path}/.rubocop.yml",
           <<~YAML
             AllCops:
               NewCops: enable
