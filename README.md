@@ -33,6 +33,7 @@ gem install rucoa
 ## Features
 
 - Diagnostics
+- Quick Fix
 - Selection Ranges (experimental)
 
 ### Coming soon
