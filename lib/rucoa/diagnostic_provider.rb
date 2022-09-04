@@ -20,7 +20,7 @@ module Rucoa
       return [] unless rubocop_configured?
 
       offenses.map do |offense|
-        OffenseToDiagnosticMapper.call(offense: offense)
+        OffenseToDiagnosticMapper.call(offense)
       end
     end
 
@@ -73,13 +73,13 @@ module Rucoa
       class << self
         # @param offense [RuboCop::Cop::Offense]
         # @return [Hash]
-        def call(offense:)
-          new(offense: offense).call
+        def call(offense)
+          new(offense).call
         end
       end
 
       # @param offense [RuboCop::Cop::Offense]
-      def initialize(offense:)
+      def initialize(offense)
         @offense = offense
       end
 
