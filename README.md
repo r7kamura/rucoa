@@ -41,5 +41,6 @@ gem install rucoa
 
 - Completion
 - Documentation
-- Highlight
 - Go to Definition
+- Highlight
+- Semantic Tokens
