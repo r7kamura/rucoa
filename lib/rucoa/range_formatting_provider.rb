@@ -27,7 +27,7 @@ module Rucoa
 
     private
 
-    # @return [RuboCop::Cop::Offense]
+    # @return [Array<RuboCop::Cop::Corrector>]
     def correctable_offenses
       offenses.select(&:corrector)
     end
