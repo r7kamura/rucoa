@@ -28,11 +28,17 @@ module Rucoa
     private
 
     # @param uri [String]
-    # @return [String]
+    # @return [String, nil]
     def path_from_uri(uri)
-      ::CGI.unescape(
-        ::URI.parse(uri).path
-      )
+      path =
+        if uri.start_with?('untitled:')
+          uri.split(':', 2).last
+        else
+          ::URI.parse(uri).path
+        end
+      return nil unless path
+
+      ::CGI.unescape(path)
     end
   end
 end
