@@ -30,21 +30,30 @@ module Rucoa
 
     # @param beginning [Rucoa::Position]
     # @param ending [Ruoca::Position]
-    def initialize(beginning, ending)
+    # @param exclude_end [Boolean]
+    def initialize(beginning, ending, exclude_end: true)
       @beginning = beginning
       @ending = ending
+      @exclude_end = exclude_end
     end
 
     # @param range [Rucoa::Range]
     # @return [Boolean]
     def contains?(range)
-      (include?(range.beginning) && include?(range.ending)) || self == range
+      copy = with_including_end
+      copy.include?(range.beginning) && copy.include?(range.ending)
     end
 
     # @param position [Rucoa::Position]
     # @return [Boolean]
     def include?(position)
-      !exclude?(position)
+      return false if position.line > @ending.line
+      return false if position.line < @beginning.line
+      return false if position.column < @beginning.column
+      return false if position.column > @ending.column
+      return false if position.column == @ending.column && @exclude_end
+
+      true
     end
 
     # @return [Hash]
@@ -55,22 +64,11 @@ module Rucoa
       }
     end
 
-    # @note Override.
-    # @param other [Rucoa::Range]
-    # @return [Boolean]
-    def ==(other)
-      @beginning == other.beginning && @ending == other.ending
-    end
-
     private
 
-    # @param position [Rucoa::Position]
-    # @return [Boolean]
-    def exclude?(position)
-      position.line > @ending.line ||
-        position.line < @beginning.line ||
-        (position.line == @beginning.line && position.column < @beginning.column) ||
-        (position.line == @ending.line && position.column >= @ending.column)
+    # @return [Rucoa::Range]
+    def with_including_end
+      self.class.new(@beginning, @ending, exclude_end: false)
     end
   end
 end
