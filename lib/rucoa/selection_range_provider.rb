@@ -74,7 +74,9 @@ module Rucoa
             expression_range
           ]
         else
-          []
+          [
+            expression_range
+          ]
         end
       end
 

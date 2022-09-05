@@ -31,7 +31,7 @@ RSpec.describe Rucoa::SelectionRangeProvider do
         )
       end
 
-      it 'returns expected selection ranges' do
+      it 'returns quotation inner and outer ranges' do
         is_expected.to eq(
           {
             parent: {
@@ -62,6 +62,40 @@ RSpec.describe Rucoa::SelectionRangeProvider do
       end
     end
 
+    context 'with class node' do
+      let(:content) do
+        <<~RUBY
+          class Foo
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 0,
+          line: 1
+        )
+      end
+
+      it 'returns class range' do
+        is_expected.to eq(
+          {
+            parent: nil,
+            range: {
+              end: {
+                character: 3,
+                line: 1
+              },
+              start: {
+                character: 0,
+                line: 0
+              }
+            }
+          }
+        )
+      end
+    end
+
     context 'without node' do
       let(:content) do
         <<~RUBY
@@ -76,7 +110,7 @@ RSpec.describe Rucoa::SelectionRangeProvider do
         )
       end
 
-      it 'returns expected selection ranges' do
+      it 'returns nil' do
         is_expected.to be_nil
       end
     end
