@@ -39,6 +39,8 @@ module Rucoa
         on_text_document_did_open(request)
       when 'textDocument/formatting'
         on_text_document_formatting(request)
+      when 'textDocument/rangeFormatting'
+        on_text_document_range_formatting(request)
       when 'textDocument/selectionRange'
         on_text_document_selection_range(request)
       end
@@ -84,6 +86,7 @@ module Rucoa
         capabilities: {
           codeActionProvider: true,
           documentFormattingProvider: true,
+          documentRangeFormattingProvider: true,
           selectionRangeProvider: true,
           textDocumentSync: {
             change: 1, # Full
@@ -136,6 +139,21 @@ module Rucoa
       return unless source
 
       FormattingProvider.call(
+        source: source
+      )
+    end
+
+    # @param request [Hash]
+    # @return [Array<Hash>, nil]
+    def on_text_document_range_formatting(request)
+      uri = request.dig('params', 'textDocument', 'uri')
+      source = @source_store.get(uri)
+      return unless source
+
+      RangeFormattingProvider.call(
+        range: Range.from_vscode_range(
+          request.dig('params', 'range')
+        ),
         source: source
       )
     end

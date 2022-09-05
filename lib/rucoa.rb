@@ -15,6 +15,7 @@ module Rucoa
   autoload :ParserBuilder, 'rucoa/parser_builder'
   autoload :Position, 'rucoa/position'
   autoload :Range, 'rucoa/range'
+  autoload :RangeFormattingProvider, 'rucoa/range_formatting_provider'
   autoload :RubocopAutocorrector, 'rucoa/rubocop_autocorrector'
   autoload :RubocopConfigurationChecker, 'rucoa/rubocop_configuration_checker'
   autoload :RubocopInvestigator, 'rucoa/rubocop_investigator'
