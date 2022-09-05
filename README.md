@@ -35,6 +35,7 @@ gem install rucoa
 - Diagnostics
 - Formatting
 - Quick Fix
+- Selection Ranges
 
 ### Coming soon
 
@@ -42,4 +43,3 @@ gem install rucoa
 - Documentation
 - Highlight
 - Go to Definition
-- Selection Ranges
