@@ -17,6 +17,8 @@ module Rucoa
 
     # @return [Array<Hash>]
     def call
+      return [] unless RubocopConfigurationChecker.call
+
       [text_edit]
     end
 
