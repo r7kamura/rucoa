@@ -51,5 +51,12 @@ module Rucoa
         line: @line - 1
       }
     end
+
+    # @note Override.
+    # @param other [Rucoa::Position]
+    # @return [Boolean]
+    def ==(other)
+      @column == other.column && @line == other.line
+    end
   end
 end
