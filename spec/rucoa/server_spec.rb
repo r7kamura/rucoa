@@ -12,6 +12,12 @@ RSpec.describe Rucoa::Server do
 
     before do
       File.write(file_path, content)
+
+      writer = Rucoa::MessageWriter.new(input)
+      input_messages.each do |message|
+        writer.write(message)
+      end
+      input.rewind
     end
 
     after do
@@ -27,16 +33,16 @@ RSpec.describe Rucoa::Server do
 
     let(:instance) do
       described_class.new(
-        reader: reader,
-        writer: writer
+        input: input,
+        output: output
       )
     end
 
-    let(:reader) do
+    let(:input) do
       StringIO.new
     end
 
-    let(:writer) do
+    let(:output) do
       StringIO.new
     end
 
@@ -59,26 +65,21 @@ RSpec.describe Rucoa::Server do
       "#{temporary_directory_path}/example.rb"
     end
 
-    # To avoid loading rucoa's .at `testing via #for_pwd`.
     let(:temporary_directory_path) do
       Dir.mktmpdir
     end
-    # To avoid loading rucoa's .at `testing via #for_pwd`.
+
+    let(:input_messages) do
+      []
+    end
+
+    let(:output_messages) do
+      output.rewind
+      Rucoa::MessageReader.new(output).read.to_a
+    end
 
     context 'when RuboCop is configured and diagnostics are found' do
       before do
-        reader << Rucoa::MessageWriter.pack(
-          id: 1,
-          method: 'textDocument/didOpen',
-          params: {
-            textDocument: {
-              text: content,
-              uri: "file://#{file_path}"
-            }
-          }
-        )
-        reader.rewind
-
         File.write(
           "#{temporary_directory_path}/.rubocop.yml",
           <<~YAML
@@ -95,140 +96,75 @@ RSpec.describe Rucoa::Server do
         RUBY
       end
 
-      it 'writes diagnostics' do
-        subject
-        expect(writer.string).to eq(
-          Rucoa::MessageWriter.pack(
-            jsonrpc: '2.0',
-            method: 'textDocument/publishDiagnostics',
+      let(:input_messages) do
+        [
+          {
+            id: 1,
+            method: 'textDocument/didOpen',
             params: {
-              diagnostics: [
-                {
-                  code: 'Style/FrozenStringLiteralComment',
-                  data: {
-                    cop_name: 'Style/FrozenStringLiteralComment',
-                    edits: [
-                      {
-                        newText: "# frozen_string_literal: true\n",
-                        range: {
-                          end: {
-                            character: 0,
-                            line: 0
-                          },
-                          start: {
-                            character: 0,
-                            line: 0
-                          }
-                        }
-                      }
-                    ],
-                    path: file_path,
-                    range: {
-                      end: {
-                        character: 1,
-                        line: 0
-                      },
-                      start: {
-                        character: 0,
-                        line: 0
-                      }
-                    },
-                    uri: "file://#{file_path}"
-                  },
-                  message: 'Missing frozen string literal comment.',
-                  range: {
-                    end: {
-                      character: 1,
-                      line: 0
-                    },
-                    start: {
-                      character: 0,
-                      line: 0
-                    }
-                  },
-                  severity: 3,
-                  source: 'RuboCop'
-                }
-              ],
-              uri: "file://#{file_path}"
+              textDocument: {
+                text: content,
+                uri: "file://#{file_path}"
+              }
             }
-          )
+          }
+        ]
+      end
+
+      it 'outputs diagnostics' do
+        subject
+        expect(output_messages).to match(
+          [
+            hash_including(
+              'method' => 'textDocument/publishDiagnostics'
+            )
+          ]
         )
       end
     end
 
     context 'when selection ranges are requested' do
-      before do
-        reader << Rucoa::MessageWriter.pack(
-          id: 1,
-          method: 'textDocument/didOpen',
-          params: {
-            textDocument: {
-              text: content,
-              uri: "file://#{file_path}"
-            }
-          }
-        )
-        reader << Rucoa::MessageWriter.pack(
-          id: 2,
-          method: 'textDocument/selectionRange',
-          params: {
-            positions: [
-              {
-                character: 0,
-                line: 2
+      let(:input_messages) do
+        [
+          {
+            id: 1,
+            method: 'textDocument/didOpen',
+            params: {
+              textDocument: {
+                text: content,
+                uri: "file://#{file_path}"
               }
-            ],
-            textDocument: {
-              uri: "file://#{file_path}"
+            }
+          },
+          {
+            id: 2,
+            method: 'textDocument/selectionRange',
+            params: {
+              positions: [
+                {
+                  character: 0,
+                  line: 2
+                }
+              ],
+              textDocument: {
+                uri: "file://#{file_path}"
+              }
             }
           }
-        )
-        reader.rewind
+        ]
       end
 
-      it 'writes selection ranges' do
+      it 'outputs selection ranges' do
         subject
-        expect(writer.string).to eq(
-          Rucoa::MessageWriter.pack(
-            jsonrpc: '2.0',
-            method: 'textDocument/publishDiagnostics',
-            params: {
-              diagnostics: [],
-              uri: "file://#{file_path}"
-            }
-          ) +
-          Rucoa::MessageWriter.pack(
-            id: 2,
-            jsonrpc: '2.0',
-            result: [
-              {
-                parent: {
-                  parent: nil,
-                  range: {
-                    end: {
-                      character: 5,
-                      line: 2
-                    },
-                    start: {
-                      character: 0,
-                      line: 2
-                    }
-                  }
-                },
-                range: {
-                  end: {
-                    character: 4,
-                    line: 2
-                  },
-                  start: {
-                    character: 1,
-                    line: 2
-                  }
-                }
-              }
-            ]
-          )
+        expect(output_messages).to match(
+          [
+            hash_including(
+              'method' => 'textDocument/publishDiagnostics'
+            ),
+            hash_including(
+              'id' => 2
+            )
+          ]
         )
       end
     end

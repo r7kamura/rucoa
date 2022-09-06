@@ -11,8 +11,10 @@ module Rucoa
     end
 
     # @yieldparam message [Hash]
-    # @return [void]
+    # @return [Enumerator<Hash>, void]
     def read
+      return enum_for(:read) unless block_given?
+
       while (buffer = @io.gets("\r\n\r\n"))
         content_length = buffer[/Content-Length: (\d+)/i, 1]
         raise Errors::ContentLengthHeaderNotFound unless content_length

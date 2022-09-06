@@ -2,11 +2,11 @@
 
 module Rucoa
   class Server
-    # @param reader [IO]
-    # @param writer [IO]
-    def initialize(reader:, writer:)
-      @reader = MessageReader.new(reader)
-      @writer = MessageWriter.new(writer)
+    # @param input [IO]
+    # @param output [IO]
+    def initialize(input:, output:)
+      @reader = MessageReader.new(input)
+      @writer = MessageWriter.new(output)
       @source_store = SourceStore.new
     end
 
