@@ -105,8 +105,6 @@ module Rucoa
         {
           cop_name: @offense.cop_name,
           edits: edits,
-          path: @source.path,
-          range: range,
           uri: @uri
         }
       end

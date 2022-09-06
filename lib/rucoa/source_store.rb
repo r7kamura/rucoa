@@ -25,6 +25,12 @@ module Rucoa
       )
     end
 
+    # @yieldparam uri [String]
+    # @return [Enumerable<String>]
+    def each_uri(&block)
+      @data.each_key(&block)
+    end
+
     private
 
     # @param uri [String]
