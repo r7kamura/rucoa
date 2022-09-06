@@ -26,6 +26,7 @@ module Rucoa
       offenses.map do |offense|
         OffenseToDiagnosticMapper.call(
           offense,
+          source: @source,
           uri: @uri
         )
       end
@@ -59,17 +60,24 @@ module Rucoa
 
       class << self
         # @param offense [RuboCop::Cop::Offense]
+        # @param source [Rucoa::Source]
         # @param uri [String]
         # @return [Hash]
-        def call(offense, uri:)
-          new(offense, uri: uri).call
+        def call(offense, source:, uri:)
+          new(
+            offense,
+            source: source,
+            uri: uri
+          ).call
         end
       end
 
       # @param offense [RuboCop::Cop::Offense]
+      # @param source [Rucoa::Source]
       # @param uri [String]
-      def initialize(offense, uri:)
+      def initialize(offense, source:, uri:)
         @offense = offense
+        @source = source
         @uri = uri
       end
 
@@ -97,7 +105,7 @@ module Rucoa
         {
           cop_name: @offense.cop_name,
           edits: edits,
-          path: @offense.location.source_buffer.name,
+          path: @source.path,
           range: range,
           uri: @uri
         }
