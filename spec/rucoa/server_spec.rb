@@ -84,7 +84,6 @@ RSpec.describe Rucoa::Server do
           "#{temporary_directory_path}/.rubocop.yml",
           <<~YAML
             AllCops:
-            # To avoid loading rucoa's .at `testing via #for_pwd`.
               NewCops: enable
           YAML
         )
