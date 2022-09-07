@@ -2,10 +2,10 @@
 
 module Rucoa
   module Nodes
-    class StrNode < Base
+    class ConstNode < Base
       # @return [String]
-      def value
-        children[0]
+      def name
+        children[1].to_s
       end
     end
   end

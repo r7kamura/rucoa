@@ -14,6 +14,9 @@ module Rucoa
         'diagnostics' => {
           'enable' => true
         },
+        'documentSymbol' => {
+          'enable' => true
+        },
         'formatting' => {
           'enable' => true
         },
@@ -35,6 +38,11 @@ module Rucoa
     # @return [Boolean]
     def enables_diagnostics?
       @settings.dig('feature', 'diagnostics', 'enable')
+    end
+
+    # @return [Boolean]
+    def enables_document_symbol?
+      @settings.dig('feature', 'documentSymbol', 'enable')
     end
 
     # @return [Boolean]

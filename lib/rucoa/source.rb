@@ -23,12 +23,12 @@ module Rucoa
       end
     end
 
-    private
-
     # @return [Rucoa::Nodes::Base, nil]
     def root_node
       @root_node ||= Parser.call(@content)
     end
+
+    private
 
     # @return [Array<Rucoa::Nodes::Base>]
     def root_and_descendant_nodes

@@ -2,7 +2,7 @@
 
 module Rucoa
   module Nodes
-    class StrNode < Base
+    class SymNode < Base
       # @return [String]
       def value
         children[0]

@@ -5,24 +5,33 @@ require 'parser/current'
 module Rucoa
   class ParserBuilder < ::Parser::Builders::Default
     NODE_CLASS_BY_TYPE = {
-      str: Nodes::StrNode
+      casgn: Nodes::CasgnNode,
+      class: Nodes::ClassNode,
+      const: Nodes::ConstNode,
+      def: Nodes::DefNode,
+      defs: Nodes::DefsNode,
+      module: Nodes::ModuleNode,
+      sclass: Nodes::SclassNode,
+      send: Nodes::SendNode,
+      str: Nodes::StrNode,
+      sym: Nodes::SymNode
     }.freeze
+
+    class << self
+      # @param type [Symbol]
+      # @return [Class]
+      def node_class_for(type)
+        NODE_CLASS_BY_TYPE.fetch(type, Nodes::Base)
+      end
+    end
 
     # @note Override.
     def n(type, children, source_map)
-      node_class_for(type).new(
+      self.class.node_class_for(type).new(
         type,
         children,
         location: source_map
       )
-    end
-
-    private
-
-    # @param type [Symbol]
-    # @return [Class]
-    def node_class_for(type)
-      NODE_CLASS_BY_TYPE.fetch(type, Nodes::Base)
     end
   end
 end

@@ -9,6 +9,7 @@ module Rucoa
       'textDocument/codeAction' => Handlers::TextDocumentCodeActionHandler,
       'textDocument/didChange' => Handlers::TextDocumentDidChangeHandler,
       'textDocument/didOpen' => Handlers::TextDocumentDidOpenHandler,
+      'textDocument/documentSymbol' => Handlers::TextDocumentDocumentSymbolHandler,
       'textDocument/formatting' => Handlers::TextDocumentFormattingHandler,
       'textDocument/rangeFormatting' => Handlers::TextDocumentRangeFormattingHandler,
       'textDocument/selectionRange' => Handlers::TextDocumentSelectionRangeHandler,
