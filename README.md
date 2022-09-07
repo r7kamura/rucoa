@@ -44,3 +44,4 @@ gem install rucoa
 - Go to Definition
 - Highlight
 - Semantic Tokens
+- Symbol
