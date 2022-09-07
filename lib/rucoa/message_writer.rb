@@ -19,6 +19,9 @@ module Rucoa
       end
     end
 
+    # @return [IO]
+    attr_reader :io
+
     # @param io [IO]
     def initialize(io)
       @io = io
