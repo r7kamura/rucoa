@@ -9,14 +9,18 @@ module Rucoa
 
       private
 
+      # @return [Boolean]
+      def formattable?
+        configuration.enables_formatting? &&
+          source &&
+          RubocopConfigurationChecker.call
+      end
+
       # @return [Array<Hash>]
       def edits
-        return unless configuration.enables_formatting?
-        return unless source
+        return [] unless formattable?
 
-        FormattingProvider.call(
-          source: source
-        )
+        [text_edit]
       end
 
       # @return [Rucoa::Source, nil]
@@ -27,6 +31,33 @@ module Rucoa
       # @return [String]
       def uri
         request.dig('params', 'textDocument', 'uri')
+      end
+
+      # @return [Hash]
+      def text_edit
+        {
+          newText: new_text,
+          range: range
+        }
+      end
+
+      # @return [String]
+      def new_text
+        RubocopAutocorrector.call(source: source)
+      end
+
+      # @return [Hash]
+      def range
+        Range.new(
+          Position.new(
+            column: 0,
+            line: 1
+          ),
+          Position.new(
+            column: @source.content.lines.last.length,
+            line: @source.content.lines.count + 1
+          )
+        ).to_vscode_range
       end
     end
   end
