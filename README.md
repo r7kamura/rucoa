@@ -6,7 +6,7 @@ Language server for Ruby.
 
 ## Usage
 
-Install both rucoa gem and [vscode-rucoa](https://github.com/r7kamura/vscode-rucoa) extension, then open your Ruby project in VSCode.
+Install both rucoa gem and [vscode-rucoa](https://marketplace.visualstudio.com/items?itemName=r7kamura.vscode-rucoa) extension, then open your Ruby project in VSCode.
 
 To install rucoa gem, if your project is managed by bundler, add to your Gemfile:
 
