@@ -2,21 +2,17 @@
 
 require 'stringio'
 
-RSpec.describe Rucoa::Handlers::InitializeHandler do
+RSpec.describe Rucoa::Handlers::InitializedHandler do
   describe '.call' do
     subject do
       described_class.call(
-        request: request,
+        request: {
+          'id' => 1,
+          'method' => 'initialized',
+          'params' => {}
+        },
         server: server
       )
-    end
-
-    let(:request) do
-      {
-        'id' => 1,
-        'method' => 'initialize',
-        'params' => {}
-      }
     end
 
     let(:server) do
@@ -27,16 +23,19 @@ RSpec.describe Rucoa::Handlers::InitializeHandler do
     end
 
     context 'with valid condition' do
-      it 'responds server capabilities' do
+      it 'requests workspace configuration' do
         subject
         expect(server.responses).to match(
           [
             hash_including(
-              'id' => 1,
-              'result' => {
-                'capabilities' => hash_including(
-                  'codeActionProvider' => true
-                )
+              'id' => 0,
+              'method' => 'workspace/configuration',
+              'params' => {
+                'items' => [
+                  {
+                    'section' => 'rucoa'
+                  }
+                ]
               }
             )
           ]
