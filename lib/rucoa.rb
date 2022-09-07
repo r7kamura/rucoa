@@ -5,7 +5,6 @@ require_relative 'rucoa/version'
 module Rucoa
   autoload :Cli, 'rucoa/cli'
   autoload :Configuration, 'rucoa/configuration'
-  autoload :DiagnosticProvider, 'rucoa/diagnostic_provider'
   autoload :Errors, 'rucoa/errors'
   autoload :HandlerConcerns, 'rucoa/handler_concerns'
   autoload :Handlers, 'rucoa/handlers'
