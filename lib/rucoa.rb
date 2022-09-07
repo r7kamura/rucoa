@@ -10,6 +10,7 @@ module Rucoa
   autoload :Handlers, 'rucoa/handlers'
   autoload :MessageReader, 'rucoa/message_reader'
   autoload :MessageWriter, 'rucoa/message_writer'
+  autoload :NodeConcerns, 'rucoa/node_concerns'
   autoload :Nodes, 'rucoa/nodes'
   autoload :Parser, 'rucoa/parser'
   autoload :ParserBuilder, 'rucoa/parser_builder'

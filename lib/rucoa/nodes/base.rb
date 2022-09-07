@@ -64,6 +64,19 @@ module Rucoa
         self
       end
 
+      # @note Override.
+      #   Some nodes change their type depending on the context.
+      #   For example, `const` node can be `casgn` node.
+      # @return [Rucoa::Nodes::Base]
+      def updated(type = nil, children = nil, properties = {})
+        properties[:location] ||= @location
+        ParserBuilder.node_class_for(type || @type).new(
+          type || @type,
+          children || @children,
+          properties
+        )
+      end
+
       # @param position [Rucoa::Position]
       # @return [Boolean]
       def include_position?(position)

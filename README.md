@@ -36,6 +36,7 @@ gem install rucoa
 - Formatting
 - Quick Fix
 - Selection Range
+- Symbol
 
 ### Coming soon
 
@@ -44,4 +45,3 @@ gem install rucoa
 - Go to Definition
 - Highlight
 - Semantic Tokens
-- Symbol

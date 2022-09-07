@@ -9,6 +9,7 @@ module Rucoa
             codeActionProvider: true,
             documentFormattingProvider: true,
             documentRangeFormattingProvider: true,
+            documentSymbolProvider: true,
             selectionRangeProvider: true,
             textDocumentSync: {
               change: 1, # Full
