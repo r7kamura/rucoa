@@ -19,7 +19,6 @@ module Rucoa
   autoload :RubocopAutocorrector, 'rucoa/rubocop_autocorrector'
   autoload :RubocopConfigurationChecker, 'rucoa/rubocop_configuration_checker'
   autoload :RubocopInvestigator, 'rucoa/rubocop_investigator'
-  autoload :SelectionRangeProvider, 'rucoa/selection_range_provider'
   autoload :Server, 'rucoa/server'
   autoload :Source, 'rucoa/source'
   autoload :SourceStore, 'rucoa/source_store'
