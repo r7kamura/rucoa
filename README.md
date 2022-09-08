@@ -32,11 +32,38 @@ gem install rucoa
 
 ## Features
 
-- Diagnostics
-- Formatting
-- Quick Fix
-- Selection Range
-- Symbol
+### Diagnostics
+
+Displays RuboCop offenses and provides Quick Fix action for autocorrection.
+
+![demo](images/diagnostics.gif)
+
+### Formatting
+
+Run "Format Document" command or enable "Format On Save" in the settings to autocorrect RuboCop offenses.
+
+![demo](images/document-formatting.gif)
+
+### Selection
+
+Run "Expand Selection" command to select appropriate ranges.
+
+![demo](images/selection-ranges.gif)
+
+### Symbol
+
+See Outline section in the explorer panel to see document symbols in the current file, or run "Go to Symbol" command to search for symbols.
+
+This extension supports the folowiing types of symbols:
+
+- class
+- module
+- constant
+- instance method
+- singleton method (a.k.a. class method)
+- attribute (attr_accessor, attr_reader, and attr_writer)
+
+![demo](images/document-symbol.gif)
 
 ### Coming soon
 
