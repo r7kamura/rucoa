@@ -11,6 +11,12 @@ module Rucoa
             documentRangeFormattingProvider: true,
             documentSymbolProvider: true,
             selectionRangeProvider: true,
+            signatureHelpProvider: {
+              triggerCharacters: %w[
+                (
+                ,
+              ]
+            },
             textDocumentSync: {
               change: 1, # Full
               openClose: true

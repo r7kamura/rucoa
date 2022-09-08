@@ -20,7 +20,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentRangeFormattingHandler do
     end
 
     before do
-      server.source_store.set(uri, content)
+      server.source_store.update(source)
     end
 
     after do
@@ -70,6 +70,13 @@ RSpec.describe Rucoa::Handlers::TextDocumentRangeFormattingHandler do
 
     let(:uri) do
       "file://#{file_path}"
+    end
+
+    let(:source) do
+      Rucoa::Source.new(
+        content: content,
+        uri: uri
+      )
     end
 
     let(:temporary_directory_path) do

@@ -46,6 +46,11 @@ module Rucoa
         @server.configuration
       end
 
+      # @return [Rucoa::DefinitionStore]
+      def definition_store
+        @server.definition_store
+      end
+
       # @return [Rucoa::SourceStore]
       def source_store
         @server.source_store

@@ -13,7 +13,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentSymbolHandler do
     end
 
     before do
-      server.source_store.set(uri, content)
+      server.source_store.update(source)
     end
 
     let(:request) do
@@ -81,6 +81,13 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentSymbolHandler do
 
     let(:file_path) do
       'example.rb'
+    end
+
+    let(:source) do
+      Rucoa::Source.new(
+        content: content,
+        uri: uri
+      )
     end
 
     context 'with valid condition' do

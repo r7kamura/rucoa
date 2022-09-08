@@ -212,7 +212,7 @@ module Rucoa
 
       # @return [Rucoa::Source]
       def source
-        @source ||= @server.source_store.get(uri)
+        @source ||= source_store.get(uri)
       end
 
       # @return [String]

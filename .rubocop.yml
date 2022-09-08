@@ -29,6 +29,9 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NamedSubject:
   Enabled: false
 
+Security/MarshalLoad:
+  Enabled: false
+
 Sevencop/HashLiteralOrder:
   Enabled: true
 

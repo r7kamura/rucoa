@@ -31,7 +31,7 @@ module Rucoa
     # @return [String]
     def call
       @options[:stdin] = @source.content
-      run([@source.path])
+      run([@source.path || 'untitled'])
       @options[:stdin]
     end
   end

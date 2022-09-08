@@ -3,6 +3,7 @@ PATH
   specs:
     rucoa (0.4.0)
       parser
+      rbs
       rubocop
 
 GEM
@@ -16,6 +17,7 @@ GEM
       ast (~> 2.4.1)
     rainbow (3.1.1)
     rake (13.0.6)
+    rbs (2.6.0)
     regexp_parser (2.5.0)
     rexml (3.2.5)
     rspec (3.11.0)
@@ -54,6 +56,12 @@ GEM
     sevencop (0.9.3)
       rubocop
     unicode-display_width (2.2.0)
+    webrick (1.7.0)
+    yard (0.9.28)
+      webrick (~> 1.7.0)
+    yardspec (0.2.0)
+      rspec
+      yard
 
 PLATFORMS
   x86_64-linux
@@ -67,6 +75,7 @@ DEPENDENCIES
   rubocop-rspec
   rucoa!
   sevencop
+  yardspec
 
 BUNDLED WITH
    2.3.21

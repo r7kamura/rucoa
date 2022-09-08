@@ -31,7 +31,7 @@ module Rucoa
     # @return [Array<RuboCop::Cop::Offense>]
     def call
       @options[:stdin] = @source.content
-      run([@source.path])
+      run([@source.path || 'untitled'])
       @offenses
     end
 

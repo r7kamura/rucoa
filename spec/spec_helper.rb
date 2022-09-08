@@ -13,3 +13,9 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+RSpec::Matchers.define :contain do |expected|
+  match do |actual|
+    actual.contain?(expected)
+  end
+end

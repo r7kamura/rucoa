@@ -8,6 +8,7 @@ module Rucoa
     autoload :ConstNode, 'rucoa/nodes/const_node'
     autoload :DefNode, 'rucoa/nodes/def_node'
     autoload :DefsNode, 'rucoa/nodes/defs_node'
+    autoload :LvarNode, 'rucoa/nodes/lvar_node'
     autoload :ModuleNode, 'rucoa/nodes/module_node'
     autoload :SclassNode, 'rucoa/nodes/sclass_node'
     autoload :SendNode, 'rucoa/nodes/send_node'

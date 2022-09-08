@@ -28,5 +28,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'parser'
+  spec.add_dependency 'rbs'
   spec.add_dependency 'rubocop'
 end

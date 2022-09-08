@@ -30,28 +30,85 @@ module Rucoa
 
     # @param beginning [Rucoa::Position]
     # @param ending [Ruoca::Position]
-    # @param exclude_end [Boolean]
-    def initialize(beginning, ending, exclude_end: true)
+    # @param including_ending [Boolean]
+    def initialize(beginning, ending, including_ending: true)
       @beginning = beginning
       @ending = ending
-      @exclude_end = exclude_end
+      @including_ending = including_ending
     end
 
     # @param range [Rucoa::Range]
     # @return [Boolean]
-    def contains?(range)
-      copy = with_including_end
-      copy.include?(range.beginning) && copy.include?(range.ending)
+    # @example returns true when the range is contained in self
+    #   range = Rucoa::Range.new(
+    #     Rucoa::Position.new(
+    #       column: 0,
+    #       line: 0
+    #     ),
+    #     Rucoa::Position.new(
+    #       column: 0,
+    #       line: 2
+    #     )
+    #   )
+    #   expect(range).to contain(
+    #     Rucoa::Range.new(
+    #       Rucoa::Position.new(
+    #         column: 0,
+    #         line: 0
+    #       ),
+    #       Rucoa::Position.new(
+    #         column: 0,
+    #         line: 0
+    #       )
+    #     )
+    #   )
+    def contain?(range)
+      include?(range.beginning) && include?(range.ending)
     end
 
     # @param position [Rucoa::Position]
     # @return [Boolean]
+    # @example returns true when the position is included in self
+    #   range = Rucoa::Range.new(
+    #     Rucoa::Position.new(
+    #       column: 0,
+    #       line: 0
+    #     ),
+    #     Rucoa::Position.new(
+    #       column: 0,
+    #       line: 2
+    #     )
+    #   )
+    #   expect(range).to include(
+    #     Rucoa::Position.new(
+    #       column: 0,
+    #       line: 0
+    #     )
+    #   )
+    #   expect(range).to include(
+    #     Rucoa::Position.new(
+    #       column: 0,
+    #       line: 1
+    #     )
+    #   )
+    #   expect(range).to include(
+    #     Rucoa::Position.new(
+    #       column: 0,
+    #       line: 2
+    #     )
+    #   )
+    #   expect(range).not_to include(
+    #     Rucoa::Position.new(
+    #       column: 0,
+    #       line: 3
+    #     )
+    #   )
     def include?(position)
       return false if position.line > @ending.line
       return false if position.line < @beginning.line
       return false if position.column < @beginning.column
       return false if position.column > @ending.column
-      return false if position.column == @ending.column && @exclude_end
+      return false if position.column == @ending.column && !@including_ending
 
       true
     end
@@ -62,13 +119,6 @@ module Rucoa
         end: @ending.to_vscode_position,
         start: @beginning.to_vscode_position
       }
-    end
-
-    private
-
-    # @return [Rucoa::Range]
-    def with_including_end
-      self.class.new(@beginning, @ending, exclude_end: false)
     end
   end
 end

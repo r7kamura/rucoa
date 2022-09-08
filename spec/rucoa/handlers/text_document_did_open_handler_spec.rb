@@ -112,12 +112,36 @@ RSpec.describe Rucoa::Handlers::TextDocumentDidOpenHandler do
       include_context 'when RuboCop is configured'
 
       before do
-        server.configuration.update(
-          'diagnostics.enable' => false
-        )
+        server.configuration.disable_diagnostics
       end
 
       include_examples 'publishes empty diagnostics'
+    end
+
+    context 'when URI is for untitled document' do
+      include_context 'when RuboCop is configured'
+
+      let(:uri) do
+        'untitled:Untitled-1'
+      end
+
+      it 'publishes some diagnostics' do
+        subject
+        expect(server.responses).to match(
+          [
+            {
+              'jsonrpc' => '2.0',
+              'method' => 'textDocument/publishDiagnostics',
+              'params' => {
+                'diagnostics' => [
+                  a_kind_of(Hash)
+                ],
+                'uri' => uri
+              }
+            }
+          ]
+        )
+      end
     end
 
     context 'when RuboCop is configured' do
