@@ -13,12 +13,16 @@ module Rucoa
       'textDocument/formatting' => Handlers::TextDocumentFormattingHandler,
       'textDocument/rangeFormatting' => Handlers::TextDocumentRangeFormattingHandler,
       'textDocument/selectionRange' => Handlers::TextDocumentSelectionRangeHandler,
+      'textDocument/signatureHelp' => Handlers::TextDocumentSignatureHelpHandler,
       'workspace/didChangeConfiguration' => Handlers::WorkspaceDidChangeConfigurationHandler
     }.freeze
     private_constant :METHOD_TO_HANDLER_MAP
 
     # @return [Rucoa::Configuration]
     attr_reader :configuration
+
+    # @return [Rucoa::DefinitionStore]
+    attr_reader :definition_store
 
     # @return [Rucoa::SourceStore]
     attr_reader :source_store
@@ -29,10 +33,13 @@ module Rucoa
       @reader = MessageReader.new(input)
       @writer = MessageWriter.new(output)
 
+      @client_response_handlers = {}
       @configuration = Configuration.new
       @server_request_id = 0
-      @client_response_handlers = {}
       @source_store = SourceStore.new
+
+      @definition_store = DefinitionStore.new
+      @definition_store.definitions += DefinitionArchiver.load
     end
 
     # @return [void]

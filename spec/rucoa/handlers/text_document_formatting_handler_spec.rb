@@ -20,7 +20,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentFormattingHandler do
     end
 
     before do
-      server.source_store.set(uri, content)
+      server.source_store.update(source)
     end
 
     after do
@@ -62,6 +62,13 @@ RSpec.describe Rucoa::Handlers::TextDocumentFormattingHandler do
       "file://#{file_path}"
     end
 
+    let(:source) do
+      Rucoa::Source.new(
+        content: content,
+        uri: uri
+      )
+    end
+
     let(:temporary_directory_path) do
       Dir.mktmpdir
     end
@@ -97,6 +104,29 @@ RSpec.describe Rucoa::Handlers::TextDocumentFormattingHandler do
             hash_including(
               'id' => 1,
               'result' => []
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when URI is for untitled file' do
+      include_context 'when RuboCop is configured'
+      include_context 'with some offenses'
+
+      let(:uri) do
+        'untitled:Untitled-1'
+      end
+
+      it 'responds some edits' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => [
+                a_kind_of(Hash)
+              ]
             )
           ]
         )

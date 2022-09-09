@@ -12,6 +12,7 @@ module Rucoa
     autoload :TextDocumentFormattingHandler, 'rucoa/handlers/text_document_formatting_handler'
     autoload :TextDocumentRangeFormattingHandler, 'rucoa/handlers/text_document_range_formatting_handler'
     autoload :TextDocumentSelectionRangeHandler, 'rucoa/handlers/text_document_selection_range_handler'
+    autoload :TextDocumentSignatureHelpHandler, 'rucoa/handlers/text_document_signature_help_handler'
     autoload :WorkspaceDidChangeConfigurationHandler, 'rucoa/handlers/workspace_did_change_configuration_handler'
   end
 end

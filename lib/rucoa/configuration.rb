@@ -2,57 +2,68 @@
 
 module Rucoa
   class Configuration
-    DEFAULT_SETTINGS = {
-      'base' => {
-        'enable' => 'auto',
-        'useBundler' => 'auto'
-      },
-      'feature' => {
-        'codeAction' => {
-          'enable' => true
-        },
-        'diagnostics' => {
-          'enable' => true
-        },
-        'documentSymbol' => {
-          'enable' => true
-        },
-        'formatting' => {
-          'enable' => true
-        },
-        'selectionRange' => {
-          'enable' => true
-        }
-      }
-    }.freeze
-
     def initialize
-      reset
+      @settings = {}
+    end
+
+    # @return [Boolean]
+    def disable_code_action
+      disable('codeAction')
+    end
+
+    # @return [Boolean]
+    def disable_diagnostics
+      disable('diagnostics')
+    end
+
+    # @return [Boolean]
+    def disable_document_symbol
+      disable('documentSymbol')
+    end
+
+    # @return [Boolean]
+    def disable_formatting
+      disable('formatting')
+    end
+
+    # @return [Boolean]
+    def disable_selection_range
+      disable('selectionRange')
+    end
+
+    # @return [Boolean]
+    def disable_signature_help
+      disable('signatureHelp')
     end
 
     # @return [Boolean]
     def enables_code_action?
-      @settings.dig('feature', 'codeAction', 'enable')
+      enables?('codeAction')
     end
 
     # @return [Boolean]
     def enables_diagnostics?
-      @settings.dig('feature', 'diagnostics', 'enable')
+      enables?('diagnostics')
     end
 
     # @return [Boolean]
     def enables_document_symbol?
-      @settings.dig('feature', 'documentSymbol', 'enable')
+      enables?('documentSymbol')
     end
 
     # @return [Boolean]
     def enables_formatting?
-      @settings.dig('feature', 'formatting', 'enable')
+      enables?('formatting')
     end
 
     # @return [Boolean]
     def enables_selection_range?
-      @settings.dig('feature', 'selectionRange', 'enable')
+      enables?('selectionRange')
+    end
+
+    # @return [Boolean]
+    def enables_signature_help?
+      enables?('signatureHelp')
     end
 
     # @param settings [Hash]
@@ -63,9 +74,24 @@ module Rucoa
 
     private
 
+    # @param feature [String]
     # @return [void]
-    def reset
-      @settings = DEFAULT_SETTINGS.dup
+    def disable(feature)
+      @settings ||= {}
+      @settings['feature'] ||= {}
+      @settings['feature'][feature] ||= {}
+      @settings['feature'][feature]['enable'] = false
+    end
+
+    # @param feature [String]
+    # @return [Boolean]
+    def enables?(feature)
+      value = @settings.dig('feature', feature, 'enable')
+      if value.nil?
+        true
+      else
+        value
+      end
     end
   end
 end

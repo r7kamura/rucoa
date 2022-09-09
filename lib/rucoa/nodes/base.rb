@@ -85,6 +85,36 @@ module Rucoa
         Range.from_parser_range(location.expression).include?(position)
       end
 
+      # @note namespace is a String representation of `Module.nesting`.
+      # @return [String]
+      # @example returns namespace
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY
+      #       module Foo
+      #         class Bar
+      #           def baz
+      #           end
+      #         end
+      #       end
+      #     RUBY
+      #   ).node_at(
+      #     Rucoa::Position.new(
+      #       column: 4,
+      #       line: 3
+      #     )
+      #   )
+      #   expect(node.namespace).to eq('Foo::Bar')
+      # @example returns "Object" when the node is not in a namespace
+      #   node = Rucoa::Parser.call(
+      #     <<~RUBY
+      #       foo
+      #     RUBY
+      #   )
+      #   expect(node.namespace).to eq('Object')
+      def namespace
+        each_ancestor(:module, :class).first&.full_qualified_name || 'Object'
+      end
+
       protected
 
       # Visit all descendants.

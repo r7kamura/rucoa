@@ -10,6 +10,7 @@ module Rucoa
       const: Nodes::ConstNode,
       def: Nodes::DefNode,
       defs: Nodes::DefsNode,
+      lvar: Nodes::LvarNode,
       module: Nodes::ModuleNode,
       sclass: Nodes::SclassNode,
       send: Nodes::SendNode,

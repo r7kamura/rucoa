@@ -53,7 +53,7 @@ module Rucoa
       # @return [Array(Rucoa::Range, String)]
       def correctable_replacements
         replacements.select do |replacement_range, _|
-          range.contains?(replacement_range)
+          range.contain?(replacement_range)
         end
       end
 

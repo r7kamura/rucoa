@@ -6,15 +6,22 @@ module Rucoa
       include HandlerConcerns::DiagnosticsPublishable
 
       def call
-        update_source
+        source_store.update(source)
+        definition_store.update_definitions_defined_in(
+          source.path,
+          definitions: source.definitions
+        )
         publish_diagnostics_on(uri)
       end
 
       private
 
-      # @return [void]
-      def update_source
-        source_store.set(uri, text)
+      # @return [Rucoa::Source]
+      def source
+        @source ||= Source.new(
+          content: text,
+          uri: uri
+        )
       end
 
       # @return [String]
