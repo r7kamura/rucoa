@@ -3,7 +3,7 @@
 require 'yard'
 
 module Rucoa
-  class YardDocumentLoader
+  class YardStringDocumentLoader
     class << self
       # @param content [String]
       # @return [Array<Rucoa::Definitions::Base>]
@@ -18,7 +18,7 @@ module Rucoa
       #       end
       #     end
       #   RUBY
-      #   definitions = Rucoa::YardDocumentLoader.call(
+      #   definitions = Rucoa::YardStringDocumentLoader.call(
       #     content: content,
       #     path: '/path/to/foo.rb'
       #   )
