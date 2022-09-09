@@ -65,6 +65,10 @@ This extension supports the folowiing types of symbols:
 
 ![demo](images/document-symbol.gif)
 
+### Signature help (experimental)
+
+Shows method signature help when you start to type method arguments like `"100".to_i(`.
+
 ### Coming soon
 
 - Completion
