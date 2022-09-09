@@ -15,13 +15,43 @@ module Rucoa
       @uri = uri
     end
 
-    # @todo
     # @return [Array<Rucoa::Definition::Base>]
+    # @example returns definitions from given source
+    #   content = <<~RUBY
+    #     class Foo
+    #       def bar
+    #       end
+    #     end
+    #   RUBY
+    #   source = Rucoa::Source.new(
+    #     content: content,
+    #     uri: 'file:///path/to/foo.rb'
+    #   )
+    #   expect(source.definitions).to match(
+    #     [
+    #       a_kind_of(Rucoa::Definitions::MethodDefinition)
+    #     ]
+    #   )
     def definitions
-      @definitions ||= []
+      @definitions ||= YardDocumentLoader.call(
+        content: @content,
+        path: path
+      )
     end
 
     # @return [String, nil]
+    # @example returns path from given VSCode URI
+    #   source = Rucoa::Source.new(
+    #     content: '',
+    #     uri: 'file:///path/to/foo.rb'
+    #   )
+    #   expect(source.path).to eq('/path/to/foo.rb')
+    # @example returns nil for untitled URI
+    #   source = Rucoa::Source.new(
+    #     content: '',
+    #     uri: 'untitled:Untitled-1'
+    #   )
+    #   expect(source.path).to be_nil
     def path
       return unless @uri
 
