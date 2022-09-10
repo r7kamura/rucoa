@@ -3,8 +3,10 @@
 module Rucoa
   module Handlers
     autoload :Base, 'rucoa/handlers/base'
+    autoload :ExitHandler, 'rucoa/handlers/exit_handler'
     autoload :InitializeHandler, 'rucoa/handlers/initialize_handler'
     autoload :InitializedHandler, 'rucoa/handlers/initialized_handler'
+    autoload :ShutdownHandler, 'rucoa/handlers/shutdown_handler'
     autoload :TextDocumentCodeActionHandler, 'rucoa/handlers/text_document_code_action_handler'
     autoload :TextDocumentDidChangeHandler, 'rucoa/handlers/text_document_did_change_handler'
     autoload :TextDocumentDidOpenHandler, 'rucoa/handlers/text_document_did_open_handler'
