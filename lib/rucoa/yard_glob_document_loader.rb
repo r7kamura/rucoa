@@ -37,9 +37,11 @@ module Rucoa
 
     # @return [Array<YARD::CodeObjects::Base>]
     def code_objects
-      ::YARD::Registry.clear
-      ::YARD.parse(@globs, [], ::Logger::UNKNOWN)
-      ::YARD::Registry.all
+      ::YARD::Logger.instance.enter_level(::Logger::FATAL) do
+        ::YARD::Registry.clear
+        ::YARD.parse(@globs)
+        ::YARD::Registry.all
+      end
     end
   end
 end
