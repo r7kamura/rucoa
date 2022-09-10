@@ -21,7 +21,7 @@ module Rucoa
       # @return [Boolean]
       def responsible?
         configuration.enables_selection_range? &&
-          source
+          !source.nil?
       end
 
       # @return [Rucoa::Source]

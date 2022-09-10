@@ -207,7 +207,8 @@ module Rucoa
 
       # @return [Boolean]
       def responsible?
-        configuration.enables_document_symbol? && source
+        configuration.enables_document_symbol? &&
+          !source.nil?
       end
 
       # @return [Rucoa::Source]
