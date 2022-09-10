@@ -16,7 +16,7 @@ module Rucoa
       @definitions += definitions
     end
 
-    # @param name [String]
+    # @param full_qualified_name [String]
     # @return [Array<Rucoa::Definitions::Base>]
     def select_by_full_qualified_name(full_qualified_name)
       @definitions.select do |definition|
