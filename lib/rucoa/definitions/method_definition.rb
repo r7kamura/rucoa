@@ -57,6 +57,12 @@ module Rucoa
         ].join
       end
 
+      # @todo
+      # @return [Array<Rucoa::Definitions::MethodParameter>]
+      def parameters
+        []
+      end
+
       # @return [Array<String>]
       # @example returns return types
       #   method_definition = Rucoa::Definitions::MethodDefinition.new(
