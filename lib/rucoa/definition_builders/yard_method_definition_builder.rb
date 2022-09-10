@@ -66,10 +66,51 @@ module Rucoa
       def types
         return_types.map do |return_type|
           ::Rucoa::Types::MethodType.new(
-            parameters_string: '', # TODO
+            parameters_string: parameters_string,
             return_type: return_type
           )
         end
+      end
+
+      # @return [String]
+      # @example
+      #   definitions = Rucoa::YardStringDocumentLoader.call(
+      #     content: <<~RUBY,
+      #       class Foo
+      #         def bar(
+      #           argument1,
+      #           argument2 = nil,
+      #           *arguments,
+      #           keyword1:,
+      #           keyword2: nil,
+      #           **keywords,
+      #           &block
+      #         )
+      #         end
+      #       end
+      #     RUBY
+      #     path: '/path/to/foo.rb'
+      #   )
+      #   expect(definitions.first.signatures).to eq(
+      #     [
+      #       'Foo#bar(argument1, argument2 = nil, *arguments, keyword1:, keyword2: nil, **keywords, &block) -> Object'
+      #     ]
+      #   )
+      def parameters_string
+        @code_object.parameters.map do |parameter_name, default_value|
+          default_value_part =
+            if default_value.nil?
+              nil
+            elsif parameter_name.end_with?(':')
+              " #{default_value}"
+            else
+              " = #{default_value}"
+            end
+          [
+            parameter_name,
+            default_value_part
+          ].join
+        end.join(', ')
       end
 
       # @return [Array<Rucoa::Definitions::MethodParameterDefinition>]
@@ -91,6 +132,8 @@ module Rucoa
 
       # @return [Array<String>]
       def return_types
+        return %w[Object] if return_tags.empty?
+
         return_tags.flat_map(&:types).map do |type|
           YardType.new(type).to_rucoa_type
         end
