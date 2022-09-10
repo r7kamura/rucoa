@@ -11,7 +11,7 @@ module Rucoa
 
       # @return [Hash]
       def signature_help
-        return unless respondable?
+        return unless responsible?
 
         {
           signatures: signature_informations
@@ -19,7 +19,7 @@ module Rucoa
       end
 
       # @return [Boolean]
-      def respondable?
+      def responsible?
         configuration.enables_signature_help? &&
           node.is_a?(Nodes::SendNode)
       end

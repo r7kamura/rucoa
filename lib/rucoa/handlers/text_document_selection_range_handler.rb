@@ -4,7 +4,7 @@ module Rucoa
   module Handlers
     class TextDocumentSelectionRangeHandler < Base
       def call
-        return unless respondable?
+        return unless responsible?
 
         respond(
           positions.filter_map do |position|
@@ -19,7 +19,7 @@ module Rucoa
       private
 
       # @return [Boolean]
-      def respondable?
+      def responsible?
         configuration.enables_selection_range? &&
           source
       end

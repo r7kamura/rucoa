@@ -40,7 +40,7 @@ module Rucoa
       ]
 
       def call
-        return unless respondable?
+        return unless responsible?
 
         respond(document_symbols)
       end
@@ -206,7 +206,7 @@ module Rucoa
       end
 
       # @return [Boolean]
-      def respondable?
+      def responsible?
         configuration.enables_document_symbol? && source
       end
 
