@@ -27,7 +27,7 @@ module Rucoa
         when ::YARD::CodeObjects::MethodObject
           DefinitionBuilders::YardMethodDefinitionBuilder.call(
             code_object: code_object,
-            path: @path
+            path: code_object.file
           )
         end
       end
