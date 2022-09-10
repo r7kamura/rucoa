@@ -12,6 +12,11 @@ module Rucoa
     end
 
     # @return [void]
+    def disable_completion
+      disable_feature('completion')
+    end
+
+    # @return [void]
     def disable_diagnostics
       disable_feature('diagnostics')
     end
@@ -65,6 +70,11 @@ module Rucoa
     #   expect(configuration).not_to be_enables_code_action
     def enables_code_action?
       enables_feature?('codeAction')
+    end
+
+    # @return [Boolean]
+    def enables_completion?
+      enables_feature?('completion')
     end
 
     # @return [Boolean]

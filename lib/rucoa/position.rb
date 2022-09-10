@@ -44,6 +44,17 @@ module Rucoa
       @line = line
     end
 
+    # @param text [String]
+    # @return [Integer]
+    def to_index_of(text)
+      text.each_line.take(@line - 1).sum(&:length) + @column
+    end
+
+    # @return [Rucoa::Range]
+    def to_range
+      Range.new(self, self)
+    end
+
     # @return [Hash]
     def to_vscode_position
       {
