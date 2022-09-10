@@ -131,10 +131,37 @@ module Rucoa
       end
 
       # @return [Array<String>]
+      # @return [String]
+      # @example returns return type annotated by YARD @return tags
+      #   definitions = Rucoa::YardStringDocumentLoader.call(
+      #     content: <<~RUBY,
+      #       # @return [String]
+      #       def foo
+      #         'foo'
+      #       end
+      #     RUBY
+      #     path: '/path/to/foo.rb'
+      #   )
+      #   expect(definitions.first.return_types).to eq(
+      #     %w[
+      #       String
+      #     ]
+      #   )
+      # @example ignores empty @return tags
+      #   definitions = Rucoa::YardStringDocumentLoader.call(
+      #     content: <<~RUBY,
+      #       # @return []
+      #       def foo
+      #         'foo'
+      #       end
+      #     RUBY
+      #     path: '/path/to/foo.rb'
+      #   )
+      #   expect(definitions.first.return_types).to eq([])
       def return_types
         return %w[Object] if return_tags.empty?
 
-        return_tags.flat_map(&:types).map do |type|
+        return_tags.flat_map(&:types).compact.map do |type|
           YardType.new(type).to_rucoa_type
         end
       end
