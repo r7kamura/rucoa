@@ -32,6 +32,9 @@ module Rucoa
       # @return [Hash]
       attr_reader :request
 
+      # @return [Rucoa::Server]
+      attr_reader :server
+
       # @param message [Hash]
       # @return [void]
       def respond(message)

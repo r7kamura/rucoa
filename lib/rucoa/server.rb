@@ -4,8 +4,10 @@ module Rucoa
   class Server
     # @return [Hash{String => Class}]
     METHOD_TO_HANDLER_MAP = {
+      'exit' => Handlers::ExitHandler,
       'initialize' => Handlers::InitializeHandler,
       'initialized' => Handlers::InitializedHandler,
+      'shutdown' => Handlers::ShutdownHandler,
       'textDocument/codeAction' => Handlers::TextDocumentCodeActionHandler,
       'textDocument/didChange' => Handlers::TextDocumentDidChangeHandler,
       'textDocument/didOpen' => Handlers::TextDocumentDidOpenHandler,
@@ -17,6 +19,9 @@ module Rucoa
       'workspace/didChangeConfiguration' => Handlers::WorkspaceDidChangeConfigurationHandler
     }.freeze
     private_constant :METHOD_TO_HANDLER_MAP
+
+    # @return [Boolean]
+    attr_accessor :shutting_down
 
     # @return [Rucoa::Configuration]
     attr_reader :configuration
@@ -36,6 +41,7 @@ module Rucoa
       @client_response_handlers = {}
       @configuration = Configuration.new
       @server_request_id = 0
+      @shutting_down = false
       @source_store = SourceStore.new
 
       @definition_store = DefinitionStore.new
@@ -47,6 +53,11 @@ module Rucoa
       @reader.read do |request|
         handle(request)
       end
+    end
+
+    # @return [void]
+    def finish
+      exit(0)
     end
 
     # @yieldparam response [Hash]
