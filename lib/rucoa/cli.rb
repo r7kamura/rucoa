@@ -16,8 +16,9 @@ module Rucoa
     # @return [void]
     def call
       Server.new(
-        input: $stdin,
-        output: $stdout
+        io_in: $stdin,
+        io_log: $stderr,
+        io_out: $stdout
       ).start
     end
   end

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'logger'
+require 'stringio'
+
 module Rucoa
   class Server
     # @return [Hash{String => Class}]
@@ -32,11 +35,18 @@ module Rucoa
     # @return [Rucoa::SourceStore]
     attr_reader :source_store
 
-    # @param input [IO]
-    # @param output [IO]
-    def initialize(input:, output:)
-      @reader = MessageReader.new(input)
-      @writer = MessageWriter.new(output)
+    # @param io_log [IO]
+    # @param io_in [IO]
+    # @param io_out [IO]
+    def initialize(
+      io_log: ::StringIO.new,
+      io_in: ::StringIO.new,
+      io_out: ::StringIO.new
+    )
+      @logger = ::Logger.new(io_log)
+      @logger.level = ::Logger::DEBUG
+      @reader = MessageReader.new(io_in)
+      @writer = MessageWriter.new(io_out)
 
       @client_response_handlers = {}
       @configuration = Configuration.new
@@ -50,8 +60,14 @@ module Rucoa
 
     # @return [void]
     def start
-      @reader.read do |request|
-        handle(request)
+      @reader.read do |message|
+        debug do
+          {
+            kind: :read,
+            message: message
+          }
+        end
+        handle(message)
       end
     end
 
@@ -91,6 +107,11 @@ module Rucoa
       end
     end
 
+    # @yieldparam log [String]
+    def debug(&block)
+      @logger.debug(&block) if configuration.enables_debug?
+    end
+
     # @param request [Hash]
     # @return [void]
     def handle_client_request(request)
@@ -115,11 +136,14 @@ module Rucoa
     # @param message [Hash]
     # @return [void]
     def write_server_request(message, &block)
-      @writer.write(
-        message.merge(
-          id: @server_request_id
-        )
-      )
+      message = message.merge('id' => @server_request_id)
+      debug do
+        {
+          kind: :write,
+          message: message
+        }
+      end
+      @writer.write(message)
       @client_response_handlers[@server_request_id] = block
       @server_request_id += 1
     end
@@ -127,6 +151,12 @@ module Rucoa
     # @param message [Hash]
     # @return [void]
     def write_server_response(message)
+      debug do
+        {
+          kind: :write,
+          message: message
+        }
+      end
       @writer.write(message)
     end
   end

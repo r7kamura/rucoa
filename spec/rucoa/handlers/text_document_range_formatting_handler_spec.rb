@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'fileutils'
-require 'stringio'
 require 'tmpdir'
 
 RSpec.describe Rucoa::Handlers::TextDocumentRangeFormattingHandler do
@@ -50,10 +49,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentRangeFormattingHandler do
     end
 
     let(:server) do
-      Rucoa::Server.new(
-        input: StringIO.new,
-        output: StringIO.new
-      )
+      Rucoa::Server.new
     end
 
     let(:content) do

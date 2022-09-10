@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'stringio'
 require 'tmpdir'
 
 RSpec.describe Rucoa::Handlers::TextDocumentDocumentSymbolHandler do
@@ -29,10 +28,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentSymbolHandler do
     end
 
     let(:server) do
-      Rucoa::Server.new(
-        input: StringIO.new,
-        output: StringIO.new
-      )
+      Rucoa::Server.new
     end
 
     let(:content) do
