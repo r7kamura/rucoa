@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'yard'
 
 module Rucoa
@@ -59,9 +60,11 @@ module Rucoa
 
     # @return [Array<YARD::CodeObjects::Base>]
     def code_objects
-      ::YARD::Registry.clear
-      ::YARD.parse_string(@content)
-      ::YARD::Registry.all
+      ::YARD::Logger.instance.enter_level(::Logger::FATAL) do
+        ::YARD::Registry.clear
+        ::YARD.parse_string(@content)
+        ::YARD::Registry.all
+      end
     end
   end
 end
