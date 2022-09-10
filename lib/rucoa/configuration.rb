@@ -6,32 +6,32 @@ module Rucoa
       @settings = {}
     end
 
-    # @return [Boolean]
+    # @return [void]
     def disable_code_action
       disable('codeAction')
     end
 
-    # @return [Boolean]
+    # @return [void]
     def disable_diagnostics
       disable('diagnostics')
     end
 
-    # @return [Boolean]
+    # @return [void]
     def disable_document_symbol
       disable('documentSymbol')
     end
 
-    # @return [Boolean]
+    # @return [void]
     def disable_formatting
       disable('formatting')
     end
 
-    # @return [Boolean]
+    # @return [void]
     def disable_selection_range
       disable('selectionRange')
     end
 
-    # @return [Boolean]
+    # @return [void]
     def disable_signature_help
       disable('signatureHelp')
     end
