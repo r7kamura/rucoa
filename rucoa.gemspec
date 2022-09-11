@@ -30,4 +30,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'parser'
   spec.add_dependency 'rbs'
   spec.add_dependency 'rubocop'
+  spec.add_dependency 'yard'
 end
