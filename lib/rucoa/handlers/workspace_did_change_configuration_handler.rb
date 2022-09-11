@@ -3,10 +3,18 @@
 module Rucoa
   module Handlers
     class WorkspaceDidChangeConfigurationHandler < Base
-      include HandlerConcerns::ConfigurationRequestable
+      include HandlerConcerns::DiagnosticsPublishable
 
       def call
-        request_workspace_configuration
+        configuration.update(settings)
+        publish_diagnostics_on_each_source
+      end
+
+      private
+
+      # @return [Hash]
+      def settings
+        request.dig('params', 'settings')
       end
     end
   end

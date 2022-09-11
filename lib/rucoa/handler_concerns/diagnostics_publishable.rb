@@ -28,6 +28,13 @@ module Rucoa
         )
       end
 
+      # @return [void]
+      def publish_diagnostics_on_each_source
+        source_store.each_uri do |uri|
+          publish_diagnostics_on(uri)
+        end
+      end
+
       class DiagnosticProvider
         # @param source [Rucoa::Source]
         # @param uri [String]

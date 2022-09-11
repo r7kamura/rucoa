@@ -7,7 +7,15 @@ RSpec.describe Rucoa::Handlers::WorkspaceDidChangeConfigurationHandler do
         request: {
           'id' => 1,
           'method' => 'workspace/didChangeConfiguration',
-          'params' => {}
+          'params' => {
+            'settings' => {
+              'feature' => {
+                'diagnostics' => {
+                  'enable' => false
+                }
+              }
+            }
+          }
         },
         server: server
       )
@@ -18,23 +26,8 @@ RSpec.describe Rucoa::Handlers::WorkspaceDidChangeConfigurationHandler do
     end
 
     context 'with valid condition' do
-      it 'requests workspace configuration' do
-        subject
-        expect(server.responses).to match(
-          [
-            hash_including(
-              'id' => 0,
-              'method' => 'workspace/configuration',
-              'params' => {
-                'items' => [
-                  {
-                    'section' => 'rucoa'
-                  }
-                ]
-              }
-            )
-          ]
-        )
+      it 'updates settings' do
+        expect { subject }.to change { server.configuration.enables_diagnostics? }.from(true).to(false)
       end
     end
   end
