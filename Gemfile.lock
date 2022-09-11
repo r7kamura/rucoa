@@ -5,6 +5,7 @@ PATH
       parser
       rbs
       rubocop
+      yard
 
 GEM
   remote: https://rubygems.org/
