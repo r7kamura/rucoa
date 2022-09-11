@@ -15,15 +15,6 @@ To install rucoa gem, if your project is managed by bundler, add to your Gemfile
 gem 'rucoa'
 ```
 
-or in Rails application, we'll recommend you to do like this:
-
-```ruby
-# Gemfile
-group :development do
-  gem 'rucoa', require: false
-end
-```
-
 If bundler is not being used to manage dependencies, simply install the gem:
 
 ```bash
