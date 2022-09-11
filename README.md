@@ -66,7 +66,6 @@ Shows method signature help when you start to type method arguments like `"100".
 
 ### Coming soon
 
-- Completion
 - Documentation
 - Go to Definition
 - Highlight
