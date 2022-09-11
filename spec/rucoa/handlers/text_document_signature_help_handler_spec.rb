@@ -20,10 +20,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
         'id' => 1,
         'method' => 'textDocument/signatureHelp',
         'params' => {
-          'position' => {
-            'character' => 12,
-            'line' => 2
-          },
+          'position' => position.to_vscode_position,
           'textDocument' => {
             'uri' => uri
           }
@@ -52,6 +49,13 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
       RUBY
     end
 
+    let(:position) do
+      Rucoa::Position.new(
+        column: 12,
+        line: 3
+      )
+    end
+
     let(:source) do
       Rucoa::Source.new(
         content: content,
@@ -71,6 +75,35 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
             hash_including(
               'id' => 1,
               'result' => nil
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when receiver is instance variable (not send node)' do
+      let(:content) do
+        <<~RUBY
+          @foo.to_i
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 9,
+          line: 1
+        )
+      end
+
+      it 'responds empty result' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => {
+                'signatures' => []
+              }
             )
           ]
         )

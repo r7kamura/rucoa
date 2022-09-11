@@ -11,16 +11,16 @@ module Rucoa
       @node = node
     end
 
-    # @return [Array<String>, nil]
+    # @return [Array<String>]
     def method_definitions
-      method_full_qualified_name&.flat_map do |full_qualified_name|
+      method_full_qualified_names.flat_map do |full_qualified_name|
         @definition_store.select_by_full_qualified_name(full_qualified_name)
       end
     end
 
-    # @return [Array<String>, nil]
+    # @return [Array<String>]
     def method_receiver_types
-      return unless @node.is_a?(Nodes::SendNode)
+      return [] unless @node.is_a?(Nodes::SendNode)
 
       if @node.receiver
         self.class.new(
@@ -32,7 +32,7 @@ module Rucoa
       end
     end
 
-    # @return [Array<String>, nil]
+    # @return [Array<String>]
     def return_types
       case @node.type
       when :const
@@ -67,14 +67,16 @@ module Rucoa
         %w[Regexp]
       when true
         %w[TrueClass]
+      else
+        []
       end
     end
 
     private
 
-    # @return [Array<String>, nil]
-    def method_full_qualified_name
-      method_receiver_types&.map do |type|
+    # @return [Array<String>]
+    def method_full_qualified_names
+      method_receiver_types.map do |type|
         [
           type,
           @node.name
@@ -101,7 +103,7 @@ module Rucoa
 
     # @return [Array<String>]
     def return_types_for_send
-      method_full_qualified_name.flat_map do |full_qualified_name|
+      method_full_qualified_names.flat_map do |full_qualified_name|
         @definition_store.select_by_full_qualified_name(full_qualified_name).flat_map(&:return_types)
       end.uniq
     end

@@ -47,8 +47,8 @@ module Rucoa
     # @return [Hash]
     def to_vscode_position
       {
-        character: @column,
-        line: @line - 1
+        'character' => @column,
+        'line' => @line - 1
       }
     end
   end
