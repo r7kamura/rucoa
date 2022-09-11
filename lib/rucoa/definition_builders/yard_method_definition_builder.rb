@@ -200,7 +200,7 @@ module Rucoa
         #     'Hash{Symbol => Object}'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Hash')
-        # @exampel scrubs "Array<Array<Integer>>" to "Array"
+        # @example scrubs "Array<Array<Integer>>" to "Array"
         #   yard_type = Rucoa::DefinitionBuilders::YardMethodDefinitionBuilder::YardType.new(
         #     'Array<Array<Integer>>'
         #   )
