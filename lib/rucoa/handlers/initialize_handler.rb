@@ -7,6 +7,12 @@ module Rucoa
         respond(
           capabilities: {
             codeActionProvider: true,
+            completionProvider: {
+              resolveProvider: true,
+              triggerCharacters: %w[
+                .
+              ]
+            },
             documentFormattingProvider: true,
             documentRangeFormattingProvider: true,
             documentSymbolProvider: true,

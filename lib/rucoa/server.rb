@@ -12,6 +12,7 @@ module Rucoa
       'initialized' => Handlers::InitializedHandler,
       'shutdown' => Handlers::ShutdownHandler,
       'textDocument/codeAction' => Handlers::TextDocumentCodeActionHandler,
+      'textDocument/completion' => Handlers::TextDocumentCompletionHandler,
       'textDocument/didChange' => Handlers::TextDocumentDidChangeHandler,
       'textDocument/didOpen' => Handlers::TextDocumentDidOpenHandler,
       'textDocument/documentSymbol' => Handlers::TextDocumentDocumentSymbolHandler,

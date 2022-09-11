@@ -78,6 +78,11 @@ module Rucoa
       nil
     end
 
+    # @return [Boolean]
+    def syntax_error?
+      root_node.nil?
+    end
+
     private
 
     # @return [Array<Rucoa::Nodes::Base>]
