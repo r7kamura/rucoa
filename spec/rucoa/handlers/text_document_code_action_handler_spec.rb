@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'stringio'
-
 RSpec.describe Rucoa::Handlers::TextDocumentCodeActionHandler do
   describe '.call' do
     subject do
@@ -47,10 +45,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentCodeActionHandler do
     end
 
     let(:server) do
-      Rucoa::Server.new(
-        input: StringIO.new,
-        output: StringIO.new
-      )
+      Rucoa::Server.new
     end
 
     let(:file_path) do

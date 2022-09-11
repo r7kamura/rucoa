@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'stringio'
-
 RSpec.describe Rucoa::Handlers::ShutdownHandler do
   describe '.call' do
     subject do
@@ -20,10 +18,7 @@ RSpec.describe Rucoa::Handlers::ShutdownHandler do
     end
 
     let(:server) do
-      Rucoa::Server.new(
-        input: StringIO.new,
-        output: StringIO.new
-      )
+      Rucoa::Server.new
     end
 
     context 'with valid condition' do

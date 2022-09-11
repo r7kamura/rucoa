@@ -45,8 +45,8 @@ RSpec.describe Rucoa::Handlers::TextDocumentDidChangeHandler do
 
     let(:server) do
       Rucoa::Server.new(
-        input: StringIO.new,
-        output: StringIO.new
+        io_in: StringIO.new,
+        io_out: StringIO.new
       )
     end
 
