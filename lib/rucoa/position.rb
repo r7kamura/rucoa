@@ -21,7 +21,7 @@ module Rucoa
         )
       end
 
-      # @param hash [Hash{Symbol => Integer}]
+      # @param hash [Hash{String => Integer}]
       # @return [Rucoa::Position]
       def from_vscode_position(hash)
         new(
