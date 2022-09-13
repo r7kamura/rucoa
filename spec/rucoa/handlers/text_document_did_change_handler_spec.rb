@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'stringio'
 require 'tmpdir'
 
 RSpec.describe Rucoa::Handlers::TextDocumentDidChangeHandler do
@@ -44,10 +43,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDidChangeHandler do
     end
 
     let(:server) do
-      Rucoa::Server.new(
-        io_in: StringIO.new,
-        io_out: StringIO.new
-      )
+      Rucoa::Server.new
     end
 
     let(:content) do

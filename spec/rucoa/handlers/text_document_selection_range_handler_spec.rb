@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'stringio'
-
 RSpec.describe Rucoa::Handlers::TextDocumentSelectionRangeHandler do
   describe '.call' do
     subject do
@@ -31,10 +29,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentSelectionRangeHandler do
     end
 
     let(:server) do
-      Rucoa::Server.new(
-        io_in: StringIO.new,
-        io_out: StringIO.new
-      )
+      Rucoa::Server.new
     end
 
     let(:file_path) do
@@ -59,7 +54,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentSelectionRangeHandler do
     end
 
     context 'with valid condition' do
-      it 'responds server capabilities' do
+      it 'responds selection ranges' do
         subject
         expect(server.responses).to match(
           [
