@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rucoa (0.5.1)
+    rucoa (0.6.0)
       parser
       rbs
       rubocop
