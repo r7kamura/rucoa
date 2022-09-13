@@ -17,6 +17,7 @@ module Rucoa
       'textDocument/didOpen' => Handlers::TextDocumentDidOpenHandler,
       'textDocument/documentSymbol' => Handlers::TextDocumentDocumentSymbolHandler,
       'textDocument/formatting' => Handlers::TextDocumentFormattingHandler,
+      'textDocument/hover' => Handlers::TextDocumentHoverHandler,
       'textDocument/rangeFormatting' => Handlers::TextDocumentRangeFormattingHandler,
       'textDocument/selectionRange' => Handlers::TextDocumentSelectionRangeHandler,
       'textDocument/signatureHelp' => Handlers::TextDocumentSignatureHelpHandler,
