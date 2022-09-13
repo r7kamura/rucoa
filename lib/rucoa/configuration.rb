@@ -32,6 +32,11 @@ module Rucoa
     end
 
     # @return [void]
+    def disable_hover
+      disable_feature('hover')
+    end
+
+    # @return [void]
     def disable_selection_range
       disable_feature('selectionRange')
     end
@@ -90,6 +95,11 @@ module Rucoa
     # @return [Boolean]
     def enables_formatting?
       enables_feature?('formatting')
+    end
+
+    # @return [Boolean]
+    def enables_hover?
+      enables_feature?('hover')
     end
 
     # @return [Boolean]

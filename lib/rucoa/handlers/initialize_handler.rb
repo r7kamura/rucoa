@@ -16,6 +16,7 @@ module Rucoa
             documentFormattingProvider: true,
             documentRangeFormattingProvider: true,
             documentSymbolProvider: true,
+            hoverProvider: true,
             selectionRangeProvider: true,
             signatureHelpProvider: {
               triggerCharacters: %w[

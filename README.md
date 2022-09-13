@@ -56,17 +56,22 @@ This extension supports the folowiing types of symbols:
 
 ![demo](images/document-symbol.gif)
 
-### Completion (experimental)
+## Experimental features
+
+### Completion
 
 Provides completion items for constant names and method names.
 
-### Signature help (experimental)
+### Hover
+
+Shows documentation for the symbol under the cursor.
+
+### Signature help
 
 Shows method signature help when you start to type method arguments like `"100".to_i(`.
 
-### Coming soon
+## Coming soon
 
-- Documentation
 - Go to Definition
 - Highlight
 - Semantic Tokens
