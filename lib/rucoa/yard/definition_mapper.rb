@@ -3,30 +3,29 @@
 require 'yard'
 
 module Rucoa
-  module DefinitionBuilders
-    class YardMethodDefinitionBuilder
+  module Yard
+    class DefinitionMapper
       class << self
-        # @param code_object [YARD::CodeObjects::MethodObject]
-        # @param path [String]
-        # @return [Rucoa::Definitions::Base]
-        def call(code_object:, path:)
-          new(
-            code_object: code_object,
-            path: path
-          ).call
+        # @param code_object [YARD::CodeObjects::Base]
+        # @param path [String] This must be passed if the path is not available from code object.
+        # @return [Rucoa::Definitions::Base, nil]
+        def call(code_object, path: code_object.file)
+          new(code_object, path: path).call
         end
       end
 
       # @param code_object [YARD::CodeObjects::Base]
       # @param path [String]
-      def initialize(code_object:, path:)
+      def initialize(code_object, path:)
         @code_object = code_object
         @path = path
       end
 
-      # @return [Rucoa::Definitions::Base]
+      # @return [Rucoa::Definitions::Base, nil]
       def call
-        ::Rucoa::Definitions::MethodDefinition.new(
+        return unless @code_object.is_a?(::YARD::CodeObjects::MethodObject)
+
+        Definitions::MethodDefinition.new(
           description: description,
           kind: kind,
           method_name: method_name,
@@ -74,7 +73,7 @@ module Rucoa
 
       # @return [String]
       # @example
-      #   definitions = Rucoa::YardStringDocumentLoader.call(
+      #   definitions = Rucoa::Yard::DefinitionsLoader.load_string(
       #     content: <<~RUBY,
       #       class Foo
       #         def bar(
@@ -133,7 +132,7 @@ module Rucoa
       # @return [Array<String>]
       # @return [String]
       # @example returns return type annotated by YARD @return tags
-      #   definitions = Rucoa::YardStringDocumentLoader.call(
+      #   definitions = Rucoa::Yard::DefinitionsLoader.load_string(
       #     content: <<~RUBY,
       #       # @return [String]
       #       def foo
@@ -148,7 +147,7 @@ module Rucoa
       #     ]
       #   )
       # @example ignores empty @return tags
-      #   definitions = Rucoa::YardStringDocumentLoader.call(
+      #   definitions = Rucoa::Yard::DefinitionsLoader.load_string(
       #     content: <<~RUBY,
       #       # @return []
       #       def foo
@@ -181,27 +180,27 @@ module Rucoa
 
         # @return [String]
         # @example scrubs "Array<String>" to "Array"
-        #   yard_type = Rucoa::DefinitionBuilders::YardMethodDefinitionBuilder::YardType.new(
+        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
         #     'Array<String>'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Array')
         # @example scrubs "Array(String, Integer)" to "Array"
-        #   yard_type = Rucoa::DefinitionBuilders::YardMethodDefinitionBuilder::YardType.new(
+        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
         #     'Array(String, Integer)'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Array')
         # @example scrubs "::Array" to "Array"
-        #   yard_type = Rucoa::DefinitionBuilders::YardMethodDefinitionBuilder::YardType.new(
+        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
         #     '::Array'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Array')
         # @example scrubs "Hash{Symbol => Object}" to "Hash"
-        #   yard_type = Rucoa::DefinitionBuilders::YardMethodDefinitionBuilder::YardType.new(
+        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
         #     'Hash{Symbol => Object}'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Hash')
         # @example scrubs "Array<Array<Integer>>" to "Array"
-        #   yard_type = Rucoa::DefinitionBuilders::YardMethodDefinitionBuilder::YardType.new(
+        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
         #     'Array<Array<Integer>>'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Array')
