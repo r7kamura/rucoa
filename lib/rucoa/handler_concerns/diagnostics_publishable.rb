@@ -18,6 +18,18 @@ module Rucoa
 
       # @param uri [String]
       # @return [void]
+      def clear_diagnostics_on(uri)
+        write(
+          method: 'textDocument/publishDiagnostics',
+          params: {
+            diagnostics: [],
+            uri: uri
+          }
+        )
+      end
+
+      # @param uri [String]
+      # @return [void]
       def publish_diagnostics_on(uri)
         write(
           method: 'textDocument/publishDiagnostics',
