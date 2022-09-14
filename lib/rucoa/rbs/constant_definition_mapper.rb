@@ -1,28 +1,24 @@
 # frozen_string_literal: true
 
 module Rucoa
-  module DefinitionBuilders
-    # Build Rucoa contant definition from RBS constant declaration.
-    class RbsConstantDefinitionBuilder
+  module Rbs
+    class ConstantDefinitionMapper
       class << self
         # @param declaration [RBS::AST::Declarations::Constant]
         # @return [Rucoa::Definitions::ConstantDefinition]
         def call(declaration:)
-          new(
-            declaration: declaration
-          ).call
+          new(declaration: declaration).call
         end
       end
 
       # @param declaration [RBS::AST::Declarations::Constant]
-      # @return [Rucoa::Definitions::ConstantDefinition]
       def initialize(declaration:)
         @declaration = declaration
       end
 
       # @return [Rucoa::Definitions::ConstantDefinition]
       def call
-        ::Rucoa::Definitions::ConstantDefinition.new(
+        Definitions::ConstantDefinition.new(
           full_qualified_name: full_qualified_name,
           source_path: source_path
         )

@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-require 'rbs'
-
 module Rucoa
-  module DefinitionBuilders
-    # Build Rucoa method definition from RBS method definition.
-    class RbsMethodDefinitionBuilder
+  module Rbs
+    class MethodDefinitionMapper
       class << self
         # @param declaration [RBS::AST::Declarations::Class, RBS::AST::Declarations::Module]
         # @param method_definition [RBS::AST::Members::MethodDefinition]
@@ -42,7 +39,7 @@ module Rucoa
       # @return [Array<Rucoa::Types::MethodType>]
       def types
         @method_definition.types.map do |method_type|
-          RbsMethodTypeToRucoaMethodTypeMapper.call(
+          MethodTypeMapper.call(
             method_type: method_type
           )
         end
@@ -73,7 +70,7 @@ module Rucoa
         @declaration.location.name
       end
 
-      class RbsMethodTypeToRucoaMethodTypeMapper
+      class MethodTypeMapper
         class << self
           # @param method_type [RBS::Types::MethodType]
           # @return [Rucoa::Types::MethodType]

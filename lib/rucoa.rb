@@ -21,6 +21,7 @@ module Rucoa
   autoload :ParserBuilder, 'rucoa/parser_builder'
   autoload :Position, 'rucoa/position'
   autoload :Range, 'rucoa/range'
+  autoload :Rbs, 'rucoa/rbs'
   autoload :RbsDocumentLoader, 'rucoa/rbs_document_loader'
   autoload :Rubocop, 'rucoa/rubocop'
   autoload :Server, 'rucoa/server'
