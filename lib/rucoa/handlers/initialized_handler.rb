@@ -14,7 +14,7 @@ module Rucoa
 
       # @return [void]
       def load_definitions
-        YardGlobDocumentLoader.call(
+        Yard::DefinitionsLoader.load_globs(
           globs: ::YARD::Parser::SourceParser::DEFAULT_PATH_GLOB
         )
       end

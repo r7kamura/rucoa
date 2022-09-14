@@ -6,7 +6,6 @@ module Rucoa
   autoload :Cli, 'rucoa/cli'
   autoload :Configuration, 'rucoa/configuration'
   autoload :DefinitionArchiver, 'rucoa/definition_archiver'
-  autoload :DefinitionBuilders, 'rucoa/definition_builders'
   autoload :Definitions, 'rucoa/definitions'
   autoload :DefinitionStore, 'rucoa/definition_store'
   autoload :Errors, 'rucoa/errors'
@@ -27,7 +26,5 @@ module Rucoa
   autoload :Source, 'rucoa/source'
   autoload :SourceStore, 'rucoa/source_store'
   autoload :Types, 'rucoa/types'
-  autoload :YardCodeObjectToDefinitionMapper, 'rucoa/yard_code_object_to_definition_mapper'
-  autoload :YardGlobDocumentLoader, 'rucoa/yard_glob_document_loader'
-  autoload :YardStringDocumentLoader, 'rucoa/yard_string_document_loader'
+  autoload :Yard, 'rucoa/yard'
 end

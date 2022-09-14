@@ -33,7 +33,7 @@ module Rucoa
     #     ]
     #   )
     def definitions
-      @definitions ||= YardStringDocumentLoader.call(
+      @definitions ||= Yard::DefinitionsLoader.load_string(
         content: @content,
         path: path
       )
