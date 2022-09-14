@@ -10,6 +10,7 @@ module Rucoa
     autoload :TextDocumentCodeActionHandler, 'rucoa/handlers/text_document_code_action_handler'
     autoload :TextDocumentCompletionHandler, 'rucoa/handlers/text_document_completion_handler'
     autoload :TextDocumentDidChangeHandler, 'rucoa/handlers/text_document_did_change_handler'
+    autoload :TextDocumentDidCloseHandler, 'rucoa/handlers/text_document_did_close_handler'
     autoload :TextDocumentDidOpenHandler, 'rucoa/handlers/text_document_did_open_handler'
     autoload :TextDocumentDocumentSymbolHandler, 'rucoa/handlers/text_document_document_symbol_handler'
     autoload :TextDocumentFormattingHandler, 'rucoa/handlers/text_document_formatting_handler'

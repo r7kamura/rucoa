@@ -14,6 +14,7 @@ module Rucoa
       'textDocument/codeAction' => Handlers::TextDocumentCodeActionHandler,
       'textDocument/completion' => Handlers::TextDocumentCompletionHandler,
       'textDocument/didChange' => Handlers::TextDocumentDidChangeHandler,
+      'textDocument/didClose' => Handlers::TextDocumentDidCloseHandler,
       'textDocument/didOpen' => Handlers::TextDocumentDidOpenHandler,
       'textDocument/documentSymbol' => Handlers::TextDocumentDocumentSymbolHandler,
       'textDocument/formatting' => Handlers::TextDocumentFormattingHandler,
