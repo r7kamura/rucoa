@@ -48,7 +48,7 @@ module Rucoa
 
         # @return [Array<Hash>]
         def call
-          return [] unless RubocopConfigurationChecker.call
+          return [] unless Rubocop::ConfigurationChecker.call
 
           offenses.map do |offense|
             OffenseToDiagnosticMapper.call(
@@ -63,7 +63,7 @@ module Rucoa
 
         # @return [Array<RuboCop::Cop::Offense>]
         def offenses
-          RubocopInvestigator.call(source: @source)
+          Rubocop::Investigator.call(source: @source)
         end
 
         class OffenseToDiagnosticMapper

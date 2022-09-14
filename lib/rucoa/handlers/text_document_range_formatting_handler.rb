@@ -25,7 +25,7 @@ module Rucoa
       def formattable?
         configuration.enables_formatting? &&
           source &&
-          RubocopConfigurationChecker.call
+          Rubocop::ConfigurationChecker.call
       end
 
       # @return [Rucoa::Source]
@@ -59,7 +59,7 @@ module Rucoa
 
       # @return [Array<RuboCop::Cop::Offense>]
       def offenses
-        RubocopInvestigator.call(source: source)
+        Rubocop::Investigator.call(source: source)
       end
 
       # @return [Array(Rucoa::Range, String)]

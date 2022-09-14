@@ -13,7 +13,7 @@ module Rucoa
       def formattable?
         configuration.enables_formatting? &&
           source &&
-          RubocopConfigurationChecker.call
+          Rubocop::ConfigurationChecker.call
       end
 
       # @return [Array<Hash>]
@@ -43,7 +43,7 @@ module Rucoa
 
       # @return [String]
       def new_text
-        RubocopAutocorrector.call(source: source)
+        Rubocop::Autocorrector.call(source: source)
       end
 
       # @return [Hash]
