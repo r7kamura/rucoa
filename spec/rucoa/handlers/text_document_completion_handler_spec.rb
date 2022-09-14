@@ -74,7 +74,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
       end
     end
 
-    context 'with method head part' do
+    context 'with string.to_sy' do
       let(:content) do
         <<~RUBY
           '10'.to_sy
@@ -88,7 +88,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
         )
       end
 
-      it 'responds completion items' do
+      it 'completes to_sym' do
         subject
         expect(server.responses).to match(
           [
@@ -105,8 +105,8 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
       end
     end
 
-    context 'with method dot' do
-      it 'responds completion items' do
+    context 'with string.to_' do
+      it 'completes to_i' do
         subject
         expect(server.responses).to match(
           [
@@ -136,7 +136,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
       end
     end
 
-    context 'with constant head part' do
+    context 'with File::SE' do
       let(:content) do
         <<~RUBY
           File::SE
@@ -167,7 +167,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
       end
     end
 
-    context 'with constant ::' do
+    context 'with File::' do
       let(:content) do
         <<~RUBY
           File::
@@ -181,7 +181,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
         )
       end
 
-      it 'responds completion items' do
+      it 'comletes PATH_SEPARATOR and SEPARATOR' do
         subject
         expect(server.responses).to match(
           [
@@ -195,6 +195,37 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
                   'label' => 'SEPARATOR'
                 )
               )
+            )
+          ]
+        )
+      end
+    end
+
+    context 'with URI::Generi' do
+      let(:content) do
+        <<~RUBY
+          URI::Generi
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 8,
+          line: 1
+        )
+      end
+
+      it 'completes Generic' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => [
+                hash_including(
+                  'label' => 'Generic'
+                )
+              ]
             )
           ]
         )
