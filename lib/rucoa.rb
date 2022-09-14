@@ -29,6 +29,7 @@ module Rucoa
   autoload :Source, 'rucoa/source'
   autoload :SourceStore, 'rucoa/source_store'
   autoload :Types, 'rucoa/types'
+  autoload :YardCodeObjectToDefinitionMapper, 'rucoa/yard_code_object_to_definition_mapper'
   autoload :YardGlobDocumentLoader, 'rucoa/yard_glob_document_loader'
   autoload :YardStringDocumentLoader, 'rucoa/yard_string_document_loader'
 end

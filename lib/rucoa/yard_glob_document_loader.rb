@@ -23,13 +23,7 @@ module Rucoa
     # @return [Array<Rucoa::Definitions::Base>]
     def call
       code_objects.filter_map do |code_object|
-        case code_object
-        when ::YARD::CodeObjects::MethodObject
-          DefinitionBuilders::YardMethodDefinitionBuilder.call(
-            code_object: code_object,
-            path: code_object.file
-          )
-        end
+        YardCodeObjectToDefinitionMapper.call(code_object)
       end
     end
 
