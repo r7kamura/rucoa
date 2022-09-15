@@ -80,7 +80,19 @@ module Rucoa
         [
           type,
           @node.name
-        ].join('#')
+        ].join(method_kind_symbol)
+      end
+    end
+
+    # @return [String, nil]
+    def method_kind_symbol
+      return unless @node.is_a?(Nodes::SendNode)
+
+      case @node.receiver
+      when Nodes::ConstNode
+        '.'
+      else
+        '#'
       end
     end
 
