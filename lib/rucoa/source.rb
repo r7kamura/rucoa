@@ -29,6 +29,7 @@ module Rucoa
     #   )
     #   expect(source.definitions).to match(
     #     [
+    #       a_kind_of(Rucoa::Definitions::ClassDefinition),
     #       a_kind_of(Rucoa::Definitions::MethodDefinition)
     #     ]
     #   )

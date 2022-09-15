@@ -6,6 +6,9 @@ module Rucoa
       # @return [String, nil]
       attr_reader :description
 
+      # @return [Symbol]
+      attr_reader :kind
+
       # @return [String]
       attr_reader :method_name
 
@@ -110,12 +113,21 @@ module Rucoa
         end
       end
 
+      # @return [Boolean]
+      def instance_method?
+        @kind == :instance
+      end
+
+      # @return [Boolean]
+      def singleton_method?
+        !instance_method?
+      end
+
       private
 
       # @return [String]
       def method_kind_symbol
-        case @kind
-        when :instance
+        if instance_method?
           '#'
         else
           '.'

@@ -18,13 +18,17 @@ module Rucoa
         declarations.flat_map do |declaration|
           case declaration
           when ::RBS::AST::Declarations::Constant
-            [
-              ConstantDefinitionMapper.call(declaration: declaration)
-            ]
-          when ::RBS::AST::Declarations::Class, ::RBS::AST::Declarations::Module
-            [
-              ConstantDefinitionMapper.call(declaration: declaration)
-            ] +
+            [ConstantDefinitionMapper.call(declaration: declaration)]
+          when ::RBS::AST::Declarations::Class
+            [ClassDefinitionMapper.call(declaration: declaration)] +
+              declaration.members.grep(::RBS::AST::Members::MethodDefinition).map do |method_definition|
+                MethodDefinitionMapper.call(
+                  declaration: declaration,
+                  method_definition: method_definition
+                )
+              end
+          when ::RBS::AST::Declarations::Module
+            [ModuleDefinitionMapper.call(declaration: declaration)] +
               declaration.members.grep(::RBS::AST::Members::MethodDefinition).map do |method_definition|
                 MethodDefinitionMapper.call(
                   declaration: declaration,

@@ -4,9 +4,9 @@ require 'yard'
 
 module Rucoa
   module Yard
-    class DefinitionMapper
+    class MethodDefinitionMapper
       class << self
-        # @param code_object [YARD::CodeObjects::Base]
+        # @param code_object [YARD::CodeObjects::MethodObject]
         # @param path [String] This must be passed if the path is not available from code object.
         # @return [Rucoa::Definitions::Base, nil]
         def call(code_object, path: code_object.file)
@@ -14,17 +14,15 @@ module Rucoa
         end
       end
 
-      # @param code_object [YARD::CodeObjects::Base]
+      # @param code_object [YARD::CodeObjects::MethodObject]
       # @param path [String]
       def initialize(code_object, path:)
         @code_object = code_object
         @path = path
       end
 
-      # @return [Rucoa::Definitions::Base, nil]
+      # @return [Rucoa::Definitions::MethodDefinition]
       def call
-        return unless @code_object.is_a?(::YARD::CodeObjects::MethodObject)
-
         Definitions::MethodDefinition.new(
           description: description,
           kind: kind,
@@ -51,9 +49,9 @@ module Rucoa
         end
       end
 
-      # @return [String
+      # @return [String]
       def method_name
-        @code_object.name
+        @code_object.name.to_s
       end
 
       # @return [String]
@@ -90,7 +88,7 @@ module Rucoa
       #     RUBY
       #     path: '/path/to/foo.rb'
       #   )
-      #   expect(definitions.first.signatures).to eq(
+      #   expect(definitions[1].signatures).to eq(
       #     [
       #       'Foo#bar(argument1, argument2 = nil, *arguments, keyword1:, keyword2: nil, **keywords, &block) -> Object'
       #     ]
@@ -115,7 +113,7 @@ module Rucoa
       # @return [Array<Rucoa::Definitions::MethodParameterDefinition>]
       def parameters
         parameter_tags.map do |parameter_tag|
-          ::Rucoa::Definitions::MethodParameterDefinition.new(
+          Definitions::MethodParameterDefinition.new(
             name: parameter_tag.name,
             types: parameter_tag.types
           )
@@ -180,27 +178,27 @@ module Rucoa
 
         # @return [String]
         # @example scrubs "Array<String>" to "Array"
-        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
+        #   yard_type = Rucoa::Yard::MethodDefinitionMapper::YardType.new(
         #     'Array<String>'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Array')
         # @example scrubs "Array(String, Integer)" to "Array"
-        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
+        #   yard_type = Rucoa::Yard::MethodDefinitionMapper::YardType.new(
         #     'Array(String, Integer)'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Array')
         # @example scrubs "::Array" to "Array"
-        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
+        #   yard_type = Rucoa::Yard::MethodDefinitionMapper::YardType.new(
         #     '::Array'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Array')
         # @example scrubs "Hash{Symbol => Object}" to "Hash"
-        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
+        #   yard_type = Rucoa::Yard::MethodDefinitionMapper::YardType.new(
         #     'Hash{Symbol => Object}'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Hash')
         # @example scrubs "Array<Array<Integer>>" to "Array"
-        #   yard_type = Rucoa::Yard::DefinitionMapper::YardType.new(
+        #   yard_type = Rucoa::Yard::MethodDefinitionMapper::YardType.new(
         #     'Array<Array<Integer>>'
         #   )
         #   expect(yard_type.to_rucoa_type).to eq('Array')
