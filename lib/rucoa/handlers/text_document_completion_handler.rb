@@ -208,7 +208,14 @@ module Rucoa
           if @repaired
             position.to_range
           else
-            Range.from_parser_range(node.location.expression)
+            Range.from_parser_range(
+              case node
+              when Nodes::SendNode
+                node.location.selector
+              else
+                node.location.expression
+              end
+            )
           end
       end
     end

@@ -136,6 +136,50 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
       end
     end
 
+    context 'with URI.par' do
+      let(:content) do
+        <<~RUBY
+          URI.par
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 7,
+          line: 1
+        )
+      end
+
+      it 'completes parse' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => [
+                hash_including(
+                  'label' => 'parse',
+                  'textEdit' => {
+                    'newText' => 'parse',
+                    'range' => {
+                      'end' => {
+                        'character' => 7,
+                        'line' => 0
+                      },
+                      'start' => {
+                        'character' => 4,
+                        'line' => 0
+                      }
+                    }
+                  }
+                )
+              ]
+            )
+          ]
+        )
+      end
+    end
+
     context 'with File::SE' do
       let(:content) do
         <<~RUBY
