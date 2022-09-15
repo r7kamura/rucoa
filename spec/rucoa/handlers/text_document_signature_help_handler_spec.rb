@@ -125,5 +125,39 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
         )
       end
     end
+
+    context 'when receiver is URI' do
+      let(:content) do
+        <<~RUBY
+          URI.parse
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 9,
+          line: 1
+        )
+      end
+
+      it 'responds signature help' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => {
+                'signatures' => [
+                  {
+                    'documentation' => a_kind_of(String),
+                    'label' => /\AURI\.parse\(::_ToStr uri\) ->/
+                  }
+                ]
+              }
+            )
+          ]
+        )
+      end
+    end
   end
 end
