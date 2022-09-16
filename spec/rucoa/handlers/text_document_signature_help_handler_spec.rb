@@ -11,6 +11,10 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
 
     before do
       server.source_store.update(source)
+      server.definition_store.update_definitions_defined_in(
+        source.path,
+        definitions: source.definitions
+      )
     end
 
     let(:request) do
@@ -126,7 +130,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
       end
     end
 
-    context 'when receiver is URI' do
+    context 'with URI.parse' do
       let(:content) do
         <<~RUBY
           URI.parse
@@ -151,6 +155,85 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
                   {
                     'documentation' => a_kind_of(String),
                     'label' => /\AURI\.parse\(::_ToStr uri\) ->/
+                  }
+                ]
+              }
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when method is defined in super class in RBS' do
+      let(:content) do
+        <<~RUBY
+          File.write
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 9,
+          line: 1
+        )
+      end
+
+      it 'responds signature help' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => {
+                'signatures' => [
+                  {
+                    'documentation' => a_kind_of(String),
+                    'label' => /\AIO\.write/
+                  }
+                ]
+              }
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when method is defined in super class in YARD' do
+      let(:content) do
+        <<~RUBY
+          module A
+            class Foo
+              def foo
+              end
+            end
+
+            class Bar < Foo
+              def bar
+                foo
+              end
+            end
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 9,
+          line: 9
+        )
+      end
+
+      it 'responds signature help' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => {
+                'signatures' => [
+                  {
+                    'documentation' => a_kind_of(String),
+                    'label' => /\AA::Foo#foo/
                   }
                 ]
               }

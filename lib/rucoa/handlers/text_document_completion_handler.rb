@@ -148,7 +148,7 @@ module Rucoa
       # @return [Array<String>]
       def callable_method_definitions
         receiver_types.flat_map do |type|
-          definition_store.method_definitions_of(type)
+          definition_store.instance_method_definitions_of(type)
         end
       end
 

@@ -13,6 +13,10 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
 
     before do
       server.source_store.update(source)
+      server.definition_store.update_definitions_defined_in(
+        source.path,
+        definitions: source.definitions
+      )
     end
 
     let(:request) do
@@ -268,6 +272,85 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
               'result' => [
                 hash_including(
                   'label' => 'Generic'
+                )
+              ]
+            )
+          ]
+        )
+      end
+    end
+
+    context 'with File.writ' do
+      let(:content) do
+        <<~RUBY
+          File.writ
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 9,
+          line: 1
+        )
+      end
+
+      it 'completes write' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => [
+                hash_including(
+                  'label' => 'writable?'
+                ),
+                hash_including(
+                  'label' => 'writable_real?'
+                ),
+                hash_including(
+                  'label' => 'write'
+                )
+              ]
+            )
+          ]
+        )
+      end
+    end
+
+    context 'with foo.to_sy' do
+      let(:content) do
+        <<~RUBY
+          class Foo
+            # @return [String]
+            def foo
+              'foo'
+            end
+          end
+
+          class Bar < Foo
+            def bar
+              foo.to_sy
+            end
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 11,
+          line: 10
+        )
+      end
+
+      it 'completes to_sym' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => [
+                hash_including(
+                  'label' => 'to_sym'
                 )
               ]
             )

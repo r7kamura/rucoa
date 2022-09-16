@@ -2,7 +2,7 @@
 
 module Rucoa
   module Yard
-    autoload :DefinitionMapper, 'rucoa/yard/definition_mapper'
     autoload :DefinitionsLoader, 'rucoa/yard/definitions_loader'
+    autoload :MethodDefinitionMapper, 'rucoa/yard/method_definition_mapper'
   end
 end

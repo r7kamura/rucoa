@@ -23,14 +23,13 @@ module Rucoa
       def responsible?
         configuration.enables_hover? &&
           !source.nil? &&
-          !node.nil?
+          !node.nil? &&
+          !method_definitions.empty?
       end
 
       # @return [String, nil]
       def contents
         method_definition = method_definitions.first
-        return unless method_definition
-
         [
           method_definition.signatures.join("\n"),
           method_definition.description
@@ -66,7 +65,7 @@ module Rucoa
 
       # @return [Array<Rucoa::Definitions::MethodDefinition>]
       def method_definitions
-        NodeInspector.new(
+        @method_definitions ||= NodeInspector.new(
           definition_store: definition_store,
           node: node
         ).method_definitions

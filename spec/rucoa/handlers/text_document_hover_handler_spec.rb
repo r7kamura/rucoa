@@ -11,6 +11,10 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
 
     before do
       server.source_store.update(source)
+      server.definition_store.update_definitions_defined_in(
+        source.path,
+        definitions: source.definitions
+      )
     end
 
     let(:request) do
@@ -102,6 +106,46 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
                   }
                 }
               }
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when method is defined in super class in YARD' do
+      let(:content) do
+        <<~RUBY
+          module A
+            class Foo
+              def foo
+              end
+            end
+
+            class Bar < Foo
+              def bar
+                foo
+              end
+            end
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 9,
+          line: 9
+        )
+      end
+
+      it 'responds hover' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => hash_including(
+                'contents' => /\AA::Foo#foo/
+              )
             )
           ]
         )

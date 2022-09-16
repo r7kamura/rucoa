@@ -13,8 +13,10 @@ module Rucoa
 
     # @return [Array<String>]
     def method_definitions
-      method_full_qualified_names.flat_map do |full_qualified_name|
-        @definition_store.select_by_full_qualified_name(full_qualified_name)
+      method_receiver_types.flat_map do |type|
+        @definition_store.instance_method_definitions_of(type)
+      end.select do |method_definition|
+        method_definition.method_name == @node.name
       end
     end
 
@@ -36,7 +38,7 @@ module Rucoa
     def return_types
       case @node.type
       when :const
-        [@node.name]
+        ["singleton<#{@node.name}>"]
       when :lvar
         return_types_for_lvar
       when :send
@@ -74,26 +76,9 @@ module Rucoa
 
     private
 
-    # @return [Array<String>]
-    def method_full_qualified_names
-      method_receiver_types.map do |type|
-        [
-          type,
-          @node.name
-        ].join(method_kind_symbol)
-      end
-    end
-
-    # @return [String, nil]
-    def method_kind_symbol
-      return unless @node.is_a?(Nodes::SendNode)
-
-      case @node.receiver
-      when Nodes::ConstNode
-        '.'
-      else
-        '#'
-      end
+    # @return [Boolean]
+    def singleton_method_call?
+      @node.is_a?(Nodes::ConstNode)
     end
 
     # @return [String, nil]
@@ -115,9 +100,13 @@ module Rucoa
 
     # @return [Array<String>]
     def return_types_for_send
-      method_full_qualified_names.flat_map do |full_qualified_name|
-        @definition_store.select_by_full_qualified_name(full_qualified_name).flat_map(&:return_types)
-      end.uniq
+      method_receiver_types.flat_map do |type|
+        @definition_store.find_method_definition_by(
+          method_name: @node.name,
+          namespace: type,
+          singleton: singleton_method_call?
+        )&.return_types
+      end.compact
     end
   end
 end
