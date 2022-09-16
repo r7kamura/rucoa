@@ -121,8 +121,8 @@ module Rucoa
       # @param types [Array<Symbol>]
       # @return [void]
       def visit_descendants(types, &block)
-        each_child_node(*types) do |child|
-          yield(child)
+        each_child_node do |child|
+          yield(child) if types.empty? || types.include?(child.type)
           child.visit_descendants(types, &block)
         end
       end
