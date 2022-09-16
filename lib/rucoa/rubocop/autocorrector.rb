@@ -32,8 +32,19 @@ module Rucoa
       # @return [String]
       def call
         @options[:stdin] = @source.content
-        run([@source.path || 'untitled'])
+        run([path])
         @options[:stdin]
+      end
+
+      private
+
+      # @return [String]
+      def path
+        if @source.untitled? || @source.path.nil?
+          'untitled'
+        else
+          @source.path
+        end
       end
     end
   end

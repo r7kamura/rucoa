@@ -13,6 +13,7 @@ module Rucoa
       'shutdown' => Handlers::ShutdownHandler,
       'textDocument/codeAction' => Handlers::TextDocumentCodeActionHandler,
       'textDocument/completion' => Handlers::TextDocumentCompletionHandler,
+      'textDocument/definition' => Handlers::TextDocumentDefinitionHandler,
       'textDocument/didChange' => Handlers::TextDocumentDidChangeHandler,
       'textDocument/didClose' => Handlers::TextDocumentDidCloseHandler,
       'textDocument/didOpen' => Handlers::TextDocumentDidOpenHandler,

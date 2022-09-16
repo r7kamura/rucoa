@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 module Rucoa
   class NodeInspector
     # @param definition_store [Rucoa::DefinitionStore]
@@ -11,7 +9,19 @@ module Rucoa
       @node = node
     end
 
-    # @return [Array<String>]
+    # @return [Array<Rucoa::Definitions::Base>]
+    def definitions
+      case @node
+      when Nodes::ConstNode
+        [constant_definition]
+      when Nodes::SendNode
+        method_definitions
+      else
+        []
+      end
+    end
+
+    # @return [Array<Rucoa::Definitions::MethodDefinition>]
     def method_definitions
       method_receiver_types.flat_map do |type|
         @definition_store.instance_method_definitions_of(type)
@@ -75,6 +85,28 @@ module Rucoa
     end
 
     private
+
+    # @return [Rucoa::Definitions::ConstantDefinition, nil]
+    def constant_definition
+      return unless @node.is_a?(Nodes::ConstNode)
+
+      module_nesting_full_qualified_names = @node.each_ancestor(:class, :module).map(&:full_qualified_name)
+      candidate_full_qualified_names = module_nesting_full_qualified_names.flat_map do |module_nesting_full_qualified_name|
+        [
+          module_nesting_full_qualified_name
+          # TODO: *ancestors_of(module_nesting_full_qualified_name)
+        ].map do |full_qualified_name|
+          [
+            full_qualified_name,
+            @node.chained_name
+          ].join('::')
+        end
+      end + [@node.chained_name]
+      candidate_full_qualified_names.find do |candidate_full_qualified_name|
+        definition = @definition_store.select_by_full_qualified_name(candidate_full_qualified_name).first
+        break definition if definition
+      end
+    end
 
     # @return [Boolean]
     def singleton_method_call?

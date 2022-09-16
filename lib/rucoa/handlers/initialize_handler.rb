@@ -13,6 +13,7 @@ module Rucoa
                 .
               ]
             },
+            definitionProvider: true,
             documentFormattingProvider: true,
             documentRangeFormattingProvider: true,
             documentSymbolProvider: true,

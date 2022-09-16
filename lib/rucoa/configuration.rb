@@ -17,6 +17,11 @@ module Rucoa
     end
 
     # @return [void]
+    def disable_definition
+      disable_feature('definition')
+    end
+
+    # @return [void]
     def disable_diagnostics
       disable_feature('diagnostics')
     end
@@ -80,6 +85,11 @@ module Rucoa
     # @return [Boolean]
     def enables_completion?
       enables_feature?('completion')
+    end
+
+    # @return [Boolean]
+    def enables_definition?
+      enables_feature?('definition')
     end
 
     # @return [Boolean]
