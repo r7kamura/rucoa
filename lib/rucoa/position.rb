@@ -39,7 +39,7 @@ module Rucoa
 
     # @param column [Integer] 0-origin column number
     # @param line [Integer] 1-origin line number
-    def initialize(column:, line:)
+    def initialize(column: 0, line: 1)
       @column = column
       @line = line
     end
