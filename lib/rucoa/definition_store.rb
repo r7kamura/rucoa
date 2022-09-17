@@ -160,7 +160,7 @@ module Rucoa
     end
 
     # @param source_path [String]
-    # @return [Array<Rucoa::Definition::Base>]
+    # @return [void]
     def delete_definitions_defined_in(source_path)
       @definitions.delete_if do |definition|
         definition.source_path == source_path
