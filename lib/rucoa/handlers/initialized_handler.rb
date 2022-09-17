@@ -14,18 +14,6 @@ module Rucoa
       private
 
       # @return [void]
-      def update_definitions
-        load_definitions.group_by(&:source_path).each do |source_path, definitions|
-          next unless source_path
-
-          definition_store.update_definitions_defined_in(
-            source_path,
-            definitions: definitions
-          )
-        end
-      end
-
-      # @return [void]
       def update_sources
         sources.each do |source|
           source_store.update(source)
@@ -33,7 +21,7 @@ module Rucoa
       end
 
       # @return [Array<Rucoa::Definitions::Base>]
-      def load_definitions
+      def update_definitions
         Yard::DefinitionsLoader.load_globs(
           globs: [glob]
         )

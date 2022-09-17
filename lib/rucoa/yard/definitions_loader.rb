@@ -69,10 +69,28 @@ module Rucoa
         # @param path [String, nil]
         # @return [Array<Rucoa::Definitions::Base>]
         def load(path: nil, &block)
-          ::YARD::Registry.clear
-          quietly(&block)
-          ::YARD::Registry.all.filter_map do |code_object|
-            map(code_object, path: path)
+          # ::YARD::Registry.clear
+          if path
+            ::YARD::Registry.all.each do |code_object|
+              ::YARD::Registry.delete(code_object) if code_object.file == path
+            end
+            before = ::YARD::Registry.all
+            quietly(&block)
+            after = ::YARD::Registry.all
+            diff = after - before
+            warn({
+              after: after.size,
+              before: before.size,
+              diff: diff.size
+            }.inspect)
+            diff.filter_map do |code_object|
+              map(code_object, path: path)
+            end
+          else
+            quietly(&block)
+            ::YARD::Registry.all.filter_map do |code_object|
+              map(code_object, path: path)
+            end
           end
         end
 
