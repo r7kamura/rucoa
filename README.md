@@ -62,6 +62,10 @@ This extension supports the folowiing types of symbols:
 
 Provides completion items for constant names and method names.
 
+### Definition
+
+Provides "Go to Definition" command to jump to the definition.
+
 ### Hover
 
 Shows documentation for the symbol under the cursor.
@@ -72,6 +76,5 @@ Shows method signature help when you start to type method arguments like `"100".
 
 ## Coming soon
 
-- Go to Definition
 - Highlight
 - Semantic Tokens

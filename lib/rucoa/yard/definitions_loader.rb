@@ -54,7 +54,7 @@ module Rucoa
             Definitions::ClassDefinition.new(
               full_qualified_name: code_object.path,
               source_path: path || code_object.file,
-              super_class_name: code_object.superclass.to_s
+              super_class_name: code_object.superclass.to_s # TODO: superclass may not include full namespace on `YARD.parse_string`.
             )
           when ::YARD::CodeObjects::ModuleObject
             Definitions::ModuleDefinition.new(

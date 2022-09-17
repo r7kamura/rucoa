@@ -32,7 +32,7 @@ module Rucoa
       # @return [Array<RuboCop::Cop::Offense>]
       def call
         @options[:stdin] = @source.content
-        run([@source.path || 'untitled'])
+        run([path])
         @offenses
       end
 
@@ -44,6 +44,15 @@ module Rucoa
       def file_finished(file, offenses)
         @offenses = offenses
         super
+      end
+
+      # @return [String]
+      def path
+        if @source.untitled? || @source.path.nil?
+          'untitled'
+        else
+          @source.path
+        end
       end
     end
   end

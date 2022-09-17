@@ -9,6 +9,7 @@ module Rucoa
     autoload :ShutdownHandler, 'rucoa/handlers/shutdown_handler'
     autoload :TextDocumentCodeActionHandler, 'rucoa/handlers/text_document_code_action_handler'
     autoload :TextDocumentCompletionHandler, 'rucoa/handlers/text_document_completion_handler'
+    autoload :TextDocumentDefinitionHandler, 'rucoa/handlers/text_document_definition_handler'
     autoload :TextDocumentDidChangeHandler, 'rucoa/handlers/text_document_did_change_handler'
     autoload :TextDocumentDidCloseHandler, 'rucoa/handlers/text_document_did_close_handler'
     autoload :TextDocumentDidOpenHandler, 'rucoa/handlers/text_document_did_open_handler'

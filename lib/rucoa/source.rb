@@ -47,14 +47,16 @@ module Rucoa
     #     uri: 'file:///path/to/foo.rb'
     #   )
     #   expect(source.path).to eq('/path/to/foo.rb')
-    # @example returns nil for untitled URI
+    # @example returns name for untitled URI
     #   source = Rucoa::Source.new(
     #     content: '',
     #     uri: 'untitled:Untitled-1'
     #   )
-    #   expect(source.path).to be_nil
+    #   expect(source.path).to eq('Untitled-1')
     def path
       return unless @uri
+
+      return @uri.split(':', 2).last if untitled?
 
       path = ::URI.parse(@uri).path
       return unless path
@@ -82,6 +84,11 @@ module Rucoa
     # @return [Boolean]
     def syntax_error?
       root_node.nil?
+    end
+
+    # @return [Boolean]
+    def untitled?
+      @uri&.start_with?('untitled:')
     end
 
     private

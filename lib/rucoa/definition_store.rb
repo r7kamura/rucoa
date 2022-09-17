@@ -99,6 +99,11 @@ module Rucoa
       end
     end
 
+    # @return [Array<Rucoa::Definition::ConstantDefinition>]
+    def constant_definitions
+      @definitions.grep(Definitions::ConstantDefinition)
+    end
+
     # @param namespace [String]
     # @return [Array<Rucoa::Definitions::ConstantDefinition>] e.g. File::Separator, File::SEPARATOR, etc.
     def constant_definitions_under(namespace)
@@ -137,11 +142,6 @@ module Rucoa
       @definitions.find do |definition|
         definition.full_qualified_name == type
       end
-    end
-
-    # @return [Array<Rucoa::Definition::ConstantDefinition>]
-    def constant_definitions
-      @definitions.grep(Definitions::ConstantDefinition)
     end
 
     # @return [Array<Rucoa::Definition::MethodDefinition>]
