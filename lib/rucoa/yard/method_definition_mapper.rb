@@ -9,7 +9,7 @@ module Rucoa
         # @param code_object [YARD::CodeObjects::MethodObject]
         # @param path [String] This must be passed if the path is not available from code object.
         # @return [Rucoa::Definitions::Base, nil]
-        def call(code_object, path: code_object.file)
+        def call(code_object, path:)
           new(code_object, path: path).call
         end
       end
@@ -28,7 +28,7 @@ module Rucoa
           kind: kind,
           method_name: method_name,
           namespace: namespace,
-          source_path: @path,
+          source_path: @path || @code_object.file,
           types: types
         )
       end
