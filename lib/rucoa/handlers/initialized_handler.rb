@@ -7,17 +7,11 @@ module Rucoa
 
       def call
         request_workspace_configuration
+        update_sources
         update_definitions
       end
 
       private
-
-      # @return [Array<Rucoa::Definitions::Base>]
-      def load_definitions
-        Yard::DefinitionsLoader.load_globs(
-          globs: ::YARD::Parser::SourceParser::DEFAULT_PATH_GLOB
-        )
-      end
 
       # @return [void]
       def update_definitions
@@ -29,6 +23,40 @@ module Rucoa
             definitions: definitions
           )
         end
+      end
+
+      # @return [void]
+      def update_sources
+        sources.each do |source|
+          source_store.update(source)
+        end
+      end
+
+      # @return [Array<Rucoa::Definitions::Base>]
+      def load_definitions
+        Yard::DefinitionsLoader.load_globs(
+          globs: [glob]
+        )
+      end
+
+      # @return [Array<Rucoa::Source>]
+      def sources
+        @sources ||= pathnames.map do |pathname|
+          Source.new(
+            content: pathname.read,
+            uri: "file://#{pathname}"
+          )
+        end
+      end
+
+      # @return [Array<Pathname>]
+      def pathnames
+        ::Pathname.glob(glob)
+      end
+
+      # @return [String]
+      def glob
+        ::File.expand_path('{app,lib}/**/*.rb')
       end
     end
   end
