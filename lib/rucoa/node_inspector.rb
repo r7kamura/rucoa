@@ -90,8 +90,8 @@ module Rucoa
     def constant_definition
       return unless @node.is_a?(Nodes::ConstNode)
 
-      module_nesting_fully_qualified_names = @node.each_ancestor(:class, :module).map(&:fully_qualified_name)
-      candidate_fully_qualified_names = module_nesting_fully_qualified_names.flat_map do |module_nesting_fully_qualified_name|
+      module_nesting = @node.module_nesting
+      candidate_fully_qualified_names = module_nesting.flat_map do |module_nesting_fully_qualified_name|
         [
           module_nesting_fully_qualified_name
           # TODO: *ancestors_of(module_nesting_fully_qualified_name)

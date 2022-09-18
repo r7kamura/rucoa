@@ -163,7 +163,7 @@ module Rucoa
       # @return [Rucoa::Node, nil]
       def node
         @node ||=
-          if source.syntax_error?
+          if source.failed_to_parse?
             repair
             repaired_node
           else

@@ -11,10 +11,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
 
     before do
       server.source_store.update(source)
-      server.definition_store.update_definitions_defined_in(
-        source.path,
-        definitions: source.definitions
-      )
+      server.definition_store.update_from(source)
     end
 
     let(:request) do
@@ -203,7 +200,10 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
         <<~RUBY
           module A
             class Foo
+              # Returns foo.
+              # @return [String]
               def foo
+                'foo'
               end
             end
 
@@ -219,7 +219,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
       let(:position) do
         Rucoa::Position.new(
           column: 9,
-          line: 9
+          line: 12
         )
       end
 
@@ -232,8 +232,8 @@ RSpec.describe Rucoa::Handlers::TextDocumentSignatureHelpHandler do
               'result' => {
                 'signatures' => [
                   {
-                    'documentation' => a_kind_of(String),
-                    'label' => /\AA::Foo#foo/
+                    'documentation' => 'Returns foo.',
+                    'label' => 'A::Foo#foo() -> String'
                   }
                 ]
               }

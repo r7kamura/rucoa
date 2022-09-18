@@ -18,6 +18,7 @@ module Rucoa
   autoload :Nodes, 'rucoa/nodes'
   autoload :Parser, 'rucoa/parser'
   autoload :ParserBuilder, 'rucoa/parser_builder'
+  autoload :ParseResult, 'rucoa/parse_result'
   autoload :Position, 'rucoa/position'
   autoload :Range, 'rucoa/range'
   autoload :Rbs, 'rucoa/rbs'

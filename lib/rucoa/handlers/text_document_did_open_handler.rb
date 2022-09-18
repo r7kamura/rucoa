@@ -7,10 +7,7 @@ module Rucoa
 
       def call
         source_store.update(source)
-        definition_store.update_definitions_defined_in(
-          source.path,
-          definitions: source.definitions
-        )
+        definition_store.update_from(source)
         publish_diagnostics_on(uri)
       end
 

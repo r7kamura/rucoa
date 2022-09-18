@@ -9,11 +9,43 @@ module Rucoa
       @definitions = []
     end
 
-    # @param source_path [String]
-    # @return [Array<Rucoa::Definition::Base>]
-    def update_definitions_defined_in(source_path, definitions:)
-      delete_definitions_defined_in(source_path)
-      @definitions += definitions
+    # @param source [Rucoa::Source]
+    # @return [void]
+    # @example resolves super class name correctly by using existent definitions
+    #   definition_store = Rucoa::DefinitionStore.new
+    #   foo = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       module A
+    #         class Foo
+    #         end
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/a/foo.rb',
+    #   )
+    #   definition_store.update_from(foo)
+    #   bar = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       module A
+    #         class Bar < Foo
+    #         end
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/a/bar.rb',
+    #   )
+    #   definition_store.update_from(bar)
+    #   expect(definition_store.definitions.last.super_class_fully_qualified_name).to eq('A::Foo')
+    def update_from(source)
+      delete_definitions_defined_in(source.path)
+
+      # Need to store definitions before super class resolution.
+      @definitions += source.definitions
+
+      source.definitions.each do |definition|
+        next unless definition.is_a?(Definitions::ClassDefinition)
+        next if definition.super_class_resolved?
+
+        definition.super_class_fully_qualified_name = resolve_super_class_of(definition)
+      end
     end
 
     # @param fully_qualified_name [String]
@@ -127,8 +159,8 @@ module Rucoa
 
       result = []
       class_definition = class_or_module_definition
-      while (super_class_name = class_definition.super_class_name)
-        class_definition = find_class_or_module_definition(super_class_name)
+      while (super_class_fully_qualified_name = class_definition.super_class_fully_qualified_name)
+        class_definition = find_class_or_module_definition(super_class_fully_qualified_name)
         break unless class_definition
 
         result << class_definition
@@ -164,6 +196,31 @@ module Rucoa
     def delete_definitions_defined_in(source_path)
       @definitions.delete_if do |definition|
         definition.source_path == source_path
+      end
+    end
+
+    # @param class_definition [Rucoa::Definitions::ClassDefinition]
+    # @return [String]
+    def resolve_super_class_of(class_definition)
+      return 'Object' unless class_definition.super_class_chained_name
+
+      candidates = class_definition.module_nesting.map do |chained_name|
+        [
+          chained_name,
+          class_definition.super_class_chained_name
+        ].join('::')
+      end + [class_definition.super_class_chained_name]
+      definition = @definitions.find do |element|
+        candidates.find do |candidate|
+          # FIXME: Iterating all of definitions is not efficient.
+          #   Implement more efficient way to find definition by its name such as hash-table or so.
+          element.fully_qualified_name == candidate
+        end
+      end
+      if definition
+        definition.fully_qualified_name
+      else
+        class_definition.super_class_chained_name
       end
     end
   end

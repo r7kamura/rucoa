@@ -13,10 +13,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentCompletionHandler do
 
     before do
       server.source_store.update(source)
-      server.definition_store.update_definitions_defined_in(
-        source.path,
-        definitions: source.definitions
-      )
+      server.definition_store.update_from(source)
     end
 
     let(:request) do

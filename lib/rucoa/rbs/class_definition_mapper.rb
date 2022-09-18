@@ -21,7 +21,7 @@ module Rucoa
         Definitions::ClassDefinition.new(
           fully_qualified_name: fully_qualified_name,
           source_path: source_path,
-          super_class_name: super_class_name
+          super_class_fully_qualified_name: super_class_fully_qualified_name
         )
       end
 
@@ -38,7 +38,7 @@ module Rucoa
       end
 
       # @return [String, nil]
-      def super_class_name
+      def super_class_fully_qualified_name
         @declaration.super_class&.name&.to_s&.delete_prefix('::')
       end
     end
