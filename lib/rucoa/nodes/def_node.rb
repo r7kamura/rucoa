@@ -42,8 +42,8 @@ module Rucoa
       #       line: 3
       #     )
       #   )
-      #   expect(node.full_qualified_name).to eq('Foo::Bar#baz')
-      def full_qualified_name
+      #   expect(node.fully_qualified_name).to eq('Foo::Bar#baz')
+      def fully_qualified_name
         [
           namespace,
           method_marker,

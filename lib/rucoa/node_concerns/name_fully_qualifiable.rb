@@ -2,9 +2,9 @@
 
 module Rucoa
   module NodeConcerns
-    module NameFullQualifiable
+    module NameFullyQualifiable
       # @return [String]
-      def full_qualified_name
+      def fully_qualified_name
         [
           name,
           *each_ancestor(:class, :constant, :module).map(&:name)

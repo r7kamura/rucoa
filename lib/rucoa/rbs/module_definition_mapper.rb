@@ -19,7 +19,7 @@ module Rucoa
       # @return [Rucoa::Definitions::ModuleDefinition]
       def call
         Definitions::ModuleDefinition.new(
-          full_qualified_name: full_qualified_name,
+          fully_qualified_name: fully_qualified_name,
           source_path: source_path
         )
       end
@@ -27,7 +27,7 @@ module Rucoa
       private
 
       # @return [String]
-      def full_qualified_name
+      def fully_qualified_name
         @declaration.name.to_s.delete_prefix('::')
       end
 

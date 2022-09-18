@@ -90,20 +90,20 @@ module Rucoa
     def constant_definition
       return unless @node.is_a?(Nodes::ConstNode)
 
-      module_nesting_full_qualified_names = @node.each_ancestor(:class, :module).map(&:full_qualified_name)
-      candidate_full_qualified_names = module_nesting_full_qualified_names.flat_map do |module_nesting_full_qualified_name|
+      module_nesting_fully_qualified_names = @node.each_ancestor(:class, :module).map(&:fully_qualified_name)
+      candidate_fully_qualified_names = module_nesting_fully_qualified_names.flat_map do |module_nesting_fully_qualified_name|
         [
-          module_nesting_full_qualified_name
-          # TODO: *ancestors_of(module_nesting_full_qualified_name)
-        ].map do |full_qualified_name|
+          module_nesting_fully_qualified_name
+          # TODO: *ancestors_of(module_nesting_fully_qualified_name)
+        ].map do |fully_qualified_name|
           [
-            full_qualified_name,
+            fully_qualified_name,
             @node.chained_name
           ].join('::')
         end
       end + [@node.chained_name]
-      candidate_full_qualified_names.find do |candidate_full_qualified_name|
-        definition = @definition_store.select_by_full_qualified_name(candidate_full_qualified_name).first
+      candidate_fully_qualified_names.find do |candidate_fully_qualified_name|
+        definition = @definition_store.select_by_fully_qualified_name(candidate_fully_qualified_name).first
         break definition if definition
       end
     end
@@ -114,16 +114,16 @@ module Rucoa
     end
 
     # @return [String, nil]
-    def nearest_def_full_qualified_name
-      @node.each_ancestor(:def).first&.full_qualified_name
+    def nearest_def_fully_qualified_name
+      @node.each_ancestor(:def).first&.fully_qualified_name
     end
 
     # @return [Array<String>]
     def return_types_for_lvar
-      full_qualified_name = nearest_def_full_qualified_name
-      return [] unless full_qualified_name
+      fully_qualified_name = nearest_def_fully_qualified_name
+      return [] unless fully_qualified_name
 
-      @definition_store.select_by_full_qualified_name(full_qualified_name).flat_map do |definition|
+      @definition_store.select_by_fully_qualified_name(fully_qualified_name).flat_map do |definition|
         definition.parameters.select do |parameter|
           parameter.name == @node.name
         end.flat_map(&:types)

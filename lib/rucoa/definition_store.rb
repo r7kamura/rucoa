@@ -16,11 +16,11 @@ module Rucoa
       @definitions += definitions
     end
 
-    # @param full_qualified_name [String]
+    # @param fully_qualified_name [String]
     # @return [Array<Rucoa::Definitions::Base>]
-    def select_by_full_qualified_name(full_qualified_name)
+    def select_by_fully_qualified_name(fully_qualified_name)
       @definitions.select do |definition|
-        definition.full_qualified_name == full_qualified_name
+        definition.fully_qualified_name == fully_qualified_name
       end
     end
 
@@ -36,7 +36,7 @@ module Rucoa
     #     namespace: 'File',
     #     singleton: true
     #   )
-    #   expect(subject.full_qualified_name).to eq('IO.write')
+    #   expect(subject.fully_qualified_name).to eq('IO.write')
     def find_method_definition_by(method_name:, namespace:, singleton: false)
       if singleton
         singleton_method_definitions_of(namespace)
@@ -53,12 +53,12 @@ module Rucoa
     #   definition_store = Rucoa::DefinitionStore.new
     #   definition_store.definitions += Rucoa::DefinitionArchiver.load
     #   subject = definition_store.instance_method_definitions_of('File')
-    #   expect(subject.map(&:full_qualified_name)).to include('IO#raw')
+    #   expect(subject.map(&:fully_qualified_name)).to include('IO#raw')
     # @example responds to `singleton<File>`
     #   definition_store = Rucoa::DefinitionStore.new
     #   definition_store.definitions += Rucoa::DefinitionArchiver.load
     #   subject = definition_store.instance_method_definitions_of('singleton<File>')
-    #   expect(subject.map(&:full_qualified_name)).to include('IO.write')
+    #   expect(subject.map(&:fully_qualified_name)).to include('IO.write')
     def instance_method_definitions_of(type)
       singleton_class_name = singleton_class_name_from(type)
       return singleton_method_definitions_of(singleton_class_name) if singleton_class_name
@@ -70,9 +70,9 @@ module Rucoa
       [
         class_or_module_definition,
         *ancestor_definitions_of(class_or_module_definition)
-      ].map(&:full_qualified_name).flat_map do |full_qualified_type_name|
+      ].map(&:fully_qualified_name).flat_map do |fully_qualified_type_name|
         definitions.select do |definition|
-          definition.namespace == full_qualified_type_name
+          definition.namespace == fully_qualified_type_name
         end
       end
     end
@@ -83,7 +83,7 @@ module Rucoa
     #   definition_store = Rucoa::DefinitionStore.new
     #   definition_store.definitions += Rucoa::DefinitionArchiver.load
     #   subject = definition_store.singleton_method_definitions_of('File')
-    #   expect(subject.map(&:full_qualified_name)).to include('IO.write')
+    #   expect(subject.map(&:fully_qualified_name)).to include('IO.write')
     def singleton_method_definitions_of(type)
       class_or_module_definition = find_class_or_module_definition(type)
       return [] unless class_or_module_definition
@@ -92,9 +92,9 @@ module Rucoa
       [
         class_or_module_definition,
         *ancestor_definitions_of(class_or_module_definition)
-      ].map(&:full_qualified_name).flat_map do |full_qualified_type_name|
+      ].map(&:fully_qualified_name).flat_map do |fully_qualified_type_name|
         definitions.select do |definition|
-          definition.namespace == full_qualified_type_name
+          definition.namespace == fully_qualified_type_name
         end
       end
     end
@@ -140,7 +140,7 @@ module Rucoa
     # @return [Rucoa::Definitions::Class, Rucoa::Definitions::Module, nil]
     def find_class_or_module_definition(type)
       @definitions.find do |definition|
-        definition.full_qualified_name == type
+        definition.fully_qualified_name == type
       end
     end
 

@@ -112,7 +112,7 @@ module Rucoa
       #   )
       #   expect(node.namespace).to eq('Object')
       def namespace
-        each_ancestor(:module, :class).first&.full_qualified_name || 'Object'
+        each_ancestor(:module, :class).first&.fully_qualified_name || 'Object'
       end
 
       protected

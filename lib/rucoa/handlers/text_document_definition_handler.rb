@@ -94,8 +94,8 @@ module Rucoa
 
       # @return [Rucoa::Nodes::ClassNode, nil]
       def find_class_node
-        find_by_full_qualified_name(
-          full_qualified_name: definition.full_qualified_name,
+        find_by_fully_qualified_name(
+          fully_qualified_name: definition.fully_qualified_name,
           klass: Nodes::ClassNode
         ) || find_by_name(
           klass: Nodes::ClassNode,
@@ -105,8 +105,8 @@ module Rucoa
 
       # @return [Rucoa::Nodes::ModuleNode, nil]
       def find_module_node
-        find_by_full_qualified_name(
-          full_qualified_name: definition.full_qualified_name,
+        find_by_fully_qualified_name(
+          fully_qualified_name: definition.fully_qualified_name,
           klass: Nodes::ModuleNode
         ) || find_by_name(
           klass: Nodes::ModuleNode,
@@ -123,13 +123,13 @@ module Rucoa
         end
       end
 
-      # @param full_qualified_name [String]
+      # @param fully_qualified_name [String]
       # @param klass [Class]
       # @return [Rucoa::Nodes::Base, nil]
-      def find_by_full_qualified_name(full_qualified_name:, klass:)
+      def find_by_fully_qualified_name(fully_qualified_name:, klass:)
         location_root_or_descendant_nodes.reverse.find do |node|
           node.is_a?(klass) &&
-            node.full_qualified_name == full_qualified_name
+            node.fully_qualified_name == fully_qualified_name
         end
       end
 

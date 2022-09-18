@@ -25,7 +25,7 @@ module Rucoa
         #     path: '/path/to/foo.rb'
         #   )
         #   expect(definitions.size).to eq(2)
-        #   expect(definitions[1].full_qualified_name).to eq('Foo#foo')
+        #   expect(definitions[1].fully_qualified_name).to eq('Foo#foo')
         #   expect(definitions[1].source_path).to eq('/path/to/foo.rb')
         #   expect(definitions[1].description).to eq('Return given argument as an Integer.')
         #   expect(definitions[1].return_types).to eq(%w[Integer])
@@ -52,13 +52,13 @@ module Rucoa
           case code_object
           when ::YARD::CodeObjects::ClassObject
             Definitions::ClassDefinition.new(
-              full_qualified_name: code_object.path,
+              fully_qualified_name: code_object.path,
               source_path: path || code_object.file,
               super_class_name: code_object.superclass.to_s # TODO: superclass may not include full namespace on `YARD.parse_string`.
             )
           when ::YARD::CodeObjects::ModuleObject
             Definitions::ModuleDefinition.new(
-              full_qualified_name: code_object.path,
+              fully_qualified_name: code_object.path,
               source_path: path || code_object.file
             )
           when ::YARD::CodeObjects::MethodObject

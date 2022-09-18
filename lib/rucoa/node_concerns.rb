@@ -2,6 +2,6 @@
 
 module Rucoa
   module NodeConcerns
-    autoload :NameFullQualifiable, 'rucoa/node_concerns/name_full_qualifiable'
+    autoload :NameFullyQualifiable, 'rucoa/node_concerns/name_fully_qualifiable'
   end
 end

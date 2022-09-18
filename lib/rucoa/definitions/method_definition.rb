@@ -51,8 +51,8 @@ module Rucoa
       #     source_path: '/path/to/foo/bar.rb',
       #     types: []
       #   )
-      #   expect(method_definition.full_qualified_name).to eq('Foo::Bar#foo')
-      def full_qualified_name
+      #   expect(method_definition.fully_qualified_name).to eq('Foo::Bar#foo')
+      def fully_qualified_name
         [
           @namespace,
           method_kind_symbol,
@@ -105,8 +105,8 @@ module Rucoa
       def signatures
         @types.map do |type|
           format(
-            '%<full_qualified_name>s(%<parameters>s) -> %<return_types>s',
-            full_qualified_name: full_qualified_name,
+            '%<fully_qualified_name>s(%<parameters>s) -> %<return_types>s',
+            fully_qualified_name: fully_qualified_name,
             parameters: type.parameters_string,
             return_types: type.return_type
           )
