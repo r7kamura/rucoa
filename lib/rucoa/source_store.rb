@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'cgi'
-require 'uri'
-
 module Rucoa
   class SourceStore
     def initialize
@@ -25,16 +22,6 @@ module Rucoa
     # @return [Enumerable<String>]
     def each_uri(&block)
       @data.each_key(&block)
-    end
-
-    private
-
-    # @param uri [String]
-    # @return [String]
-    def path_from_uri(uri)
-      ::CGI.unescape(
-        ::URI.parse(uri).path || 'untitled'
-      )
     end
   end
 end
