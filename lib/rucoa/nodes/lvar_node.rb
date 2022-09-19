@@ -6,10 +6,11 @@ module Rucoa
       # @return [String]
       # @example returns local variable name
       #   node = Rucoa::Source.new(
-      #     content: <<~RUBY
+      #     content: <<~RUBY,
       #       foo = 1
       #       foo
       #     RUBY
+      #     uri: 'file:///path/to/example.rb'
       #   ).node_at(
       #     Rucoa::Position.new(
       #       column: 2,

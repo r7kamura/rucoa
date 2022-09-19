@@ -89,7 +89,7 @@ module Rucoa
       # @return [String]
       # @example returns namespace
       #   node = Rucoa::Source.new(
-      #     content: <<~RUBY
+      #     content: <<~RUBY,
       #       module Foo
       #         class Bar
       #           def baz
@@ -97,6 +97,7 @@ module Rucoa
       #         end
       #       end
       #     RUBY
+      #     uri: 'file:///path/to/foo/bar.rb'
       #   ).node_at(
       #     Rucoa::Position.new(
       #       column: 4,
@@ -106,15 +107,11 @@ module Rucoa
       #   expect(node.namespace).to eq('Foo::Bar')
       # @example returns "Object" when the node is not in a namespace
       #   node = Rucoa::Source.new(
-      #     content: <<~RUBY
+      #     content: <<~RUBY,
       #       foo
       #     RUBY
-      #   ).node_at(
-      #     Rucoa::Position.new(
-      #       column: 0,
-      #       line: 1
-      #     )
-      #   )
+      #     uri: 'file:///path/to/example.rb'
+      #   ).root_node
       #   expect(node.namespace).to eq('Object')
       def namespace
         module_nesting.first || 'Object'

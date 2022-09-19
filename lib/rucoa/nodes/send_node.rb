@@ -5,11 +5,11 @@ module Rucoa
     class SendNode < Base
       # @return [Array<Rucoa::Nodes::Base>]
       # @example returns arguments
-      #   node = Rucoa::Parser.call(
-      #     path: '/path/to/example.rb',
-      #     text: <<~RUBY
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
       #       foo(bar, baz)
       #     RUBY
+      #     uri: 'file:///path/to/example.rb'
       #   ).root_node
       #   expect(node.arguments.map(&:name)).to eq(
       #     %w[
@@ -23,11 +23,11 @@ module Rucoa
 
       # @return [String]
       # @example returns method name
-      #   node = Rucoa::Parser.call(
-      #     path: '/path/to/example.rb',
-      #     text: <<~RUBY
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
       #       foo(bar, baz)
       #     RUBY
+      #     uri: 'file:///path/to/example.rb'
       #   ).root_node
       #   expect(node.name).to eq('foo')
       def name
@@ -36,18 +36,19 @@ module Rucoa
 
       # @return [Rucoa::Nodes::Base, nil]
       # @example returns nil for receiver-less method call
-      #   node = Rucoa::Parser.call(
-      #     path: '/path/to/example.rb',
-      #     text: <<~RUBY
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
       #       foo(bar, baz)
       #     RUBY
+      #     uri: 'file:///path/to/example.rb'
       #   ).root_node
       #   expect(node.receiver).to be_nil
       # @example returns receiver
       #   node = Rucoa::Source.new(
-      #     content: <<~RUBY
+      #     content: <<~RUBY,
       #       foo.bar
       #     RUBY
+      #     uri: 'file:///path/to/example.rb'
       #   ).node_at(
       #     Rucoa::Position.new(
       #       column: 4,

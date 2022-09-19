@@ -48,7 +48,7 @@ module Rucoa
 
       # @return [String]
       def path
-        if @source.untitled? || @source.path.nil?
+        if @source.untitled?
           'untitled'
         else
           @source.path

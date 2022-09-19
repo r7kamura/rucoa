@@ -6,7 +6,7 @@ module Rucoa
       # @return [String]
       # @example returns method name
       #   node = Rucoa::Source.new(
-      #     content: <<~RUBY
+      #     content: <<~RUBY,
       #       module Foo
       #         class Bar
       #           def baz
@@ -14,6 +14,7 @@ module Rucoa
       #         end
       #       end
       #     RUBY
+      #     uri: 'file:///path/to/foo/bar.rb'
       #   ).node_at(
       #     Rucoa::Position.new(
       #       column: 4,
@@ -28,7 +29,7 @@ module Rucoa
       # @return [String]
       # @example returns full qualified name
       #   node = Rucoa::Source.new(
-      #     content: <<~RUBY
+      #     content: <<~RUBY,
       #       module Foo
       #         class Bar
       #           def baz
@@ -36,6 +37,7 @@ module Rucoa
       #         end
       #       end
       #     RUBY
+      #     uri: 'file:///path/to/foo/bar.rb'
       #   ).node_at(
       #     Rucoa::Position.new(
       #       column: 4,

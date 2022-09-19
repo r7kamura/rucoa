@@ -11,8 +11,8 @@ module Rucoa
     attr_reader :uri
 
     # @param content [String]
-    # @param uri [String, nil]
-    def initialize(content:, uri: nil)
+    # @param uri [String]
+    def initialize(content:, uri:)
       @content = content
       @uri = uri
     end
