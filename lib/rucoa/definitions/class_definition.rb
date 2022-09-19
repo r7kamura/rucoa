@@ -46,7 +46,28 @@ module Rucoa
       end
 
       # @return [Array<String>]
+      # @example returns candidates of super class fully qualified name
+      #   class_definition = Rucoa::Definitions::ClassDefinition.new(
+      #     fully_qualified_name: nil,
+      #     module_nesting: %w[B::A B],
+      #     source_path: '/path/to/b/a/c.rb',
+      #     super_class_chained_name: 'C'
+      #   )
+      #   expect(class_definition.super_class_candidates).to eq(
+      #     %w[B::A::C B::C C]
+      #   )
+      # @example returns only correct answer if it's already resolved
+      #   class_definition = Rucoa::Definitions::ClassDefinition.new(
+      #     fully_qualified_name: 'B::A::C',
+      #     source_path: '/path/to/b/a/c.rb',
+      #     super_class_fully_qualified_name: 'B::A::C'
+      #   )
+      #   expect(class_definition.super_class_candidates).to eq(
+      #     %w[B::A::C]
+      #   )
       def super_class_candidates
+        return [super_class_fully_qualified_name] if super_class_resolved?
+
         module_nesting.map do |chained_name|
           [
             chained_name,
