@@ -103,7 +103,7 @@ module Rucoa
         end
       end + [@node.chained_name]
       candidate_fully_qualified_names.find do |candidate_fully_qualified_name|
-        definition = @definition_store.select_by_fully_qualified_name(candidate_fully_qualified_name).first
+        definition = @definition_store.find_definition_by_fully_qualified_name(candidate_fully_qualified_name)
         break definition if definition
       end
     end
@@ -123,11 +123,12 @@ module Rucoa
       fully_qualified_name = nearest_def_fully_qualified_name
       return [] unless fully_qualified_name
 
-      @definition_store.select_by_fully_qualified_name(fully_qualified_name).flat_map do |definition|
-        definition.parameters.select do |parameter|
-          parameter.name == @node.name
-        end.flat_map(&:types)
-      end
+      definition = @definition_store.find_definition_by_fully_qualified_name(fully_qualified_name)
+      return [] unless definition
+
+      definition.parameters.select do |parameter|
+        parameter.name == @node.name
+      end.flat_map(&:types)
     end
 
     # @return [Array<String>]
