@@ -51,7 +51,7 @@ module Rucoa
         if @source.untitled?
           'untitled'
         else
-          @source.path
+          @source.name
         end
       end
     end

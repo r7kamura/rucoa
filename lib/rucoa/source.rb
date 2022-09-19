@@ -48,27 +48,24 @@ module Rucoa
     end
 
     # @return [String, nil]
-    # @example returns path from given VSCode URI
+    # @example returns path for file URI
     #   source = Rucoa::Source.new(
     #     content: '',
     #     uri: 'file:///path/to/foo.rb'
     #   )
-    #   expect(source.path).to eq('/path/to/foo.rb')
-    # @example returns name for untitled URI
+    #   expect(source.name).to eq('/path/to/foo.rb')
+    # @example returns opaque for untitled URI
     #   source = Rucoa::Source.new(
     #     content: '',
     #     uri: 'untitled:Untitled-1'
     #   )
-    #   expect(source.path).to eq('Untitled-1')
-    def path
-      return unless @uri
-
-      return @uri.split(':', 2).last if untitled?
-
-      path = ::URI.parse(@uri).path
-      return unless path
-
-      ::CGI.unescape(path)
+    #   expect(source.name).to eq('Untitled-1')
+    def name
+      if untitled?
+        uri_object.opaque
+      else
+        uri_object.path
+      end
     end
 
     # @param position [Rucoa::Position]
@@ -91,7 +88,7 @@ module Rucoa
 
     # @return [Boolean]
     def untitled?
-      @uri&.start_with?('untitled:')
+      uri_object.scheme == 'untitled'
     end
 
     private
@@ -101,7 +98,7 @@ module Rucoa
       return @parse_result if instance_variable_defined?(:@parse_result)
 
       @parse_result = Parser.call(
-        path: path,
+        path: name,
         text: @content
       )
     end
@@ -111,6 +108,11 @@ module Rucoa
       return [] unless root_node
 
       [root_node, *root_node.descendants]
+    end
+
+    # @return [URI]
+    def uri_object
+      @uri_object ||= ::URI.parse(@uri)
     end
   end
 end

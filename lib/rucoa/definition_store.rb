@@ -35,7 +35,7 @@ module Rucoa
     #   definition_store.update_from(bar)
     #   expect(definition_store.definitions.last.super_class_fully_qualified_name).to eq('A::Foo')
     def update_from(source)
-      delete_definitions_defined_in(source.path)
+      delete_definitions_defined_in(source.name)
 
       # Need to store definitions before super class resolution.
       @definitions += source.definitions

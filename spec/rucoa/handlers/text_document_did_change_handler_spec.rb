@@ -69,7 +69,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDidChangeHandler do
         subject
         source = server.source_store.get(uri)
         expect(source.content).to eq(content)
-        expect(source.path).to eq(file_path)
+        expect(source.uri).to eq(uri)
       end
     end
 
