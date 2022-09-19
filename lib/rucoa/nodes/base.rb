@@ -105,14 +105,42 @@ module Rucoa
       #   )
       #   expect(node.namespace).to eq('Foo::Bar')
       # @example returns "Object" when the node is not in a namespace
-      #   node = Rucoa::Parser.call(
-      #     <<~RUBY
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY
       #       foo
       #     RUBY
+      #   ).node_at(
+      #     Rucoa::Position.new(
+      #       column: 0,
+      #       line: 1
+      #     )
       #   )
       #   expect(node.namespace).to eq('Object')
       def namespace
-        each_ancestor(:module, :class).first&.fully_qualified_name || 'Object'
+        module_nesting.first || 'Object'
+      end
+
+      # @return [Array<String>]
+      # @example return ["Bar::Foo", "Foo"] for class Foo::Bar::Baz
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         module Bar
+      #           module Baz
+      #           end
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/bar/baz.rb'
+      #   ).node_at(
+      #     Rucoa::Position.new(
+      #       column: 4,
+      #       line: 3
+      #     )
+      #   )
+      #   expect(node.module_nesting).to eq(['Foo::Bar', 'Foo'])
+      def module_nesting
+        each_ancestor(:class, :module).map(&:fully_qualified_name)
       end
 
       protected

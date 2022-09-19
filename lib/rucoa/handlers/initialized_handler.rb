@@ -7,36 +7,24 @@ module Rucoa
 
       def call
         request_workspace_configuration
-        update_sources
-        update_definitions
+        update_source_store
+        update_definition_store
       end
 
       private
 
       # @return [void]
-      def update_definitions
-        load_definitions.group_by(&:source_path).each do |source_path, definitions|
-          next unless source_path
-
-          definition_store.update_definitions_defined_in(
-            source_path,
-            definitions: definitions
-          )
+      def update_definition_store
+        sources.each do |source|
+          definition_store.update_from(source)
         end
       end
 
       # @return [void]
-      def update_sources
+      def update_source_store
         sources.each do |source|
           source_store.update(source)
         end
-      end
-
-      # @return [Array<Rucoa::Definitions::Base>]
-      def load_definitions
-        Yard::DefinitionsLoader.load_globs(
-          globs: [glob]
-        )
       end
 
       # @return [Array<Rucoa::Source>]

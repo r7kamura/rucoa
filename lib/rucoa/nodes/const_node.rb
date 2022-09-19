@@ -5,10 +5,16 @@ module Rucoa
     class ConstNode < Base
       # @return [String]
       # @example returns "A" for "A"
-      #   node = Rucoa::Parser.call('A')
+      #   node = Rucoa::Parser.call(
+      #     path: '/path/to/example.rb',
+      #     text: 'A'
+      #   ).root_node
       #   expect(node.name).to eq('A')
       # @example returns "B" for "A::B"
-      #   node = Rucoa::Parser.call('A::B')
+      #   node = Rucoa::Parser.call(
+      #     path: '/path/to/example.rb',
+      #     text: 'A::B'
+      #   ).root_node
       #   expect(node.name).to eq('B')
       def name
         children[1].to_s
@@ -16,13 +22,25 @@ module Rucoa
 
       # @return [String]
       # @example returns "A" for "A"
-      #   node = Rucoa::Parser.call('A')
+      #   node = Rucoa::Parser.call(
+      #     path: '/path/to/example.rb',
+      #     text: 'A'
+      #   ).root_node
       #   expect(node.chained_name).to eq('A')
       # @example returns "A::B" for "A::B"
-      #   node = Rucoa::Parser.call('A::B')
+      #   node = Rucoa::Parser.call(
+      #     path: '/path/to/example.rb',
+      #     text: 'A::B'
+      #   ).root_node
       #   expect(node.chained_name).to eq('A::B')
       def chained_name
-        if receiver.is_a?(ConstNode)
+        case receiver
+        when Nodes::CbaseNode
+          [
+            '',
+            name
+          ].join('::')
+        when Nodes::ConstNode
           [
             receiver.chained_name,
             name
@@ -30,6 +48,29 @@ module Rucoa
         else
           name
         end
+      end
+
+      # @return [Array<String>]
+      # @example return ["Bar::Foo", "Foo"] for class Foo::Bar::Baz
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         module Bar
+      #           module Baz
+      #           end
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/bar/baz.rb'
+      #   ).node_at(
+      #     Rucoa::Position.new(
+      #       column: 4,
+      #       line: 3
+      #     )
+      #   )
+      #   expect(node.module_nesting).to eq(['Foo::Bar', 'Foo'])
+      def module_nesting
+        each_ancestor(:class, :module).map(&:fully_qualified_name)
       end
 
       private

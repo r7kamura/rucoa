@@ -7,78 +7,90 @@ module Rucoa
   module Yard
     class DefinitionsLoader
       class << self
-        # @param content [String]
-        # @return [Array<Rucoa::Definitions::Base>]
-        # @example returns method definitions from Ruby source code
-        #   content = <<~RUBY
-        #     class Foo
-        #       # Return given argument as an Integer.
-        #       # @param bar [String]
-        #       # @return [Integer]
-        #       def foo(bar)
-        #         bar.to_i
-        #       end
-        #     end
-        #   RUBY
-        #   definitions = Rucoa::Yard::DefinitionsLoader.load_string(
-        #     content: content,
-        #     path: '/path/to/foo.rb'
-        #   )
-        #   expect(definitions.size).to eq(2)
-        #   expect(definitions[1].fully_qualified_name).to eq('Foo#foo')
-        #   expect(definitions[1].source_path).to eq('/path/to/foo.rb')
-        #   expect(definitions[1].description).to eq('Return given argument as an Integer.')
-        #   expect(definitions[1].return_types).to eq(%w[Integer])
-        def load_string(content:, path:)
-          load(path: path) do
-            ::YARD.parse_string(content)
-          end
+        # @param associations [Hash]
+        # @param root_node [Rucoa::Nodes::Base]
+        def call(
+          associations:,
+          root_node:
+        )
+          new(
+            associations: associations,
+            root_node: root_node
+          ).call
         end
 
-        # @param globs [String]
-        # @return [Array<Rucoa::Definitions::Base>]
-        def load_globs(globs:)
-          load do
-            ::YARD.parse(globs)
+        # @param comment [String]
+        # @return [YARD::DocstringParser]
+        def parse_yard_comment(comment)
+          ::YARD::Logger.instance.enter_level(::Logger::FATAL) do
+            ::YARD::Docstring.parser.parse(
+              comment,
+              ::YARD::CodeObjects::Base.new(:root, 'stub')
+            )
           end
         end
+      end
 
-        private
+      # @param associations [Hash]
+      # @param root_node [Rucoa::Nodes::Base]
+      def initialize(
+        associations:,
+        root_node:
+      )
+        @associations = associations
+        @root_node = root_node
+      end
 
-        # @param code_object [YARD::CodeObjects::Base]
-        # @param path [String, nil]
-        # @return [Rucoa::Definitions::Base, nil]
-        def map(code_object, path:)
-          case code_object
-          when ::YARD::CodeObjects::ClassObject
+      # @return [Array<Rucoa::Definition::Base>]
+      def call
+        [
+          @root_node,
+          *@root_node.descendants
+        ].filter_map do |node|
+          comment = comment_for(node)
+          case node
+          when Nodes::ClassNode
             Definitions::ClassDefinition.new(
-              fully_qualified_name: code_object.path,
-              source_path: path || code_object.file,
-              super_class_name: code_object.superclass.to_s # TODO: superclass may not include full namespace on `YARD.parse_string`.
+              fully_qualified_name: node.fully_qualified_name,
+              module_nesting: node.module_nesting,
+              source_path: @root_node.location.expression.source_buffer.name,
+              super_class_chained_name: node.super_class_chained_name
             )
-          when ::YARD::CodeObjects::ModuleObject
+          when Nodes::ModuleNode
             Definitions::ModuleDefinition.new(
-              fully_qualified_name: code_object.path,
-              source_path: path || code_object.file
+              fully_qualified_name: node.fully_qualified_name,
+              source_path: @root_node.location.expression.source_buffer.name
             )
-          when ::YARD::CodeObjects::MethodObject
-            MethodDefinitionMapper.call(code_object, path: path)
+          when Nodes::DefNode, Nodes::DefsNode
+            docstring_parser = self.class.parse_yard_comment(comment)
+            return_types = docstring_parser.tags.select do |tag|
+              tag.tag_name == 'return'
+            end.flat_map(&:types).compact.map do |yard_type|
+              Type.new(yard_type).to_rucoa_type
+            end
+            return_types = ['Object'] if return_types.empty?
+            Definitions::MethodDefinition.new(
+              description: docstring_parser.to_docstring.to_s,
+              kind: node.singleton? ? :singleton : :instance,
+              method_name: node.name,
+              namespace: node.namespace,
+              source_path: @root_node.location.expression.source_buffer.name,
+              types: return_types.map do |type|
+                Types::MethodType.new(
+                  parameters_string: '', # TODO
+                  return_type: type
+                )
+              end
+            )
           end
         end
+      end
 
-        # @param path [String, nil]
-        # @return [Array<Rucoa::Definitions::Base>]
-        def load(path: nil, &block)
-          ::YARD::Registry.clear
-          quietly(&block)
-          ::YARD::Registry.all.filter_map do |code_object|
-            map(code_object, path: path)
-          end
-        end
-
-        def quietly(&block)
-          ::YARD::Logger.instance.enter_level(::Logger::FATAL, &block)
-        end
+      # @return [String]
+      def comment_for(node)
+        @associations[node.location].map do |parser_comment|
+          parser_comment.text.gsub(/^#\s*/m, '')
+        end.join("\n")
       end
     end
   end

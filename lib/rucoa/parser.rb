@@ -3,29 +3,61 @@
 require 'parser/current'
 
 module Rucoa
-  # Parses Ruby text code.
   class Parser
     class << self
+      # @param path [String]
       # @param text [String]
-      # @return [Rucoa::Nodes::Base]
-      def call(text)
-        new(text).call
+      # @return [Rucoa::ParseResult]
+      # @example returns non-failed parse result for valid Ruby source
+      #   result = Rucoa::Parser.call(
+      #     path: '/path/to/foo.rb',
+      #     text: 'foo'
+      #   )
+      #   expect(result).not_to be_failed
+      # @example returns failed parse result for invalid Ruby source
+      #   result = Rucoa::Parser.call(
+      #     path: '/path/to/foo.rb',
+      #     text: 'foo('
+      #   )
+      #   expect(result).to be_failed
+      def call(
+        path:,
+        text:
+      )
+        new(
+          path: path,
+          text: text
+        ).call
       end
     end
 
+    # @param path [String]
     # @param text [String]
-    def initialize(text)
+    def initialize(
+      path:,
+      text:
+    )
+      @path = path
       @text = text
     end
 
-    # @return [Rucoa::Nodes::Base]
+    # @return [Rucoa::ParseResult]
     def call
-      parser.parse(
+      root_node, comments = parser.parse_with_comments(
         ::Parser::Source::Buffer.new(
-          '',
+          @path,
           source: @text
         )
       )
+      ParseResult.new(
+        associations: ::Parser::Source::Comment.associate_locations(
+          root_node,
+          comments
+        ),
+        root_node: root_node
+      )
+    rescue ::Parser::SyntaxError
+      ParseResult.new(failed: true)
     end
 
     private

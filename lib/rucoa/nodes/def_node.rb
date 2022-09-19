@@ -51,6 +51,11 @@ module Rucoa
         ].join
       end
 
+      # @return [Boolean]
+      def singleton?
+        each_ancestor(:sclass).any?
+      end
+
       private
 
       # @return [String]
@@ -60,11 +65,6 @@ module Rucoa
         else
           '#'
         end
-      end
-
-      # @return [Boolean]
-      def singleton?
-        each_ancestor(:sclass).any?
       end
     end
   end

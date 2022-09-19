@@ -6,6 +6,7 @@ module Rucoa
   class ParserBuilder < ::Parser::Builders::Default
     NODE_CLASS_BY_TYPE = {
       casgn: Nodes::CasgnNode,
+      cbase: Nodes::CbaseNode,
       class: Nodes::ClassNode,
       const: Nodes::ConstNode,
       def: Nodes::DefNode,

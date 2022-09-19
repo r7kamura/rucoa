@@ -3,6 +3,6 @@
 module Rucoa
   module Yard
     autoload :DefinitionsLoader, 'rucoa/yard/definitions_loader'
-    autoload :MethodDefinitionMapper, 'rucoa/yard/method_definition_mapper'
+    autoload :Type, 'rucoa/yard/type'
   end
 end

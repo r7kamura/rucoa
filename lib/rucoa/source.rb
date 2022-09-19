@@ -34,10 +34,15 @@ module Rucoa
     #     ]
     #   )
     def definitions
-      @definitions ||= Yard::DefinitionsLoader.load_string(
-        content: @content,
-        path: path
-      )
+      @definitions ||=
+        if parse_result.failed?
+          []
+        else
+          Yard::DefinitionsLoader.call(
+            associations: parse_result.associations,
+            root_node: parse_result.root_node
+          )
+        end
     end
 
     # @return [String, nil]
@@ -70,20 +75,16 @@ module Rucoa
       root_and_descendant_nodes.reverse.find do |node|
         node.include_position?(position)
       end
-    rescue ::Parser::SyntaxError
-      nil
     end
 
     # @return [Rucoa::Nodes::Base, nil]
     def root_node
-      @root_node ||= Parser.call(@content)
-    rescue ::Parser::SyntaxError
-      nil
+      parse_result.root_node
     end
 
     # @return [Boolean]
-    def syntax_error?
-      root_node.nil?
+    def failed_to_parse?
+      parse_result.failed?
     end
 
     # @return [Boolean]
@@ -92,6 +93,16 @@ module Rucoa
     end
 
     private
+
+    # @return [Rucoa::ParseResult]
+    def parse_result
+      return @parse_result if instance_variable_defined?(:@parse_result)
+
+      @parse_result = Parser.call(
+        path: path,
+        text: @content
+      )
+    end
 
     # @return [Array<Rucoa::Nodes::Base>]
     def root_and_descendant_nodes
