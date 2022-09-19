@@ -151,11 +151,6 @@ module Rucoa
       end
     end
 
-    # @return [Array<Rucoa::Definition::ConstantDefinition>]
-    def constant_definitions
-      definitions.grep(Definitions::ConstantDefinition)
-    end
-
     # @param namespace [String]
     # @return [Array<Rucoa::Definitions::ConstantDefinition>] e.g. File::Separator, File::SEPARATOR, etc.
     def constant_definitions_under(namespace)
@@ -215,6 +210,11 @@ module Rucoa
     # @return [Array<Rucoa::Definition::MethodDefinition>]
     def singleton_method_definitions
       method_definitions.select(&:singleton_method?)
+    end
+
+    # @return [Array<Rucoa::Definition::ConstantDefinition>]
+    def constant_definitions
+      definitions.grep(Definitions::ConstantDefinition)
     end
 
     # @param class_definition [Rucoa::Definitions::ClassDefinition]
