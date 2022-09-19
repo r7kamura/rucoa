@@ -59,7 +59,7 @@ module Rucoa
       @source_store = SourceStore.new
 
       @definition_store = DefinitionStore.new
-      @definition_store.definitions += DefinitionArchiver.load
+      @definition_store.bulk_add(DefinitionArchiver.load)
     end
 
     # @return [void]

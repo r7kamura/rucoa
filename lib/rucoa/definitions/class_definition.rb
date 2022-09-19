@@ -44,6 +44,16 @@ module Rucoa
       def super_class_resolved?
         !@super_class_fully_qualified_name.nil?
       end
+
+      # @return [Array<String>]
+      def super_class_candidates
+        module_nesting.map do |chained_name|
+          [
+            chained_name,
+            super_class_chained_name
+          ].join('::')
+        end + [super_class_chained_name]
+      end
     end
   end
 end
