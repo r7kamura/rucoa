@@ -12,7 +12,9 @@ module Rucoa
       # @return [String, nil]
       attr_accessor :super_class_fully_qualified_name
 
+      # @param module_nesting [Array<String>, nil]
       # @param super_class_chained_name [String, nil]
+      # @param super_class_fully_qualified_name [String, nil]
       def initialize(
         module_nesting: nil,
         super_class_chained_name: nil,
