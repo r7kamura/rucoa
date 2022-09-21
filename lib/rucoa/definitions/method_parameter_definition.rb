@@ -12,7 +12,10 @@ module Rucoa
 
       # @param name [String]
       # @param types [Array<String>]
-      def initialize(name:, types:)
+      def initialize(
+        name:,
+        types:
+      )
         super()
         @name = name
         @types = types

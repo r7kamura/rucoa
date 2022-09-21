@@ -28,7 +28,11 @@ module Rucoa
     end
 
     # @note Override.
-    def n(type, children, source_map)
+    def n(
+      type,
+      children,
+      source_map
+    )
       self.class.node_class_for(type).new(
         type,
         children,

@@ -7,7 +7,10 @@ module Rucoa
         # @param declaration [RBS::AST::Declarations::Class, RBS::AST::Declarations::Module]
         # @param method_definition [RBS::AST::Members::MethodDefinition]
         # @return [Rucoa::Definitions::MethodDefinition]
-        def call(declaration:, method_definition:)
+        def call(
+          declaration:,
+          method_definition:
+        )
           new(
             declaration: declaration,
             method_definition: method_definition
@@ -17,7 +20,10 @@ module Rucoa
 
       # @param declaration [RBS::AST::Declarations::Class, RBS::AST::Declarations::Module]
       # @param method_definition [RBS::AST::Members::MethodDefinition]
-      def initialize(declaration:, method_definition:)
+      def initialize(
+        declaration:,
+        method_definition:
+      )
         @declaration = declaration
         @method_definition = method_definition
       end

@@ -31,7 +31,11 @@ module Rucoa
     # @param beginning [Rucoa::Position]
     # @param ending [Ruoca::Position]
     # @param including_ending [Boolean]
-    def initialize(beginning, ending, including_ending: true)
+    def initialize(
+      beginning,
+      ending,
+      including_ending: true
+    )
       @beginning = beginning
       @ending = ending
       @including_ending = including_ending

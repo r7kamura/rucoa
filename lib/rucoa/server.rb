@@ -83,7 +83,10 @@ module Rucoa
     # @yieldparam response [Hash]
     # @param message [Hash]
     # @return [void]
-    def write(message, &block)
+    def write(
+      message,
+      &block
+    )
       if block
         write_server_request(message, &block)
       else
@@ -139,7 +142,10 @@ module Rucoa
 
     # @param message [Hash]
     # @return [void]
-    def write_server_request(message, &block)
+    def write_server_request(
+      message,
+      &block
+    )
       message = message.merge('id' => @server_request_id)
       debug do
         {

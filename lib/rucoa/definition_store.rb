@@ -80,7 +80,11 @@ module Rucoa
     #     singleton: true
     #   )
     #   expect(subject.fully_qualified_name).to eq('IO.write')
-    def find_method_definition_by(method_name:, namespace:, singleton: false)
+    def find_method_definition_by(
+      method_name:,
+      namespace:,
+      singleton: false
+    )
       definition = find_definition_by_fully_qualified_name(namespace)
       return unless definition
 

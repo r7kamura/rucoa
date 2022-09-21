@@ -7,7 +7,10 @@ module Rucoa
         # @param server [Rucoa::Server]
         # @param request [Hash]
         # @return [void]
-        def call(request:, server:)
+        def call(
+          request:,
+          server:
+        )
           new(
             request: request,
             server: server
@@ -17,7 +20,10 @@ module Rucoa
 
       # @param request [Hash]
       # @param server [Rucoa::Server]
-      def initialize(request:, server:)
+      def initialize(
+        request:,
+        server:
+      )
         @request = request
         @server = server
       end
@@ -61,7 +67,10 @@ module Rucoa
 
       # @param message [Hash]
       # @return [void]
-      def write(message, &block)
+      def write(
+        message,
+        &block
+      )
         @server.write(message, &block)
       end
     end

@@ -37,7 +37,10 @@ module Rucoa
       # @param types [Array<Symbol>]
       # @return [Rucoa::Nodes::Base] if a block is given
       # @return [Enumerator] if no block is given
-      def each_ancestor(*types, &block)
+      def each_ancestor(
+        *types,
+        &block
+      )
         return to_enum(__method__, *types) unless block
 
         visit_ancestors(types, &block)
@@ -47,7 +50,10 @@ module Rucoa
       # @param types [Array<Symbol>]
       # @return [Rucoa::Nodes::Base] if a block is given
       # @return [Enumerator] if no block is given
-      def each_child_node(*types, &block)
+      def each_child_node(
+        *types,
+        &block
+      )
         return to_enum(__method__, *types) unless block
 
         visit_child_node(types, &block)
@@ -57,7 +63,10 @@ module Rucoa
       # @param types [Array<Symbol>]
       # @return [Rucoa::Nodes::Base] if a block is given
       # @return [Enumerator] if no block is given
-      def each_descendant(*types, &block)
+      def each_descendant(
+        *types,
+        &block
+      )
         return to_enum(__method__, *types) unless block
 
         visit_descendants(types, &block)
@@ -68,7 +77,11 @@ module Rucoa
       #   Some nodes change their type depending on the context.
       #   For example, `const` node can be `casgn` node.
       # @return [Rucoa::Nodes::Base]
-      def updated(type = nil, children = nil, properties = {})
+      def updated(
+        type = nil,
+        children = nil,
+        properties = {}
+      )
         properties[:location] ||= @location
         ParserBuilder.node_class_for(type || @type).new(
           type || @type,
@@ -145,7 +158,10 @@ module Rucoa
       # Visit all descendants.
       # @param types [Array<Symbol>]
       # @return [void]
-      def visit_descendants(types, &block)
+      def visit_descendants(
+        types,
+        &block
+      )
         each_child_node do |child|
           yield(child) if types.empty? || types.include?(child.type)
           child.visit_descendants(types, &block)
