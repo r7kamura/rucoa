@@ -2,7 +2,14 @@
 
 module Rucoa
   module Nodes
-    class ClassNode < ModuleNode
+    class ClassNode < Base
+      include NodeConcerns::NameFullyQualifiable
+
+      # @return [String]
+      def name
+        const_node.name
+      end
+
       # @return [String, nil]
       # @example returns nil for class for `class Foo`
       #   node = Rucoa::Source.new(
@@ -47,6 +54,11 @@ module Rucoa
       end
 
       private
+
+      # @return [Rucoa::Nodes::ConstNode]
+      def const_node
+        children[0]
+      end
 
       # @return [Rucoa::Nodes::Base, nil]
       def super_class_node
