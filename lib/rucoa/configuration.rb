@@ -148,7 +148,10 @@ module Rucoa
     # @param keys [Array<String>]
     # @param default [Object]
     # @return [Object]
-    def fetch(*keys, default:)
+    def fetch(
+      *keys,
+      default:
+    )
       value = @settings.dig(*keys)
       if value.nil?
         default

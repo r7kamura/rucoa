@@ -41,7 +41,10 @@ module Rucoa
       # @param file [String]
       # @param offenses [Array<RuboCop::Cop::Offense>]
       # @return [void]
-      def file_finished(file, offenses)
+      def file_finished(
+        file,
+        offenses
+      )
         @offenses = offenses
         super
       end

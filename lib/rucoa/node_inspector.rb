@@ -4,7 +4,10 @@ module Rucoa
   class NodeInspector
     # @param definition_store [Rucoa::DefinitionStore]
     # @param node [Rucoa::Node]
-    def initialize(definition_store:, node:)
+    def initialize(
+      definition_store:,
+      node:
+    )
       @definition_store = definition_store
       @node = node
     end

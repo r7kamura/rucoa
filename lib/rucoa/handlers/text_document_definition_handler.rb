@@ -126,7 +126,10 @@ module Rucoa
       # @param fully_qualified_name [String]
       # @param klass [Class]
       # @return [Rucoa::Nodes::Base, nil]
-      def find_by_fully_qualified_name(fully_qualified_name:, klass:)
+      def find_by_fully_qualified_name(
+        fully_qualified_name:,
+        klass:
+      )
         location_root_or_descendant_nodes.reverse.find do |node|
           node.is_a?(klass) &&
             node.fully_qualified_name == fully_qualified_name
@@ -136,7 +139,10 @@ module Rucoa
       # @param name [String]
       # @param klass [Class]
       # @return [Rucoa::Nodes::Base, nil]
-      def find_by_name(klass:, name:)
+      def find_by_name(
+        klass:,
+        name:
+      )
         location_root_or_descendant_nodes.reverse.find do |node|
           node.is_a?(klass) &&
             node.name == name

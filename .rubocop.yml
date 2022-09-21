@@ -35,6 +35,9 @@ Security/MarshalLoad:
 Sevencop/HashLiteralOrder:
   Enabled: true
 
+Sevencop/MethodDefinitionMultilineArguments:
+  Enabled: true
+
 Style/Documentation:
   Enabled: false
 

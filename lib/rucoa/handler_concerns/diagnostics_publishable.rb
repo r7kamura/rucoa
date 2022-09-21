@@ -53,7 +53,10 @@ module Rucoa
 
         # @param source [Rucoa::Source]
         # @param uri [String]
-        def initialize(source:, uri:)
+        def initialize(
+          source:,
+          uri:
+        )
           @source = source
           @uri = uri
         end
@@ -102,7 +105,11 @@ module Rucoa
             # @param source [Rucoa::Source]
             # @param uri [String]
             # @return [Hash]
-            def call(offense, source:, uri:)
+            def call(
+              offense,
+              source:,
+              uri:
+            )
               new(
                 offense,
                 source: source,
@@ -114,7 +121,11 @@ module Rucoa
           # @param offense [RuboCop::Cop::Offense]
           # @param source [Rucoa::Source]
           # @param uri [String]
-          def initialize(offense, source:, uri:)
+          def initialize(
+            offense,
+            source:,
+            uri:
+          )
             @offense = offense
             @source = source
             @uri = uri

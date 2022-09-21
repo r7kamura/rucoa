@@ -12,7 +12,10 @@ module Rucoa
 
     # @param content [String]
     # @param uri [String]
-    def initialize(content:, uri:)
+    def initialize(
+      content:,
+      uri:
+    )
       @content = content
       @uri = uri
     end

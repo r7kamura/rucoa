@@ -12,7 +12,10 @@ module Rucoa
 
       # @param fully_qualified_name [String]
       # @param source_path [String]
-      def initialize(fully_qualified_name:, source_path:)
+      def initialize(
+        fully_qualified_name:,
+        source_path:
+      )
         super()
         @fully_qualified_name = fully_qualified_name
         @source_path = source_path

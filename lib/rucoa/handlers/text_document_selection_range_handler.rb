@@ -46,7 +46,10 @@ module Rucoa
           # @param source [Rucoa::Source]
           # @param position [Rucoa::Position]
           # @return [Hash, nil]
-          def call(position:, source:)
+          def call(
+            position:,
+            source:
+          )
             new(
               position: position,
               source: source
@@ -56,7 +59,10 @@ module Rucoa
 
         # @param position [Rucoa::Position]
         # @param source [Rucoa::Source]
-        def initialize(position:, source:)
+        def initialize(
+          position:,
+          source:
+        )
           @position = position
           @source = source
         end
