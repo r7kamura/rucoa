@@ -18,7 +18,7 @@ module Rucoa
 
     # @param source [Rucoa::Source]
     # @return [void]
-    # @example resolves super class name correctly by using existent definitions
+    # @example resolves super class name from definitions
     #   definition_store = Rucoa::DefinitionStore.new
     #   foo = Rucoa::Source.new(
     #     content: <<~RUBY,
@@ -42,25 +42,35 @@ module Rucoa
     #   definition_store.update_from(bar)
     #   definition = definition_store.find_definition_by_fully_qualified_name('A::Bar')
     #   expect(definition.super_class_fully_qualified_name).to eq('A::Foo')
+    # @example resolves included module names from definitions
+    #   definition_store = Rucoa::DefinitionStore.new
+    #   foo = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       module A
+    #         module Foo
+    #         end
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/a/foo.rb',
+    #   )
+    #   definition_store.update_from(foo)
+    #   bar = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       module A
+    #         class Bar
+    #           include Foo
+    #         end
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/a/bar.rb',
+    #   )
+    #   definition_store.update_from(bar)
+    #   definition = definition_store.find_definition_by_fully_qualified_name('A::Bar')
+    #   expect(definition.included_module_fully_qualified_names).to eq(%w[A::Foo])
     def update_from(source)
-      delete_definitions_about(source)
-
-      # Need to store definitions before super class resolution.
-      source.definitions.group_by do |definition|
-        definition.location.uri
-      end.each do |uri, definitions|
-        @fully_qualified_names_by_uri[uri] += definitions.map(&:fully_qualified_name)
-        definitions.each do |definition|
-          @definition_by_fully_qualified_name[definition.fully_qualified_name] = definition
-        end
-      end
-
-      source.definitions.each do |definition|
-        next unless definition.is_a?(Definitions::ClassDefinition)
-        next if definition.super_class_resolved?
-
-        definition.super_class_fully_qualified_name = resolve_super_class_of(definition)
-      end
+      delete_definitions_in(source)
+      add_definitions_in(source)
+      resolve_constants_in(source)
     end
 
     # @param fully_qualified_name [String]
@@ -169,7 +179,7 @@ module Rucoa
 
     # @param source [Rucoa::Source]
     # @return [void]
-    def delete_definitions_about(source)
+    def delete_definitions_in(source)
       @fully_qualified_names_by_uri[source.uri].each do |fully_qualified_name|
         @definition_by_fully_qualified_name.delete(fully_qualified_name)
       end
@@ -187,11 +197,20 @@ module Rucoa
     def ancestor_definitions_of(class_or_module_definition)
       return [] unless class_or_module_definition.is_a?(Definitions::ClassDefinition)
 
-      result = []
       class_definition = class_or_module_definition
+      result = []
+
+      result += class_definition.included_module_fully_qualified_names.filter_map do |fully_qualified_name|
+        find_definition_by_fully_qualified_name(fully_qualified_name)
+      end.reverse
+
       while (super_class_fully_qualified_name = class_definition.super_class_fully_qualified_name)
         class_definition = find_definition_by_fully_qualified_name(super_class_fully_qualified_name)
         break unless class_definition
+
+        result += class_definition.included_module_fully_qualified_names.filter_map do |fully_qualified_name|
+          find_definition_by_fully_qualified_name(fully_qualified_name)
+        end.reverse
 
         result << class_definition
       end
@@ -223,14 +242,70 @@ module Rucoa
       definitions.grep(Definitions::ConstantDefinition)
     end
 
+    # @param source [Rucoa::Source]
+    # @return [void]
+    def add_definitions_in(source)
+      source.definitions.group_by do |definition|
+        definition.location.uri
+      end.each do |uri, definitions|
+        @fully_qualified_names_by_uri[uri] += definitions.map(&:fully_qualified_name)
+        definitions.each do |definition|
+          @definition_by_fully_qualified_name[definition.fully_qualified_name] = definition
+        end
+      end
+    end
+
+    # @param source [Rucoa::Source]
+    # @return [void]
+    def resolve_constants_in(source)
+      source.definitions.each do |definition|
+        next unless definition.is_a?(Definitions::ClassDefinition)
+
+        definition.super_class_fully_qualified_name = resolve_super_class_of(definition)
+        definition.included_module_fully_qualified_names = resolve_included_modules_of(definition)
+      end
+    end
+
     # @param class_definition [Rucoa::Definitions::ClassDefinition]
     # @return [String]
     def resolve_super_class_of(class_definition)
-      return 'Object' unless class_definition.super_class_chained_name
+      chained_name = class_definition.super_class_chained_name
+      return 'Object' unless chained_name
 
-      class_definition.super_class_candidates.find do |candidate|
+      resolve_constant(
+        chained_name: chained_name,
+        module_nesting: class_definition.module_nesting
+      )
+    end
+
+    # @param class_definition [Rucoa::Definitions::ClassDefinition]
+    # @return [Array<String>]
+    def resolve_included_modules_of(class_definition)
+      class_definition.included_module_chained_names.map do |chained_name|
+        resolve_constant(
+          chained_name: chained_name,
+          module_nesting: [
+            class_definition.fully_qualified_name,
+            *class_definition.module_nesting
+          ]
+        )
+      end
+    end
+
+    # @param chained_name [String]
+    # @param module_nesting [Array<String>]
+    # @return [String]
+    def resolve_constant(
+      chained_name:,
+      module_nesting:
+    )
+      (
+        module_nesting.map do |prefix|
+          "#{prefix}::#{chained_name}"
+        end + [chained_name]
+      ).find do |candidate|
         find_definition_by_fully_qualified_name(candidate)
-      end || class_definition.super_class_chained_name
+      end || chained_name
     end
   end
 end
