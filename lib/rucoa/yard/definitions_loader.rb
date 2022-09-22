@@ -153,8 +153,8 @@ module Rucoa
             [
               Definitions::ClassDefinition.new(
                 fully_qualified_name: @node.fully_qualified_name,
+                location: Location.from_rucoa_node(@node),
                 module_nesting: @node.module_nesting,
-                source_path: @node.location.expression.source_buffer.name,
                 super_class_chained_name: @node.super_class_chained_name
               )
             ]
@@ -177,7 +177,7 @@ module Rucoa
             [
               Definitions::ModuleDefinition.new(
                 fully_qualified_name: @node.fully_qualified_name,
-                source_path: @node.location.expression.source_buffer.name
+                location: Location.from_rucoa_node(@node)
               )
             ]
           end
@@ -209,9 +209,9 @@ module Rucoa
               Definitions::MethodDefinition.new(
                 description: docstring_parser.to_docstring.to_s,
                 kind: @node.singleton? ? :singleton : :instance,
+                location: Location.from_rucoa_node(@node),
                 method_name: @node.name,
                 namespace: @node.namespace,
-                source_path: @node.location.expression.source_buffer.name,
                 types: return_types.map do |type|
                   Types::MethodType.new(
                     parameters_string: '', # TODO
@@ -262,9 +262,9 @@ module Rucoa
               Definitions::MethodDefinition.new(
                 description: docstring_parser.to_docstring.to_s,
                 kind: :instance,
+                location: Location.from_rucoa_node(@node),
                 method_name: argument.value.to_s,
                 namespace: @node.namespace,
-                source_path: @node.location.expression.source_buffer.name,
                 types: return_types.map do |type|
                   Types::MethodType.new(
                     parameters_string: '', # TODO
@@ -315,9 +315,9 @@ module Rucoa
               Definitions::MethodDefinition.new(
                 description: docstring_parser.to_docstring.to_s,
                 kind: :instance,
+                location: Location.from_rucoa_node(@node),
                 method_name: "#{argument.value}=",
                 namespace: @node.namespace,
-                source_path: @node.location.expression.source_buffer.name,
                 types: return_types.map do |type|
                   Types::MethodType.new(
                     parameters_string: 'value', # TODO

@@ -7,26 +7,28 @@ module Rucoa
       # @return [String]
       attr_reader :fully_qualified_name
 
-      # @return [String]
-      attr_reader :source_path
-
       # @param fully_qualified_name [String]
-      # @param source_path [String]
       def initialize(
         fully_qualified_name:,
-        source_path:
+        **keyword_arguments
       )
-        super()
+        super(**keyword_arguments)
         @fully_qualified_name = fully_qualified_name
-        @source_path = source_path
       end
 
       # @return [String]
       # @example returns non-full-qualified name
-      #   definition = Rucoa::Definitions::ConstantDefinition.new(
-      #     fully_qualified_name: 'Foo::Bar::Baz',
-      #     source_path: '/path/to/foo/bar/baz.rb'
-      #   )
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         module Bar
+      #           class Baz
+      #           end
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/bar/baz.rb',
+      #   ).definitions[2]
       #   expect(definition.name).to eq('Baz')
       def name
         names.last
@@ -34,10 +36,17 @@ module Rucoa
 
       # @return [String]
       # @example returns namespace
-      #   definition = Rucoa::Definitions::ConstantDefinition.new(
-      #     fully_qualified_name: 'Foo::Bar::Baz',
-      #     source_path: '/path/to/foo/bar/baz.rb'
-      #   )
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         module Bar
+      #           class Baz
+      #           end
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/bar/baz.rb',
+      #   ).definitions[2]
       #   expect(definition.namespace).to eq('Foo::Bar')
       def namespace
         names[..-2].join('::')

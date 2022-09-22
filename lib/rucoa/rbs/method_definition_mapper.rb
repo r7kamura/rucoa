@@ -33,9 +33,9 @@ module Rucoa
         Definitions::MethodDefinition.new(
           description: description,
           kind: kind,
+          location: location,
           method_name: method_name,
           namespace: namespace,
-          source_path: source_path,
           types: types
         )
       end
@@ -71,9 +71,9 @@ module Rucoa
         @method_definition.kind
       end
 
-      # @return [String]
-      def source_path
-        @declaration.location.name
+      # @return [Rucoa::Location]
+      def location
+        Location.from_rbs_location(@method_definition.location)
       end
 
       class MethodTypeMapper

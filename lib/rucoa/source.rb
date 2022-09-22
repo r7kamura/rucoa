@@ -101,8 +101,8 @@ module Rucoa
       return @parse_result if instance_variable_defined?(:@parse_result)
 
       @parse_result = Parser.call(
-        path: name,
-        text: @content
+        text: @content,
+        uri: @uri
       )
     end
 

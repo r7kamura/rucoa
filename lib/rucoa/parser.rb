@@ -5,47 +5,47 @@ require 'parser/current'
 module Rucoa
   class Parser
     class << self
-      # @param path [String]
       # @param text [String]
+      # @param uri [String]
       # @return [Rucoa::ParseResult]
       # @example returns non-failed parse result for valid Ruby source
       #   result = Rucoa::Parser.call(
-      #     path: '/path/to/foo.rb',
-      #     text: 'foo'
+      #     text: 'foo',
+      #     uri: 'file:///path/to/foo.rb'
       #   )
       #   expect(result).not_to be_failed
       # @example returns failed parse result for invalid Ruby source
       #   result = Rucoa::Parser.call(
-      #     path: '/path/to/foo.rb',
-      #     text: 'foo('
+      #     text: 'foo(',
+      #     uri: 'file:///path/to/foo.rb'
       #   )
       #   expect(result).to be_failed
       def call(
-        path:,
-        text:
+        text:,
+        uri:
       )
         new(
-          path: path,
-          text: text
+          text: text,
+          uri: uri
         ).call
       end
     end
 
-    # @param path [String]
     # @param text [String]
+    # @param uri [String]
     def initialize(
-      path:,
-      text:
+      text:,
+      uri:
     )
-      @path = path
       @text = text
+      @uri = uri
     end
 
     # @return [Rucoa::ParseResult]
     def call
       root_node, comments = parser.parse_with_comments(
         ::Parser::Source::Buffer.new(
-          @path,
+          @uri,
           source: @text
         )
       )

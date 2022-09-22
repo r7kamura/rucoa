@@ -11,7 +11,7 @@ module Rucoa
     # @return [void]
     def bulk_add(definitions)
       definitions.each do |definition|
-        @fully_qualified_names_by_uri["file://#{definition.source_path}"] << definition.fully_qualified_name
+        @fully_qualified_names_by_uri[definition.location.uri] << definition.fully_qualified_name
         @definition_by_full_qualified_name[definition.fully_qualified_name] = definition
       end
     end
@@ -46,8 +46,10 @@ module Rucoa
       delete_definitions_about(source)
 
       # Need to store definitions before super class resolution.
-      source.definitions.group_by(&:source_path).each do |source_path, definitions|
-        @fully_qualified_names_by_uri["file://#{source_path}"] += definitions.map(&:fully_qualified_name)
+      source.definitions.group_by do |definition|
+        definition.location.uri
+      end.each do |uri, definitions|
+        @fully_qualified_names_by_uri[uri] += definitions.map(&:fully_qualified_name)
         definitions.each do |definition|
           @definition_by_full_qualified_name[definition.fully_qualified_name] = definition
         end
