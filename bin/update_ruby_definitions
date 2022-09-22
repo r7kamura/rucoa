@@ -4,6 +4,8 @@
 require 'bundler/setup'
 require 'rucoa'
 
-Rucoa::DefinitionArchiver.dump(
-  Rucoa::Rbs::RubyDefinitionsLoader.call
-)
+definitions = Rucoa::Rbs::RubyDefinitionsLoader.call
+definitions.each do |definition|
+  definition.location = nil
+end
+Rucoa::DefinitionArchiver.dump(definitions)

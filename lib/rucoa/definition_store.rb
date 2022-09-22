@@ -11,7 +11,7 @@ module Rucoa
     # @return [void]
     def bulk_add(definitions)
       definitions.each do |definition|
-        @fully_qualified_names_by_uri[definition.location.uri] << definition.fully_qualified_name
+        @fully_qualified_names_by_uri[definition.location.uri] << definition.fully_qualified_name if definition.location
         @definition_by_full_qualified_name[definition.fully_qualified_name] = definition
       end
     end

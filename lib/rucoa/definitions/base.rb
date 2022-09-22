@@ -3,10 +3,10 @@
 module Rucoa
   module Definitions
     class Base
-      # @return [Rucoa::Location]
-      attr_reader :location
+      # @return [Rucoa::Location, nil]
+      attr_accessor :location
 
-      # @param location [Rucoa::Location]
+      # @param location [Rucoa::Location, nil]
       def initialize(location:)
         @location = location
       end
