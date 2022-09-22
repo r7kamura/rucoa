@@ -3,6 +3,7 @@
 module Rucoa
   module Nodes
     class ModuleNode < Base
+      include NodeConcerns::Body
       include NodeConcerns::NameFullyQualifiable
 
       # @return [String]
