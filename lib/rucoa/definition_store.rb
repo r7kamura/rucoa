@@ -3,7 +3,7 @@
 module Rucoa
   class DefinitionStore
     def initialize
-      @definition_by_full_qualified_name = {}
+      @definition_by_fully_qualified_name = {}
       @fully_qualified_names_by_uri = ::Hash.new { |hash, key| hash[key] = [] }
     end
 
@@ -12,7 +12,7 @@ module Rucoa
     def bulk_add(definitions)
       definitions.each do |definition|
         @fully_qualified_names_by_uri[definition.location.uri] << definition.fully_qualified_name if definition.location
-        @definition_by_full_qualified_name[definition.fully_qualified_name] = definition
+        @definition_by_fully_qualified_name[definition.fully_qualified_name] = definition
       end
     end
 
@@ -51,7 +51,7 @@ module Rucoa
       end.each do |uri, definitions|
         @fully_qualified_names_by_uri[uri] += definitions.map(&:fully_qualified_name)
         definitions.each do |definition|
-          @definition_by_full_qualified_name[definition.fully_qualified_name] = definition
+          @definition_by_fully_qualified_name[definition.fully_qualified_name] = definition
         end
       end
 
@@ -66,7 +66,7 @@ module Rucoa
     # @param fully_qualified_name [String]
     # @return [Rucoa::Definitions::Base, nil]
     def find_definition_by_fully_qualified_name(fully_qualified_name)
-      @definition_by_full_qualified_name[fully_qualified_name]
+      @definition_by_fully_qualified_name[fully_qualified_name]
     end
 
     # @param method_name [String]
@@ -171,7 +171,7 @@ module Rucoa
     # @return [void]
     def delete_definitions_about(source)
       @fully_qualified_names_by_uri[source.uri].each do |fully_qualified_name|
-        @definition_by_full_qualified_name.delete(fully_qualified_name)
+        @definition_by_fully_qualified_name.delete(fully_qualified_name)
       end
       @fully_qualified_names_by_uri.delete(source.uri)
     end
@@ -200,7 +200,7 @@ module Rucoa
 
     # @return [Array<Rucoa::Definitions::Base>]
     def definitions
-      @definition_by_full_qualified_name.values
+      @definition_by_fully_qualified_name.values
     end
 
     # @return [Array<Rucoa::Definition::MethodDefinition>]
