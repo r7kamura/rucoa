@@ -15,43 +15,41 @@ module Rucoa
       # @return [String]
       attr_reader :namespace
 
-      # @return [String]
-      attr_reader :source_path
-
       # @param description [String, nil]
       # @param kind [Symbol]
       # @param method_name [String]
       # @param namespace [String]
-      # @param source_path [String]
       # @param types [Array<Rucoa::Types::MethodType>]
       def initialize(
         description:,
         kind:,
         method_name:,
         namespace:,
-        source_path:,
-        types:
+        types:,
+        **keyword_arguments
       )
-        super()
+        super(**keyword_arguments)
         @description = description
         @kind = kind
         @method_name = method_name
         @namespace = namespace
-        @source_path = source_path
         @types = types
       end
 
       # @return [String]
       # @example returns qualified name of method
-      #   method_definition = Rucoa::Definitions::MethodDefinition.new(
-      #     description: nil,
-      #     kind: :instance,
-      #     method_name: 'foo',
-      #     namespace: 'Foo::Bar',
-      #     source_path: '/path/to/foo/bar.rb',
-      #     types: []
-      #   )
-      #   expect(method_definition.fully_qualified_name).to eq('Foo::Bar#foo')
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         module Bar
+      #           def foo
+      #           end
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/bar/baz.rb',
+      #   ).definitions[2]
+      #   expect(definition.fully_qualified_name).to eq('Foo::Bar#foo')
       def fully_qualified_name
         [
           @namespace,
@@ -68,40 +66,40 @@ module Rucoa
 
       # @return [Array<String>]
       # @example returns return types
-      #   method_definition = Rucoa::Definitions::MethodDefinition.new(
-      #     description: nil,
-      #     kind: :instance,
-      #     method_name: 'foo',
-      #     namespace: 'Foo::Bar',
-      #     source_path: '/path/to/foo/bar.rb',
-      #     types: [
-      #       Rucoa::Types::MethodType.new(
-      #         parameters_string: '',
-      #         return_type: 'String'
-      #       )
-      #     ]
-      #   )
-      #   expect(method_definition.return_types).to eq(%w[String])
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         module Bar
+      #           # @return [String]
+      #           def baz
+      #           end
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/bar.rb',
+      #   ).definitions[2]
+      #   expect(definition.return_types).to eq(%w[String])
       def return_types
         @types.map(&:return_type)
       end
 
       # @return [Array<String>]
       # @example returns signature
-      #   method_definition = Rucoa::Definitions::MethodDefinition.new(
-      #     description: nil,
-      #     kind: :instance,
-      #     method_name: 'foo',
-      #     namespace: 'Foo::Bar',
-      #     source_path: '/path/to/foo/bar.rb',
-      #     types: [
-      #       Rucoa::Types::MethodType.new(
-      #         parameters_string: '?::int base',
-      #         return_type: 'String'
-      #       )
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         module Bar
+      #           attr_writer :baz
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/bar.rb',
+      #   ).definitions[2]
+      #   expect(definition.signatures).to eq(
+      #     [
+      #       'Foo::Bar#baz=(value) -> Object'
       #     ]
       #   )
-      #   expect(method_definition.signatures).to eq(['Foo::Bar#foo(?::int base) -> String'])
       def signatures
         @types.map do |type|
           format(

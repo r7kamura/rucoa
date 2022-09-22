@@ -20,7 +20,7 @@ module Rucoa
       def call
         Definitions::ModuleDefinition.new(
           fully_qualified_name: fully_qualified_name,
-          source_path: source_path
+          location: location
         )
       end
 
@@ -31,9 +31,9 @@ module Rucoa
         @declaration.name.to_s.delete_prefix('::')
       end
 
-      # @return [String]
-      def source_path
-        @declaration.location.name
+      # @return [Rucoa::Location]
+      def location
+        Location.from_rbs_location(@declaration.location)
       end
     end
   end

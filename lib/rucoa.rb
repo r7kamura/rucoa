@@ -11,6 +11,7 @@ module Rucoa
   autoload :Errors, 'rucoa/errors'
   autoload :HandlerConcerns, 'rucoa/handler_concerns'
   autoload :Handlers, 'rucoa/handlers'
+  autoload :Location, 'rucoa/location'
   autoload :MessageReader, 'rucoa/message_reader'
   autoload :MessageWriter, 'rucoa/message_writer'
   autoload :NodeConcerns, 'rucoa/node_concerns'

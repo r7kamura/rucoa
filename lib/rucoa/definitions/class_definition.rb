@@ -29,19 +29,27 @@ module Rucoa
 
       # @return [Boolean]
       # @example returns false on not-resolved case
-      #   definition = Rucoa::Definitions::ClassDefinition.new(
-      #     fully_qualified_name: 'Foo',
-      #     source_path: '/path/to/foo.rb',
-      #     super_class_chained_name: 'Bar'
-      #   )
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         class Baz < Bar
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/baz.rb',
+      #   ).definitions[1]
       #   expect(definition).not_to be_super_class_resolved
       # @example returns true on resolved case
-      #   definition = Rucoa::Definitions::ClassDefinition.new(
-      #     fully_qualified_name: 'Foo',
-      #     source_path: '/path/to/foo.rb',
-      #     super_class_chained_name: 'Bar',
-      #     super_class_fully_qualified_name: 'Bar'
-      #   )
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         class Baz < Bar
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/baz.rb',
+      #   ).definitions[1]
+      #   definition.super_class_fully_qualified_name = 'Foo::Bar'
       #   expect(definition).to be_super_class_resolved
       def super_class_resolved?
         !@super_class_fully_qualified_name.nil?
@@ -49,23 +57,31 @@ module Rucoa
 
       # @return [Array<String>]
       # @example returns candidates of super class fully qualified name
-      #   class_definition = Rucoa::Definitions::ClassDefinition.new(
-      #     fully_qualified_name: nil,
-      #     module_nesting: %w[B::A B],
-      #     source_path: '/path/to/b/a/c.rb',
-      #     super_class_chained_name: 'C'
-      #   )
-      #   expect(class_definition.super_class_candidates).to eq(
-      #     %w[B::A::C B::C C]
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         class Baz < Bar
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/baz.rb',
+      #   ).definitions[1]
+      #   expect(definition.super_class_candidates).to eq(
+      #     %w[Foo::Bar Bar]
       #   )
       # @example returns only correct answer if it's already resolved
-      #   class_definition = Rucoa::Definitions::ClassDefinition.new(
-      #     fully_qualified_name: 'B::A::C',
-      #     source_path: '/path/to/b/a/c.rb',
-      #     super_class_fully_qualified_name: 'B::A::C'
-      #   )
-      #   expect(class_definition.super_class_candidates).to eq(
-      #     %w[B::A::C]
+      #   definition = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         class Baz < Bar
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/baz.rb',
+      #   ).definitions[1]
+      #   definition.super_class_fully_qualified_name = 'Foo::Bar'
+      #   expect(definition.super_class_candidates).to eq(
+      #     %w[Foo::Bar]
       #   )
       def super_class_candidates
         return [super_class_fully_qualified_name] if super_class_resolved?

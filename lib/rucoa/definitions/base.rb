@@ -3,9 +3,12 @@
 module Rucoa
   module Definitions
     class Base
-      # @return [String]
-      def source_path
-        raise ::NotImplementedError
+      # @return [Rucoa::Location]
+      attr_reader :location
+
+      # @param location [Rucoa::Location]
+      def initialize(location:)
+        @location = location
       end
     end
   end
