@@ -2,7 +2,7 @@
 
 module Rucoa
   module NodeConcerns
-    module NameFullyQualifiable
+    module FullyQualifiedName
       # @return [String]
       def fully_qualified_name
         [

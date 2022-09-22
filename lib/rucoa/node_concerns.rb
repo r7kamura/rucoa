@@ -3,6 +3,6 @@
 module Rucoa
   module NodeConcerns
     autoload :Body, 'rucoa/node_concerns/body'
-    autoload :NameFullyQualifiable, 'rucoa/node_concerns/name_fully_qualifiable'
+    autoload :FullyQualifiedName, 'rucoa/node_concerns/fully_qualified_name'
   end
 end
