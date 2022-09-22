@@ -22,7 +22,7 @@ module Rucoa
       # @return [Boolean]
       def reponsible?
         configuration.enables_definition? &&
-          !definition.nil?
+          !definition&.location.nil?
       end
 
       # @return [Rucoa::Position]
