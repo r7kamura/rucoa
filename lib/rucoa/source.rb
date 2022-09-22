@@ -38,9 +38,21 @@ module Rucoa
     #       a_kind_of(Rucoa::Definitions::MethodDefinition)
     #     ]
     #   )
+    # @example returns empty array when failed to parse
+    #   source = Rucoa::Source.new(
+    #     content: 'class Foo',
+    #     uri: 'file:///path/to/foo.rb'
+    #   )
+    #   expect(source.definitions).to eq([])
+    # @example returns empty array when no node is found from content
+    #   source = Rucoa::Source.new(
+    #     content: '',
+    #     uri: 'file:///path/to/foo.rb'
+    #   )
+    #   expect(source.definitions).to eq([])
     def definitions
       @definitions ||=
-        if parse_result.failed?
+        if parse_result.failed? || root_node.nil?
           []
         else
           Yard::DefinitionsLoader.call(
