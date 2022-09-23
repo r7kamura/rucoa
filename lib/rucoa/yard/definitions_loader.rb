@@ -93,6 +93,11 @@ module Rucoa
 
           private
 
+          # @return [String]
+          def description
+            docstring_parser.to_docstring.to_s
+          end
+
           # @return [YARD::DocstringParser]
           def docstring_parser
             @docstring_parser ||= ::YARD::Logger.instance.enter_level(::Logger::FATAL) do
@@ -162,7 +167,7 @@ module Rucoa
 
             [
               Definitions::ClassDefinition.new(
-                description: docstring_parser.to_docstring.to_s,
+                description: description,
                 fully_qualified_name: @node.fully_qualified_name,
                 included_module_chained_names: included_module_chained_names,
                 location: Location.from_rucoa_node(@node),
@@ -188,7 +193,7 @@ module Rucoa
 
             [
               Definitions::ModuleDefinition.new(
-                description: docstring_parser.to_docstring.to_s,
+                description: description,
                 fully_qualified_name: @node.fully_qualified_name,
                 location: Location.from_rucoa_node(@node)
               )
@@ -220,7 +225,7 @@ module Rucoa
 
             [
               Definitions::MethodDefinition.new(
-                description: docstring_parser.to_docstring.to_s,
+                description: description,
                 kind: @node.singleton? ? :singleton : :instance,
                 location: Location.from_rucoa_node(@node),
                 method_name: @node.name,
@@ -273,7 +278,7 @@ module Rucoa
 
             @node.arguments.map do |argument|
               Definitions::MethodDefinition.new(
-                description: docstring_parser.to_docstring.to_s,
+                description: description,
                 kind: :instance,
                 location: Location.from_rucoa_node(@node),
                 method_name: argument.value.to_s,
@@ -326,7 +331,7 @@ module Rucoa
 
             @node.arguments.map do |argument|
               Definitions::MethodDefinition.new(
-                description: docstring_parser.to_docstring.to_s,
+                description: description,
                 kind: :instance,
                 location: Location.from_rucoa_node(@node),
                 method_name: "#{argument.value}=",
