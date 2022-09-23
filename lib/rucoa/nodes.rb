@@ -4,9 +4,9 @@ module Rucoa
   module Nodes
     autoload :Base, 'rucoa/nodes/base'
     autoload :BeginNode, 'rucoa/nodes/begin_node'
+    autoload :CasgnNode, 'rucoa/nodes/casgn_node'
     autoload :CbaseNode, 'rucoa/nodes/cbase_node'
     autoload :ClassNode, 'rucoa/nodes/class_node'
-    autoload :CasgnNode, 'rucoa/nodes/casgn_node'
     autoload :ConstNode, 'rucoa/nodes/const_node'
     autoload :DefNode, 'rucoa/nodes/def_node'
     autoload :DefsNode, 'rucoa/nodes/defs_node'

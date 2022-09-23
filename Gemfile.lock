@@ -54,7 +54,7 @@ GEM
     rubocop-rspec (2.13.2)
       rubocop (~> 1.33)
     ruby-progressbar (1.11.0)
-    sevencop (0.12.0)
+    sevencop (0.12.1)
       rubocop
     unicode-display_width (2.3.0)
     webrick (1.7.0)
