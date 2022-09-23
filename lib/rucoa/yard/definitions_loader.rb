@@ -39,6 +39,7 @@ module Rucoa
         ].flat_map do |node|
           [
             DefinitionGenerators::ClassDefinitionGenerator,
+            DefinitionGenerators::ConstantAssignmentDefinitionGenerator,
             DefinitionGenerators::MethodDefinitionGenerator,
             DefinitionGenerators::ModuleDefinitionGenerator,
             DefinitionGenerators::AttributeReaderDefinitionGenerator,
@@ -173,6 +174,28 @@ module Rucoa
                 location: Location.from_rucoa_node(@node),
                 module_nesting: @node.module_nesting,
                 super_class_chained_name: @node.super_class_chained_name
+              )
+            ]
+          end
+        end
+
+        class ConstantAssignmentDefinitionGenerator < Base
+          # @example returns constant definition for constant assignment node
+          #   definitions = Rucoa::Source.new(
+          #     content: <<~RUBY,
+          #       Foo = 'foo'
+          #     RUBY
+          #     uri: '/path/to/foo.rb'
+          #   ).definitions
+          #   expect(definitions[0]).to be_a(Rucoa::Definitions::ConstantDefinition)
+          def call
+            return [] unless @node.is_a?(Nodes::CasgnNode)
+
+            [
+              Definitions::ConstantDefinition.new(
+                description: description,
+                fully_qualified_name: @node.fully_qualified_name,
+                location: Location.from_rucoa_node(@node)
               )
             ]
           end
