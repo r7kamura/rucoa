@@ -175,6 +175,22 @@ module Rucoa
       end
     end
 
+    # @param chained_name [String]
+    # @param module_nesting [Array<String>]
+    # @return [String]
+    def resolve_constant(
+      chained_name:,
+      module_nesting:
+    )
+      (
+        module_nesting.map do |prefix|
+          "#{prefix}::#{chained_name}"
+        end + [chained_name]
+      ).find do |candidate|
+        find_definition_by_fully_qualified_name(candidate)
+      end || chained_name
+    end
+
     private
 
     # @param source [Rucoa::Source]
@@ -290,22 +306,6 @@ module Rucoa
           ]
         )
       end
-    end
-
-    # @param chained_name [String]
-    # @param module_nesting [Array<String>]
-    # @return [String]
-    def resolve_constant(
-      chained_name:,
-      module_nesting:
-    )
-      (
-        module_nesting.map do |prefix|
-          "#{prefix}::#{chained_name}"
-        end + [chained_name]
-      ).find do |candidate|
-        find_definition_by_fully_qualified_name(candidate)
-      end || chained_name
     end
   end
 end
