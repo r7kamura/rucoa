@@ -32,6 +32,9 @@ RSpec/NamedSubject:
 Security/MarshalLoad:
   Enabled: false
 
+Sevencop/AutoloadOrdered:
+  Enabled: true
+
 Sevencop/HashLiteralOrder:
   Enabled: true
 
