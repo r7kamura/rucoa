@@ -217,5 +217,38 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
         )
       end
     end
+
+    context 'when non-class and non-module constant is hovered' do
+      let(:content) do
+        <<~RUBY
+          # Returns one.
+          # @return [Integer]
+          A = 1
+
+          A
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 0,
+          line: 5
+        )
+      end
+
+      it 'responds hover' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => hash_including(
+                'contents' => "A\nReturns one."
+              )
+            )
+          ]
+        )
+      end
+    end
   end
 end
