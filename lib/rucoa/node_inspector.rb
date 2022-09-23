@@ -93,22 +93,12 @@ module Rucoa
     def constant_definition
       return unless @node.is_a?(Nodes::ConstNode)
 
-      module_nesting = @node.module_nesting
-      candidate_fully_qualified_names = module_nesting.flat_map do |module_nesting_fully_qualified_name|
-        [
-          module_nesting_fully_qualified_name
-          # TODO: *ancestors_of(module_nesting_fully_qualified_name)
-        ].map do |fully_qualified_name|
-          [
-            fully_qualified_name,
-            @node.chained_name
-          ].join('::')
-        end
-      end + [@node.chained_name]
-      candidate_fully_qualified_names.find do |candidate_fully_qualified_name|
-        definition = @definition_store.find_definition_by_fully_qualified_name(candidate_fully_qualified_name)
-        break definition if definition
-      end
+      @definition_store.find_definition_by_fully_qualified_name(
+        @definition_store.resolve_constant(
+          chained_name: @node.chained_name,
+          module_nesting: @node.module_nesting
+        )
+      )
     end
 
     # @return [Boolean]
