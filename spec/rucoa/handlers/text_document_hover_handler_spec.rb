@@ -83,7 +83,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
       end
     end
 
-    context 'with valid condition' do
+    context 'with String#to_i method call is hovered' do
       it 'responds hover' do
         subject
         expect(server.responses).to match(
@@ -109,7 +109,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
       end
     end
 
-    context 'when method is defined in super class in YARD' do
+    context 'when inherited method call is hovered' do
       let(:content) do
         <<~RUBY
           module A
@@ -142,6 +142,75 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
               'id' => 1,
               'result' => hash_including(
                 'contents' => /\AA::Foo#foo/
+              )
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when constant is hovered' do
+      let(:content) do
+        <<~RUBY
+          class Foo
+          end
+          Foo
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 0,
+          line: 3
+        )
+      end
+
+      it 'responds hover' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => hash_including(
+                'contents' => "Foo\n"
+              )
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when resolvable constant is hovered' do
+      let(:content) do
+        <<~RUBY
+          class A
+            class Foo
+            end
+
+            class Bar < Foo
+              def baz
+                Bar
+              end
+            end
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 6,
+          line: 7
+        )
+      end
+
+      it 'responds hover' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => hash_including(
+                'contents' => "A::Bar\n"
               )
             )
           ]

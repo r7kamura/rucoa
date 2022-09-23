@@ -19,12 +19,18 @@ module Rucoa
       # @return [Rucoa::Definitions::ConstantDefinition]
       def call
         Definitions::ConstantDefinition.new(
+          description: description,
           fully_qualified_name: fully_qualified_name,
           location: location
         )
       end
 
       private
+
+      # @return [String, nil]
+      def description
+        @declaration.comment&.string&.sub(/\A\s*<!--.*-->\s*/m, '')
+      end
 
       # @return [String]
       def fully_qualified_name
