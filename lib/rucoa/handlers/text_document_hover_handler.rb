@@ -22,18 +22,24 @@ module Rucoa
       # @return [Boolean]
       def responsible?
         configuration.enables_hover? &&
-          !source.nil? &&
-          !node.nil? &&
-          !method_definitions.empty?
+          !contents.nil?
       end
 
       # @return [String, nil]
       def contents
-        method_definition = method_definitions.first
-        [
-          method_definition.signatures.join("\n"),
-          method_definition.description
-        ].join("\n\n")
+        @contents ||=
+          case definition
+          when Definitions::ClassDefinition, Definitions::ModuleDefinition
+            [
+              definition.fully_qualified_name,
+              definition.description
+            ].compact.join("\n")
+          when Definitions::MethodDefinition
+            [
+              definition.signatures.join("\n"),
+              definition.description
+            ].join("\n\n")
+          end
       end
 
       # @return [Rucoa::Range]
@@ -43,7 +49,7 @@ module Rucoa
 
       # @return [Rucoa::Nodes::Base, nil]
       def node
-        @node ||= source.node_at(position)
+        @node ||= source&.node_at(position)
       end
 
       # @return [Rucoa::Source, nil]
@@ -63,12 +69,14 @@ module Rucoa
         )
       end
 
-      # @return [Array<Rucoa::Definitions::MethodDefinition>]
-      def method_definitions
-        @method_definitions ||= NodeInspector.new(
+      # @return [Rucoa::Definitions::Base, nil]
+      def definition
+        return unless node
+
+        @definition ||= NodeInspector.new(
           definition_store: definition_store,
           node: node
-        ).method_definitions
+        ).definitions.first
       end
     end
   end

@@ -3,9 +3,6 @@
 module Rucoa
   module Definitions
     class MethodDefinition < Base
-      # @return [String, nil]
-      attr_reader :description
-
       # @return [Symbol]
       attr_reader :kind
 
@@ -15,13 +12,11 @@ module Rucoa
       # @return [String]
       attr_reader :namespace
 
-      # @param description [String, nil]
       # @param kind [Symbol]
       # @param method_name [String]
       # @param namespace [String]
       # @param types [Array<Rucoa::Types::MethodType>]
       def initialize(
-        description:,
         kind:,
         method_name:,
         namespace:,
@@ -29,7 +24,6 @@ module Rucoa
         **keyword_arguments
       )
         super(**keyword_arguments)
-        @description = description
         @kind = kind
         @method_name = method_name
         @namespace = namespace

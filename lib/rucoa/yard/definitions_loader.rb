@@ -162,6 +162,7 @@ module Rucoa
 
             [
               Definitions::ClassDefinition.new(
+                description: docstring_parser.to_docstring.to_s,
                 fully_qualified_name: @node.fully_qualified_name,
                 included_module_chained_names: included_module_chained_names,
                 location: Location.from_rucoa_node(@node),
@@ -187,6 +188,7 @@ module Rucoa
 
             [
               Definitions::ModuleDefinition.new(
+                description: docstring_parser.to_docstring.to_s,
                 fully_qualified_name: @node.fully_qualified_name,
                 location: Location.from_rucoa_node(@node)
               )

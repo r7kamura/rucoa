@@ -19,6 +19,7 @@ module Rucoa
       # @return [Rucoa::Definitions::ClassDefinition]
       def call
         Definitions::ClassDefinition.new(
+          description: description,
           fully_qualified_name: fully_qualified_name,
           location: location,
           super_class_fully_qualified_name: super_class_fully_qualified_name
@@ -26,6 +27,11 @@ module Rucoa
       end
 
       private
+
+      # @return [String, nil]
+      def description
+        @declaration.comment&.string&.sub(/\A\s*<!--.*-->\s*/m, '')
+      end
 
       # @return [String]
       def fully_qualified_name
