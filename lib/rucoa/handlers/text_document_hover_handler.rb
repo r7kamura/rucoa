@@ -29,7 +29,7 @@ module Rucoa
       def contents
         @contents ||=
           case definition
-          when Definitions::ClassDefinition, Definitions::ModuleDefinition
+          when Definitions::ClassDefinition, Definitions::ConstantDefinition, Definitions::ModuleDefinition
             [
               definition.fully_qualified_name,
               definition.description
