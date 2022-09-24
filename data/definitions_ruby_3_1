@@ -562,7 +562,7 @@ Each of these methods removes elements from `self`:
 :   Returns a sum of elements according to either `+` or a given block.
 
 :ET:@location0:@fully_qualified_nameI"
-Array;T:#@included_module_chained_names[ :+@included_module_fully_qualified_names[ :@module_nesting0:$@prepended_module_chained_names[ :,@prepended_module_fully_qualified_names[ :@super_class_chained_name0:&@super_class_fully_qualified_nameI"Object;To:)Rucoa::Definitions::MethodDefinition;I"2Returns a new Array.
+Array;T:#@included_module_chained_names[ :+@included_module_fully_qualified_names[I"Enumerable;T:@module_nesting0:$@prepended_module_chained_names[ :,@prepended_module_fully_qualified_names[ :@super_class_chained_name0:&@super_class_fully_qualified_nameI"Object;To:)Rucoa::Definitions::MethodDefinition;I"2Returns a new Array.
 
 With no block and no arguments, returns a new empty Array object.
 
@@ -4049,7 +4049,7 @@ Here, class Dir provides methods that are useful for:
 :       Returns a string description of `self`.
 
 ;T;0;	I"Dir;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"¿Returns a new directory object for the named directory.
+[ ;[I"Enumerable;T;0;[ ;[ ;0;0o;;I"¿Returns a new directory object for the named directory.
 
 The optional *encoding* keyword argument specifies the encoding of the
 directory. If not specified, the filesystem encoding is used.
@@ -7132,7 +7132,7 @@ You can use this to implement an internal iterator as follows:
     # => [], [:b], [1], [:b, 1], [1, 2], [:b, 1, 2], 3
 
 ;T;0;	I"Enumerator;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"bIterates over the block according to how this Enumerator was constructed. If
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Object;To;;I"bIterates over the block according to how this Enumerator was constructed. If
 no block and no arguments are given, returns self.
 
 ### Examples
@@ -7361,7 +7361,7 @@ U obj;T;I"U;Fo;;I"
 U obj;T;I"Enumerator[[ Elem, U ], U];To; ;I"Generator
 
 ;T;0;	I"Enumerator::Generator;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;0;0;;;I"	each;F;I"Enumerator::Generator;T;[o;;I" ;F;I"	void;To; ;I"	Enumerator::Lazy is a special type of Enumerator, that allows constructing
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Object;To;;0;0;;;I"	each;F;I"Enumerator::Generator;T;[o;;I" ;F;I"	void;To; ;I"	Enumerator::Lazy is a special type of Enumerator, that allows constructing
 chains of operations without evaluating them immediately, and evaluating
 values on as-needed basis. In order to do so it redefines most of Enumerable
 methods so that they just construct another lazy enumerator.
@@ -7450,7 +7450,7 @@ enumerables that works as a single enumerator.
 This type of objects can be created by Enumerable#chain and Enumerator#+.
 
 ;T;0;	I"Enumerator::Chain;T;
-[ ;[ ;0;[ ;[ ;0;I"Enumerator;To;;I"Iterates over the elements of the first enumerable by calling the "each"
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Enumerator;To;;I"Iterates over the elements of the first enumerable by calling the "each"
 method on it with the given arguments, then proceeds to the following
 enumerables in sequence until all of the enumerables are exhausted.
 
@@ -7756,7 +7756,7 @@ subclasses of IOError:
 ;T;0;;;I"key;F;I"KeyError;T;[o;;I" ;F;I"K?;To;;I"CReturn the receiver associated with this KeyError exception.
 
 ;T;0;;;I"receiver;F;I"KeyError;T;[o;;I" ;F;I"R?;To; ;0;0;	I"KeyError;T;
-[ ;[ ;0;[ ;[ ;0;0o; ;I"ÖRaised when a file required (a Ruby script, extension library, ...) fails to
+[ ;[ ;0;[ ;[I"DidYouMean::Correctable;T;0;0o; ;I"ÖRaised when a file required (a Ruby script, extension library, ...) fails to
 load.
 
     require 'this/file/does/not/exist'
@@ -7769,7 +7769,7 @@ load.
 [ ;[ ;0;[ ;[ ;0;I"ScriptError;To;;I"the path failed to load
 
 ;T;0;;;I"	path;F;I"LoadError;T;[o;;I" ;F;I"String?;To; ;0;0;	I"LoadError;T;
-[ ;[ ;0;[ ;[ ;0;0o; ;I"Raised when Ruby can't yield as requested.
+[ ;[ ;0;[ ;[I"DidYouMean::Correctable;T;0;0o; ;I"Raised when Ruby can't yield as requested.
 
 A typical scenario is attempting to yield when no block is given:
 
@@ -7833,7 +7833,7 @@ Internal use only.
 ;T;0;;;I"	name;F;I"NameError;T;[o;;I" ;F;I"String?;To;;I"DReturn the receiver associated with this NameError exception.
 
 ;T;0;;;I"receiver;F;I"NameError;T;[o;;I" ;F;I"T?;To; ;0;0;	I"NameError;T;
-[ ;[ ;0;[ ;[ ;0;0o; ;0;0;	I"NoMatchingPatternError;T;
+[ ;[ ;0;[ ;[I"DidYouMean::Correctable;T;0;0o; ;0;0;	I"NoMatchingPatternError;T;
 [ ;[ ;0;[ ;[ ;0;I"StandardError;To; ;0;0;	I"NoMatchingPatternKeyError;T;
 [ ;[ ;0;[ ;[ ;0;I"NoMatchingPatternError;To;;I"eConstruct a new `NoMatchingPatternKeyError` exception with the given message,
 matchee and key.
@@ -9496,7 +9496,7 @@ File::lstat. Many of these methods return platform-specific values, and not
 all values are meaningful on all systems. See also Kernel#test.
 
 ;T;0;	I"File::Stat;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"kCreate a File::Stat object for the given file name (raising an exception if
+[ ;[I"Comparable;T;0;[ ;[ ;0;I"Object;To;;I"kCreate a File::Stat object for the given file name (raising an exception if
 the file doesn't exist).
 
 ;T;0;;;I"initialize;F;I"File::Stat;T;[o;;I"::String file;T;I"	void;To;;I"õCompares File::Stat objects by comparing their respective modification times.
@@ -11523,7 +11523,7 @@ These methods return a copy of `self` with some entries removed:
 :   Returns a hash with the each key-value pair inverted.
 
 ;T;0;	I"	Hash;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"DReturns a new Hash object populated with the given objects, if any. See
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Object;To;;I"DReturns a new Hash object populated with the given objects, if any. See
 Hash::new.
 
 With no argument, returns a new empty Hash.
@@ -13959,7 +13959,7 @@ Here, class IO provides methods that are useful for:
 :       Returns the string representation of `self`.
 
 ;T;0;	I"IO;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"CWrites the given `object` to `self`, which must be opened for writing (see
+[ ;[I"File::Constants;TI"Enumerable;T;0;[ ;[ ;0;I"Object;To;;I"CWrites the given `object` to `self`, which must be opened for writing (see
 [Modes](#class-IO-label-Modes)); returns `self`; if `object` is not a string,
 it is converted via method `to_s`:
 
@@ -15769,7 +15769,7 @@ Buffer from file:
 **The class is experimental and the interface is subject to change.**
 
 ;T;0;	I"IO::Buffer;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"ƒCreates a IO::Buffer from the given string's memory. The buffer remains
+[ ;[I"Comparable;T;0;[ ;[ ;0;0o;;I"ƒCreates a IO::Buffer from the given string's memory. The buffer remains
 associated with the string, and writing to a buffer will update the string's
 contents.
 
@@ -16168,16 +16168,16 @@ Examples
 ;T;0;;;I"initialize;F;I"IO::Buffer;T;[o;;I"&?::Integer size, ?::Integer flags;T;I"	void;To; ;I">exception to wait for reading by EAGAIN. see IO.select.
 
 ;T;0;	I"IO::EAGAINWaitReadable;T;
-[ ;[ ;0;[ ;[ ;0;I"Errno::EAGAIN;To; ;I">exception to wait for writing by EAGAIN. see IO.select.
+[ ;[I"IO::WaitReadable;T;0;[ ;[ ;0;I"Errno::EAGAIN;To; ;I">exception to wait for writing by EAGAIN. see IO.select.
 
 ;T;0;	I"IO::EAGAINWaitWritable;T;
-[ ;[ ;0;[ ;[ ;0;I"Errno::EAGAIN;To; ;I"Cexception to wait for reading by EINPROGRESS. see IO.select.
+[ ;[I"IO::WaitWritable;T;0;[ ;[ ;0;I"Errno::EAGAIN;To; ;I"Cexception to wait for reading by EINPROGRESS. see IO.select.
 
 ;T;0;	I" IO::EINPROGRESSWaitReadable;T;
-[ ;[ ;0;[ ;[ ;0;I"Errno::EINPROGRESS;To; ;I"Cexception to wait for writing by EINPROGRESS. see IO.select.
+[ ;[I"IO::WaitReadable;T;0;[ ;[ ;0;I"Errno::EINPROGRESS;To; ;I"Cexception to wait for writing by EINPROGRESS. see IO.select.
 
 ;T;0;	I" IO::EINPROGRESSWaitWritable;T;
-[ ;[ ;0;[ ;[ ;0;I"Errno::EINPROGRESS;To;;I"4exception to wait for reading. see IO.select.
+[ ;[I"IO::WaitWritable;T;0;[ ;[ ;0;I"Errno::EINPROGRESS;To;;I"4exception to wait for reading. see IO.select.
 
 ;T;0;	I"IO::WaitReadable;T;
 [ ;[ ;0;[ ;[ o;;I"4exception to wait for writing. see IO.select.
@@ -20189,7 +20189,7 @@ Here, class Numeric provides methods for:
 :       Invokes the given block with the sequence of specified numbers.
 
 ;T;0;	I"Numeric;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"õReturns `self` modulo `other` as a real number.
+[ ;[I"Comparable;T;0;[ ;[ ;0;0o;;I"õReturns `self` modulo `other` as a real number.
 
 Of the Core and Standard Library classes, only Rational uses this
 implementation.
@@ -20753,7 +20753,7 @@ Here, class Object provides methods for:
 :       Returns a string representation of `self`.
 
 ;T;0;	I"Object;T;
-[ ;[ ;0;[ ;[ ;0;I"BasicObject;To;;I"YReturns true if two objects do not match (using the *=~* method), otherwise
+[ ;[I"Kernel;T;0;[ ;[ ;0;I"BasicObject;To;;I"YReturns true if two objects do not match (using the *=~* method), otherwise
 false.
 
 ;T;0;;;I"!~;F;I"Object;T;[o;;I"untyped;T;I"	bool;To;;I"Returns 0 if `obj` and `other` are the same object or `obj == other`,
@@ -24404,7 +24404,7 @@ Here, class Range provides methods that are useful for:
 
 ;T;0;	I"
 Range;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"›Returns `true` if and only if:
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Object;To;;I"›Returns `true` if and only if:
 
 *   `other` is a range.
 *   `other.begin == self.begin`.
@@ -25357,7 +25357,7 @@ to your script. For example:
     "glark\n"
 
 ;T;0;	I"RBS::Unnamed::ARGFClass;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"¸Returns the `ARGV` array, which contains the arguments passed to your script,
+[ ;[I"Enumerable;T;0;[ ;[ ;0;0o;;I"¸Returns the `ARGV` array, which contains the arguments passed to your script,
 one per element.
 
 For example:
@@ -26166,7 +26166,7 @@ Here, class ENV provides methods that are useful for:
 :       Returns `nil`, without modifying ENV.
 
 ;T;0;	I"RBS::Unnamed::ENVClass;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"Returns the value for the environment variable `name` if it exists:
+[ ;[I"Enumerable;T;0;[ ;[ ;0;0o;;I"Returns the value for the environment variable `name` if it exists:
     ENV['foo'] = '0'
     ENV['foo'] # => "0"
 
@@ -26649,7 +26649,7 @@ The order in which environment variables are examined is OS-dependent. See
 Returns `nil` if there is no such environment variable.
 
 ;T;0;;;I"rassoc;F;I"RBS::Unnamed::ENVClass;T;[o;;I"::String value;T;I"[ ::String, ::String ]?;To; ;0;0;	I"RBS::Unnamed::Random_Base;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"ÆCreates a new PRNG using `seed` to set the initial state. If `seed` is
+[ ;[I"#RBS::Unnamed::Random_Formatter;T;0;[ ;[ ;0;0o;;I"ÆCreates a new PRNG using `seed` to set the initial state. If `seed` is
 omitted, the generator is initialized with Random.new_seed.
 
 See Random.srand for more information on the use of seed values.
@@ -28668,7 +28668,7 @@ Each of these methods converts the contents of `self` to a non-String.
         calls to #succ.
 
 ;T;0;	I"String;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"If `object` is a String object, returns `object`.
+[ ;[I"Comparable;T;0;[ ;[ ;0;0o;;I"If `object` is a String object, returns `object`.
 
 Otherwise if `object` responds to `:to_str`, calls `object.to_str` and returns
 the result.
@@ -30794,7 +30794,7 @@ Here, class Struct provides methods that are useful for:
 :   Returns a hash of the member name/value pairs in `self`.
 
 ;T;0;	I"Struct;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"¦`Struct.new` returns a new subclass of `Struct`.  The new subclass:
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Object;To;;I"¦`Struct.new` returns a new subclass of `Struct`.  The new subclass:
 
 *   May be anonymous, or may have the name given by `class_name`.
 *   May have members as given by `member_names`.
@@ -31101,7 +31101,7 @@ Here, class Symbol provides methods that are useful for:
 :       Returns symbol with all characters upcased.
 
 ;T;0;	I"Symbol;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"öReturns an array of all the symbols currently in Ruby's symbol table.
+[ ;[I"Comparable;T;0;[ ;[ ;0;0o;;I"öReturns an array of all the symbols currently in Ruby's symbol table.
 
     Symbol.all_symbols.size    #=> 903
     Symbol.all_symbols[1,20]   #=> [:floor, :ARGV, :Binding, :symlink,
@@ -32707,7 +32707,7 @@ Similarly, that class method will be called when a timezone argument does not
 have the necessary methods mentioned above.
 
 ;T;0;	I"	Time;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"
+[ ;[I"Comparable;T;0;[ ;[ ;0;I"Object;To;;I"
 *Time*
 
 This form accepts a Time object `time` and optional keyword argument `in`:
@@ -35851,7 +35851,7 @@ precision, `numeric`.
     h('Usage: foo "bar" <baz>') # alias
 
 ;T;0;	I"CGI;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"{	Create a new CGI instance.
+[ ;[I"CGI::Util;T;0;[ ;[ ;0;0o;;I"{	Create a new CGI instance.
 
 `tag_maker`
 :   This is the same as using the `options_hash` form with the value `{
@@ -38179,7 +38179,7 @@ feel free to [report](mailto:james@grayproductions.net) any issues you find
 with it.
 
 ;T;0;	I"CSV;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"eCalls the block with each row read from source `path` or `io`.
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Object;To;;I"eCalls the block with each row read from source `path` or `io`.
 
 *   Argument `path`, if given, must be the path to a file.
 *   Argument `io` should be an IO object that is:
@@ -38693,7 +38693,7 @@ All rows returned by CSV will be constructed from this class, if header row
 processing is activated.
 
 ;T;0;	I"CSV::Row;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"ËAdds a field to `self`; returns `self`:
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Object;To;;I"ËAdds a field to `self`; returns `self`:
 
 If the argument is a 2-element Array `[header, value]`, a field is added with
 the given `header` and `value`:
@@ -39009,7 +39009,7 @@ All tables returned by CSV will be constructed from this class, if header row
 processing is activated.
 
 ;T;0;	I"CSV::Table;T;
-[ ;[ ;0;[ ;[ ;0;I"Object;To;;I"ÔConstructs a new CSV::Table from `array_of_rows`, which are expected to be
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"Object;To;;I"ÔConstructs a new CSV::Table from `array_of_rows`, which are expected to be
 CSV::Row objects. All rows are assumed to have the same headers.
 
 The optional `headers` parameter can be set to Array of headers. If headers
@@ -39494,7 +39494,7 @@ A Date object has various methods. See each reference.
     d.strftime('%a %d %b %Y')    #=> "Sun 04 Feb 2001"
 
 ;T;0;	I"	Date;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"initialize;F;I"	Date;T;[o;;I"I?::Integer year, ?::Integer month, ?::Integer mday, ?::Integer start;T;I"	void;To;;I"ÌReturns a hash of parsed elements.
+[ ;[I"Comparable;T;0;[ ;[ ;0;0o;;I" ;T;0;;;I"initialize;F;I"	Date;T;[o;;I"I?::Integer year, ?::Integer month, ?::Integer mday, ?::Integer start;T;I"	void;To;;I"ÌReturns a hash of parsed elements.
 
 Raise an ArgumentError when the string length is longer than *limit*. You can
 stop this check by passing `limit: nil`, but note that it may take a long time
@@ -40894,7 +40894,7 @@ Hash for processing large amounts of data.
     puts db['822']
 
 ;T;0;	I"DBM;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"QOpen a dbm database and yields it if a block is given. See also `DBM.new`.
+[ ;[I"Enumerable;T;0;[ ;[ ;0;0o;;I"QOpen a dbm database and yields it if a block is given. See also `DBM.new`.
 
 ;T;0;;;I"	open;F;I"DBM;T;[o;;I"9::String filename, ?::Integer mode, ?::Integer flags;T;I"DBM;To;;I"9::String filename, ?::Integer mode, ?::Integer flags;T;I"T;Fo;;I"sReturn a value from the database by locating the key string provided.  If the
 key is not found, returns nil.
@@ -41271,7 +41271,7 @@ which ensures that internal data be reset for security reasons.
 ;T;0;;;I"finish;F;I"Digest::Instance;T;[o;;I" ;F;I"	self;To; ;I"LThis module stands as a base class for digest implementation classes.
 
 ;T;0;	I"Digest::Class;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"†Returns the base64 encoded hash value of a given *string*.  The return value
+[ ;[I"Digest::Instance;T;0;[ ;[ ;0;0o;;I"†Returns the base64 encoded hash value of a given *string*.  The return value
 is properly padded with '=' and contains no line feeds.
 
 ;T;0;;;I"base64digest;F;I"Digest::Class;T;[o;;I"::String str, *untyped;T;I"String;To;;I"GReturns the BubbleBabble encoded hash value of a given *string*.
@@ -42726,7 +42726,7 @@ IPv6 are supported.
     p ipaddr3                   #=> #<IPAddr: IPv4:192.168.2.0/255.255.255.0>
 
 ;T;0;	I"IPAddr;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"cCreates a new ipaddr containing the given network byte ordered string form of
+[ ;[I"Comparable;T;0;[ ;[ ;0;0o;;I"cCreates a new ipaddr containing the given network byte ordered string form of
 an IP address.
 
 ;T;0;;;I"new_ntoh;F;I"IPAddr;T;[o;;I"::String addr;T;I"IPAddr;To;;I"\Convert a network byte ordered string form of an IP address into human
@@ -44017,7 +44017,7 @@ Here, class Set provides methods that are useful for:
      has been modified while an element in the set.
 
 ;T;0;	I"Set;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"ÝCreates a new set containing the elements of the given enumerable
+[ ;[I"Enumerable;T;0;[ ;[ ;0;0o;;I"ÝCreates a new set containing the elements of the given enumerable
 object.
 If a block is given, the elements of enum are preprocessed by the
 given block.
@@ -44188,7 +44188,7 @@ and returns self.
 [ ;[ ;0;[ ;[ ;0;0o; ;I"-not used after 1.2.7. just for compat.
 
 ;T;0;	I"Logger;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"kDump given message to the log device without any formatting.  If no log device
+[ ;[I"Logger::Severity;T;0;[ ;[ ;0;0o;;I"kDump given message to the log device without any formatting.  If no log device
 exists, return `nil`.
 
 ;T;0;;;I"<<;F;I"Logger;T;[o;;I"untyped msg;T;I"untyped | nil;To;;I"¦### Args
@@ -44414,7 +44414,7 @@ Create an instance.
 [ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"	call;F;I"Logger::Formatter;T;[o;;I"B::String severity, ::Time time, untyped progname, untyped msg;T;I"String;To;;I" ;T;0;;;I"format_datetime;F;I"Logger::Formatter;T;[o;;I"::Time time;T;I"untyped;To;;I" ;T;0;;;I"initialize;F;I"Logger::Formatter;T;[o;;I" ;F;I"	void;To;;I" ;T;0;;;I"msg2str;F;I"Logger::Formatter;T;[o;;I")::String | ::Exception | untyped msg;T;I"String;To; ;I"(Device used for logging messages.
 
 ;T;0;	I"Logger::LogDevice;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"
+[ ;[I"MonitorMixin;TI"Logger::Period;T;0;[ ;[ ;0;0o;;I" ;T;0;;;I"
 close;F;I"Logger::LogDevice;T;[o;;I" ;F;I"nil;To;;I" ;T;0;;;I"reopen;F;I"Logger::LogDevice;T;[o;;I"?::Logger::logdev log;T;I"	self;To;;I" ;T;0;;;I"
 write;F;I"Logger::LogDevice;T;[o;;I"untyped message;T;I"untyped;To;;I" ;T;0;;;I"add_log_header;F;I"Logger::LogDevice;T;[o;;I"::IO file;T;I"untyped;To;;I" ;T;0;;;I"check_shift_log;F;I"Logger::LogDevice;T;[o;;I" ;F;I"untyped;To;;I" ;T;0;;;I"create_logfile;F;I"Logger::LogDevice;T;[o;;I"::String filename;T;I"	File;To;;I" ;T;0;;;I"initialize;F;I"Logger::LogDevice;T;[o;;I"~?untyped logdev, ?binmode: ::boolish, ?shift_period_suffix: ::String, ?shift_size: ::Integer, ?shift_age: ::Numeric | ::String;T;I"	void;To;;I" ;T;0;;;I"lock_shift_log;F;I"Logger::LogDevice;T;[o;;I" ;F;I"untyped;To;;I" ;T;0;;;I"open_logfile;F;I"Logger::LogDevice;T;[o;;I"::String filename;T;I"	File;To;;I" ;T;0;;;I"set_dev;F;I"Logger::LogDevice;T;[o;;I"::Logger::logdev log;T;I"untyped;To;;I" ;T;0;;;I"shift_log_age;F;I"Logger::LogDevice;T;[o;;I" ;F;I"	true;Fo;;I" ;T;0;;;I"shift_log_period;F;I"Logger::LogDevice;T;[o;;I"::Time period_end;T;I"	true;Fo;;0;0;	I"Logger::Period;T;
 [ ;[ ;0;[ ;[ o;;I" ;T;0;;;I"next_rotate_time;F;I"Logger::Period;T;[o;;I"#::Time now, ::String shift_age;T;I"untyped;To;;I" ;T;0;;;I"previous_period_end;F;I"Logger::Period;T;[o;;I"#::Time now, ::String shift_age;T;I"untyped;To;;I"Logging severity.
@@ -44424,7 +44424,7 @@ write;F;I"Logger::LogDevice;T;[o;;I"untyped message;T;I"untyped
 Go nuts.
 
 ;T;0;	I"Minitest::AbstractReporter;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"#Starts reporting on the run.
+[ ;[I"Mutex_m;T;0;[ ;[ ;0;0o;;I"#Starts reporting on the run.
 
 ;T;0;;;I"
 start;F;I"Minitest::AbstractReporter;T;[o;;I" ;F;I"nil;To;;I"About to start running a test. This allows a reporter to show that it is
@@ -44682,7 +44682,7 @@ $MT_DEBUG (env).
 ;T;0;;;I"filter;F;I"Minitest::BacktraceFilter;T;[o;;I"untyped bt;T;I"$Array["No backtrace"] | untyped;To; ;I"/The spec version of Minitest::Benchmark.
 
 ;T;0;	I"Minitest::BenchSpec;T;
-[ ;[ ;0;[ ;[ ;0;I"Minitest::Benchmark;To;;I"This is used to define a new benchmark method. You usually don't use this
+[ ;[I")Minitest::Spec::DSL::InstanceMethods;T;0;[ ;[ ;0;I"Minitest::Benchmark;To;;I"This is used to define a new benchmark method. You usually don't use this
 directly and is intended for those needing to write new performance curve fits
 (eg: you need a specific polynomial fit).
 
@@ -45058,7 +45058,7 @@ conditions that cause Marshal.dump to blow up. By using Result.from(a_test)
 you can be reasonably sure that the test result can be marshalled.
 
 ;T;0;	I"Minitest::Result;T;
-[ ;[ ;0;[ ;[ ;0;I"Minitest::Runnable;To;;I"9Create a new test result from a Runnable instance.
+[ ;[I"Minitest::Reportable;T;0;[ ;[ ;0;I"Minitest::Runnable;To;;I"9Create a new test result from a Runnable instance.
 
 ;T;0;;;I"	from;F;I"Minitest::Result;T;[o;;I"untyped runnable;T;I"untyped;To;;0;0;;;I"class_name;F;I"Minitest::Result;T;[o;;I" ;F;I"untyped;To;;0;0;;;I"	to_s;F;I"Minitest::Result;T;[o;;I" ;F;I"untyped;To; ;I"±Represents anything "runnable", like Test, Spec, Benchmark, or whatever you
 can dream up.
@@ -45184,7 +45184,7 @@ for you to `subject`.
 For a list of expectations, see Minitest::Expectations.
 
 ;T;0;	I"Minitest::Spec;T;
-[ ;[ ;0;[ ;[ ;0;I"Minitest::Test;To;;0;0;;;I"current;F;I"Minitest::Spec;T;[o;;I" ;F;I"untyped;To;;0;0;;;I"initialize;F;I"Minitest::Spec;T;[o;;I"untyped name;T;I"	void;To; ;I"A reporter that gathers statistics about a test run. Does not do any IO
+[ ;[I")Minitest::Spec::DSL::InstanceMethods;T;0;[ ;[ ;0;I"Minitest::Test;To;;0;0;;;I"current;F;I"Minitest::Spec;T;[o;;I" ;F;I"untyped;To;;0;0;;;I"initialize;F;I"Minitest::Spec;T;[o;;I"untyped name;T;I"	void;To; ;I"A reporter that gathers statistics about a test run. Does not do any IO
 because meant to be used as a parent class for a reporter that does.
 
 If you want to create an entirely different type of output (eg, CI, HTML,
@@ -45278,7 +45278,7 @@ per implementation class.
 See Minitest::Assertions
 
 ;T;0;	I"Minitest::Test;T;
-[ ;[ ;0;[ ;[ ;0;I"Minitest::Runnable;To;;0;0;;;I"class_name;F;I"Minitest::Test;T;[o;;I" ;F;I"untyped;To;;I"¤Call this at the top of your tests when you absolutely positively need to have
+[ ;[	I"Minitest::Assertions;TI"Minitest::Reportable;TI"#Minitest::Test::LifecycleHooks;TI"Minitest::Guard;T;0;[ ;[ ;0;I"Minitest::Runnable;To;;0;0;;;I"class_name;F;I"Minitest::Test;T;[o;;I" ;F;I"untyped;To;;I"¤Call this at the top of your tests when you absolutely positively need to have
 ordered tests. In doing so, you're admitting that you suck and your tests are
 weak.
 
@@ -47126,7 +47126,7 @@ this directly; use a subclass of Net::HTTPRequest.
 Mixes in the Net::HTTPHeader module to provide easier access to HTTP headers.
 
 ;T;0;	I"Net::HTTPGenericRequest;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"initialize;F;I"Net::HTTPGenericRequest;T;[o;;I"~::String m, ::boolish reqbody, ::boolish resbody, ::URI::Generic | ::String uri_or_path, ?::Hash[::String, untyped] initheader;T;I"Net::HTTP;To;;I" ;T;0;;;I"inspect;F;I"Net::HTTPGenericRequest;T;[o;;I" ;F;I"String;To;;0;0;;;I"[]=;F;I"Net::HTTPGenericRequest;T;[o;;I"untyped key, untyped val;T;I"	void;To;;I" ;T;0;;;I"request_body_permitted?;F;I"Net::HTTPGenericRequest;T;[o;;I" ;F;I"	bool;To;;I" ;T;0;;;I"response_body_permitted?;F;I"Net::HTTPGenericRequest;T;[o;;I" ;F;I"	bool;To;;I" ;T;0;;;I"body_exist?;F;I"Net::HTTPGenericRequest;T;[o;;I" ;F;I"	bool;To;;I"[The HTTPHeader module defines methods for reading and writing HTTP headers.
+[ ;[I"Net::HTTPHeader;T;0;[ ;[ ;0;0o;;I" ;T;0;;;I"initialize;F;I"Net::HTTPGenericRequest;T;[o;;I"~::String m, ::boolish reqbody, ::boolish resbody, ::URI::Generic | ::String uri_or_path, ?::Hash[::String, untyped] initheader;T;I"Net::HTTP;To;;I" ;T;0;;;I"inspect;F;I"Net::HTTPGenericRequest;T;[o;;I" ;F;I"String;To;;0;0;;;I"[]=;F;I"Net::HTTPGenericRequest;T;[o;;I"untyped key, untyped val;T;I"	void;To;;I" ;T;0;;;I"request_body_permitted?;F;I"Net::HTTPGenericRequest;T;[o;;I" ;F;I"	bool;To;;I" ;T;0;;;I"response_body_permitted?;F;I"Net::HTTPGenericRequest;T;[o;;I" ;F;I"	bool;To;;I" ;T;0;;;I"body_exist?;F;I"Net::HTTPGenericRequest;T;[o;;I" ;F;I"	bool;To;;I"[The HTTPHeader module defines methods for reading and writing HTTP headers.
 
 It is used as a mixin by other classes, to provide hash-like access to HTTP
 header values. Unlike raw hash access, HTTPHeader provides access via
@@ -47398,7 +47398,7 @@ Correspondence `HTTP code => class` is stored in CODE_TO_OBJ constant:
     Net::HTTPResponse::CODE_TO_OBJ['404'] #=> Net::HTTPNotFound
 
 ;T;0;	I"Net::HTTPResponse;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"'true if the response has a body.
+[ ;[I"Net::HTTPHeader;T;0;[ ;[ ;0;0o;;I"'true if the response has a body.
 
 ;T;0;;;I"body_permitted?;F;I"Net::HTTPResponse;T;[o;;I" ;F;I"	bool;To;;I" ;T;0;;;I"inspect;F;I"Net::HTTPResponse;T;[o;;I" ;F;I"String;To;;0;0;;;I"code_type;F;I"Net::HTTPResponse;T;[o;;I" ;F;I"untyped;To;;0;0;;;I"error!;F;I"Net::HTTPResponse;T;[o;;I" ;F;I"untyped;To;;0;0;;;I"error_type;F;I"Net::HTTPResponse;T;[o;;I" ;F;I"dNet::HTTPError | ::Net::HTTPServerException | ::Net::HTTPRetriableError | ::Net::HTTPFatalError;To;;I"ARaises an HTTP error if the response is not 2xx (success).
 
@@ -47550,10 +47550,10 @@ instead, you must use its subclasses.
 
 ;T;0;	I"Net::HTTPExceptions;T;
 [ ;[ ;0;[ ;[ o;;0;0;;;I"initialize;F;I"Net::HTTPExceptions;T;[o;;I"untyped msg, untyped res;T;I"untyped;To; ;0;0;	I"Net::HTTPError;T;
-[ ;[ ;0;[ ;[ ;0;I"Net::ProtocolError;To; ;0;0;	I"Net::HTTPRetriableError;T;
-[ ;[ ;0;[ ;[ ;0;I"Net::ProtoRetriableError;To; ;0;0;	I"Net::HTTPServerException;T;
-[ ;[ ;0;[ ;[ ;0;I"Net::ProtoServerError;To; ;0;0;	I"Net::HTTPFatalError;T;
-[ ;[ ;0;[ ;[ ;0;I"Net::ProtoFatalError;To;;I"
+[ ;[I"Net::HTTPExceptions;T;0;[ ;[ ;0;I"Net::ProtocolError;To; ;0;0;	I"Net::HTTPRetriableError;T;
+[ ;[I"Net::HTTPExceptions;T;0;[ ;[ ;0;I"Net::ProtoRetriableError;To; ;0;0;	I"Net::HTTPServerException;T;
+[ ;[I"Net::HTTPExceptions;T;0;[ ;[ ;0;I"Net::ProtoServerError;To; ;0;0;	I"Net::HTTPFatalError;T;
+[ ;[I"Net::HTTPExceptions;T;0;[ ;[ ;0;I"Net::ProtoFatalError;To;;I"
 NKF - Ruby extension for Network Kanji Filter
 
 ## Description
@@ -48732,7 +48732,7 @@ ASN1Data. Find further details on tagged values there.
     set = OpenSSL::ASN1::Set.new( [ int, str ] )
 
 ;T;0;	I" OpenSSL::ASN1::Constructive;T;
-[ ;[ ;0;[ ;[ ;0;I"OpenSSL::ASN1::ASN1Data;To;;I"ÙCalls the given block once for each element in self, passing that element as
+[ ;[I"Enumerable;T;0;[ ;[ ;0;I"OpenSSL::ASN1::ASN1Data;To;;I"ÙCalls the given block once for each element in self, passing that element as
 parameter *asn1*. If no block is given, an enumerator is returned instead.
 
 ## Example
@@ -48913,7 +48913,7 @@ value;F;I"OpenSSL::ASN1::UTF8String;T;[o;;I" ;F;I"String;To;;
 value;F;I"#OpenSSL::ASN1::UniversalString;T;[o;;I" ;F;I"String;To;;0;0;;;I"value=;F;I"#OpenSSL::ASN1::UniversalString;T;[o;;I"::String;T;I"String;To; ;0;0;	I""OpenSSL::ASN1::VideotexString;T;
 [ ;[ ;0;[ ;[ ;0;I"OpenSSL::ASN1::Primitive;To;;0;0;;;I"
 value;F;I""OpenSSL::ASN1::VideotexString;T;[o;;I" ;F;I"String;To;;0;0;;;I"value=;F;I""OpenSSL::ASN1::VideotexString;T;[o;;I"::String;T;I"String;To; ;0;0;	I"OpenSSL::BN;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"Generates a random prime number of bit length *bits*. If *safe* is set to
+[ ;[I"Comparable;T;0;[ ;[ ;0;0o;;I"Generates a random prime number of bit length *bits*. If *safe* is set to
 `true`, generates a safe prime. If *add* is specified, generates a prime that
 fulfills condition `p % add = rem`.
 
@@ -49555,7 +49555,7 @@ location of the file for your host.
 See also http://www.openssl.org/docs/apps/config.html
 
 ;T;0;	I"OpenSSL::Config;T;
-[ ;[ ;0;[ ;[ ;0;0o;;0;0;;;I"	load;F;I"OpenSSL::Config;T;[o;;I"?::_ToS filename;T;I"instance;To;;I"QParses a given *string* as a blob that contains configuration for OpenSSL.
+[ ;[I"Enumerable;T;0;[ ;[ ;0;0o;;0;0;;;I"	load;F;I"OpenSSL::Config;T;[o;;I"?::_ToS filename;T;I"instance;To;;I"QParses a given *string* as a blob that contains configuration for OpenSSL.
 
 ;T;0;;;I"
 parse;F;I"OpenSSL::Config;T;[o;;I"::String string;T;I"instance;To;;I"\Parses the configuration data read from *io* and returns the whole content as
@@ -50756,7 +50756,7 @@ DH#priv_key
     puts symm_key1 == symm_key2 # => true
 
 ;T;0;	I"OpenSSL::PKey::DH;T;
-[ ;[ ;0;[ ;[ ;0;I"OpenSSL::PKey::PKey;To;;I"íCreates a new DH instance from scratch by generating random parameters and a
+[ ;[I"OpenSSL::Marshal;T;0;[ ;[ ;0;I"OpenSSL::PKey::PKey;To;;I"íCreates a new DH instance from scratch by generating random parameters and a
 key pair.
 
 See also OpenSSL::PKey.generate_parameters and OpenSSL::PKey.generate_key.
@@ -50888,7 +50888,7 @@ non-conformant input data.
 an asymmetric public key algorithm that may be used similar to e.g. RSA.
 
 ;T;0;	I"OpenSSL::PKey::DSA;T;
-[ ;[ ;0;[ ;[ ;0;I"OpenSSL::PKey::PKey;To;;I"ÈCreates a new DSA instance by generating a private/public key pair from
+[ ;[I"OpenSSL::Marshal;T;0;[ ;[ ;0;I"OpenSSL::PKey::PKey;To;;I"ÈCreates a new DSA instance by generating a private/public key pair from
 scratch.
 
 See also OpenSSL::PKey.generate_parameters and OpenSSL::PKey.generate_key.
@@ -51016,7 +51016,7 @@ Algorithm (ECDSA) and Elliptic Curve Diffie-Hellman (ECDH).
     p shared_key1 == shared_key2 #=> true
 
 ;T;0;	I"OpenSSL::PKey::EC;T;
-[ ;[ ;0;[ ;[ ;0;I"OpenSSL::PKey::PKey;To;;I"•Obtains a list of all predefined curves by the OpenSSL. Curve names are
+[ ;[I"OpenSSL::Marshal;T;0;[ ;[ ;0;I"OpenSSL::PKey::PKey;To;;I"•Obtains a list of all predefined curves by the OpenSSL. Curve names are
 returned as sn.
 
 See the OpenSSL documentation for EC_get_builtin_curves().
@@ -51290,7 +51290,7 @@ such as secure (symmetric) key exchange, e.g. when establishing a secure
 TLS/SSL connection. It is also used in various digital signature schemes.
 
 ;T;0;	I"OpenSSL::PKey::RSA;T;
-[ ;[ ;0;[ ;[ ;0;I"OpenSSL::PKey::PKey;To;;I"¤Generates an RSA keypair.
+[ ;[I"OpenSSL::Marshal;T;0;[ ;[ ;0;I"OpenSSL::PKey::PKey;To;;I"¤Generates an RSA keypair.
 
 See also OpenSSL::PKey.generate_key.
 
@@ -52003,11 +52003,11 @@ and #max_version=.
 
 ;T;0;	I"OpenSSL::SSL::SSLError;T;
 [ ;[ ;0;[ ;[ ;0;I"OpenSSL::OpenSSLError;To; ;0;0;	I"'OpenSSL::SSL::SSLErrorWaitReadable;T;
-[ ;[ ;0;[ ;[ ;0;I"OpenSSL::SSL::SSLError;To; ;0;0;	I"'OpenSSL::SSL::SSLErrorWaitWritable;T;
-[ ;[ ;0;[ ;[ ;0;I"OpenSSL::SSL::SSLError;To; ;I"MSSLServer represents a TCP/IP server socket with Secure Sockets Layer.
+[ ;[I"IO::WaitReadable;T;0;[ ;[ ;0;I"OpenSSL::SSL::SSLError;To; ;0;0;	I"'OpenSSL::SSL::SSLErrorWaitWritable;T;
+[ ;[I"IO::WaitWritable;T;0;[ ;[ ;0;I"OpenSSL::SSL::SSLError;To; ;I"MSSLServer represents a TCP/IP server socket with Secure Sockets Layer.
 
 ;T;0;	I"OpenSSL::SSL::SSLServer;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I")Works similar to TCPServer#accept.
+[ ;[I""OpenSSL::SSL::SocketForwarder;T;0;[ ;[ ;0;0o;;I")Works similar to TCPServer#accept.
 
 ;T;0;;;I"accept;F;I"OpenSSL::SSL::SSLServer;T;[o;;I" ;F;I"OpenSSL::SSL::SSLSocket;To;;I" See IO#close for details.
 
@@ -52028,7 +52028,7 @@ to_io;F;I"OpenSSL::SSL::SSLServer;T;[o;;I" ;F;I"TCPServer | ::UNI
 *   *ctx* is an instance of OpenSSL::SSL::SSLContext.
 
 ;T;0;;;I"initialize;F;I"OpenSSL::SSL::SSLServer;T;[o;;I"0::TCPServer | ::UNIXServer svr, untyped ctx;T;I"	void;To; ;0;0;	I"OpenSSL::SSL::SSLSocket;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"‰Creates a new instance of SSLSocket. *remote*host_ and *remote*port_ are used
+[ ;[I""OpenSSL::SSL::SocketForwarder;TI"OpenSSL::Buffering;T;0;[ ;[ ;0;0o;;I"‰Creates a new instance of SSLSocket. *remote*host_ and *remote*port_ are used
 to open TCPSocket. If *local*host_ and *local*port_ are specified, then those
 parameters are used on the local end to establish the connection. If *context*
 is provided, the SSL Sockets initial params will be taken from the context.
@@ -52560,10 +52560,10 @@ Factory instead.
 
 ;T;0;;;I"initialize;F;I""OpenSSL::Timestamp::TokenInfo;T;[o;;I" ::File | ::String token_der;T;I"	void;To;;0;0;	I"OpenSSL::X509;T;
 [ ;[ ;0;[ ;[ o; ;0;0;	I"OpenSSL::X509::Attribute;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"==;F;I"OpenSSL::X509::Attribute;T;[o;;I"instance other;T;I"	bool;To;;I" ;T;0;;;I"oid;F;I"OpenSSL::X509::Attribute;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"	oid=;F;I"OpenSSL::X509::Attribute;T;[o;;I"::String;T;I"String;To;;I" ;T;0;;;I"to_der;F;I"OpenSSL::X509::Attribute;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"
+[ ;[I"OpenSSL::Marshal;T;0;[ ;[ ;0;0o;;I" ;T;0;;;I"==;F;I"OpenSSL::X509::Attribute;T;[o;;I"instance other;T;I"	bool;To;;I" ;T;0;;;I"oid;F;I"OpenSSL::X509::Attribute;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"	oid=;F;I"OpenSSL::X509::Attribute;T;[o;;I"::String;T;I"String;To;;I" ;T;0;;;I"to_der;F;I"OpenSSL::X509::Attribute;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"
 value;F;I"OpenSSL::X509::Attribute;T;[o;;I" ;F;I"OpenSSL::ASN1::Set;To;;I" ;T;0;;;I"value=;F;I"OpenSSL::X509::Attribute;T;[o;;I"::OpenSSL::ASN1::ASN1Data;T;I"OpenSSL::ASN1::Set;To;;I" ;T;0;;;I"initialize;F;I"OpenSSL::X509::Attribute;T;[o;;I"::String der;T;I"	void;To;;I"2::String oid, ::OpenSSL::ASN1::ASN1Data value;T;I"	void;To;;I" ;T;0;;;I"initialize_copy;F;I"OpenSSL::X509::Attribute;T;[o;;I"instance;T;I"	void;To; ;0;0;	I""OpenSSL::X509::AttributeError;T;
 [ ;[ ;0;[ ;[ ;0;I"OpenSSL::OpenSSLError;To; ;0;0;	I"OpenSSL::X509::CRL;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"==;F;I"OpenSSL::X509::CRL;T;[o;;I"instance other;T;I"	bool;To;;I" ;T;0;;;I"add_extension;F;I"OpenSSL::X509::CRL;T;[o;;I"#::OpenSSL::X509::Extension ext;T;I"OpenSSL::X509::Extension;To;;I" ;T;0;;;I"add_revoked;F;I"OpenSSL::X509::CRL;T;[o;;I"%::OpenSSL::X509::Revoked revoked;T;I"OpenSSL::X509::Revoked;To;;I"9Gets X509v3 extensions as array of X509Ext objects
+[ ;[I"5OpenSSL::X509::Extension::AuthorityKeyIdentifier;TI"OpenSSL::Marshal;T;0;[ ;[ ;0;0o;;I" ;T;0;;;I"==;F;I"OpenSSL::X509::CRL;T;[o;;I"instance other;T;I"	bool;To;;I" ;T;0;;;I"add_extension;F;I"OpenSSL::X509::CRL;T;[o;;I"#::OpenSSL::X509::Extension ext;T;I"OpenSSL::X509::Extension;To;;I" ;T;0;;;I"add_revoked;F;I"OpenSSL::X509::CRL;T;[o;;I"%::OpenSSL::X509::Revoked revoked;T;I"OpenSSL::X509::Revoked;To;;I"9Gets X509v3 extensions as array of X509Ext objects
 
 ;T;0;;;I"extensions;F;I"OpenSSL::X509::CRL;T;[o;;I" ;F;I"&Array[::OpenSSL::X509::Extension];To;;I"Sets X509_EXTENSIONs
 
@@ -52657,7 +52657,8 @@ certificate.
     cert.sign(root_key, OpenSSL::Digest.new('SHA256'))
 
 ;T;0;	I"OpenSSL::X509::Certificate;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"~Compares the two certificates. Note that this takes into account all fields,
+[ ;[
+I"2OpenSSL::X509::Extension::AuthorityInfoAccess;TI"4OpenSSL::X509::Extension::CRLDistributionPoints;TI"5OpenSSL::X509::Extension::AuthorityKeyIdentifier;TI"3OpenSSL::X509::Extension::SubjectKeyIdentifier;TI"OpenSSL::Marshal;T;0;[ ;[ ;0;0o;;I"~Compares the two certificates. Note that this takes into account all fields,
 not just the issuer name and the serial number.
 
 ;T;0;;;I"==;F;I"OpenSSL::X509::Certificate;T;[o;;I"instance other;T;I"	bool;To;;I" ;T;0;;;I"add_extension;F;I"OpenSSL::X509::Certificate;T;[o;;I"#::OpenSSL::X509::Extension ext;T;I"OpenSSL::X509::Extension;To;;I"yReturns `true` if *key* is the corresponding private key to the Subject Public
@@ -52670,7 +52671,7 @@ must be an instance of OpenSSL::PKey.
 
 ;T;0;;;I"verify;F;I"OpenSSL::X509::Certificate;T;[o;;I"::OpenSSL::PKey::PKey key;T;I"	bool;To;;I" ;T;0;;;I"version;F;I"OpenSSL::X509::Certificate;T;[o;;I" ;F;I"Integer;To;;I" ;T;0;;;I"version=;F;I"OpenSSL::X509::Certificate;T;[o;;I"::Integer;T;I"Integer;To;;I" ;T;0;;;I"initialize;F;I"OpenSSL::X509::Certificate;T;[o;;I"?::String pem;T;I"	void;To;;I" ;T;0;;;I"initialize_copy;F;I"OpenSSL::X509::Certificate;T;[o;;I"instance;T;I"	void;To; ;0;0;	I"$OpenSSL::X509::CertificateError;T;
 [ ;[ ;0;[ ;[ ;0;I"OpenSSL::OpenSSLError;To; ;0;0;	I"OpenSSL::X509::Extension;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"==;F;I"OpenSSL::X509::Extension;T;[o;;I"instance other;T;I"	bool;To;;I" ;T;0;;;I"critical=;F;I"OpenSSL::X509::Extension;T;[o;;I"::boolish;T;I"U;Fo;;I" ;T;0;;;I"critical?;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"	bool;To;;I" ;T;0;;;I"oid;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"	oid=;F;I"OpenSSL::X509::Extension;T;[o;;I"::String oid;T;I"String;To;;I" ;T;0;;;I"	to_a;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"![ ::String, ::String, bool ];To;;I" ;T;0;;;I"to_der;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"	to_h;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"Hash[::String, untyped];To;;I" ;T;0;;;I"	to_s;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"
+[ ;[I"OpenSSL::Marshal;T;0;[ ;[ ;0;0o;;I" ;T;0;;;I"==;F;I"OpenSSL::X509::Extension;T;[o;;I"instance other;T;I"	bool;To;;I" ;T;0;;;I"critical=;F;I"OpenSSL::X509::Extension;T;[o;;I"::boolish;T;I"U;Fo;;I" ;T;0;;;I"critical?;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"	bool;To;;I" ;T;0;;;I"oid;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"	oid=;F;I"OpenSSL::X509::Extension;T;[o;;I"::String oid;T;I"String;To;;I" ;T;0;;;I"	to_a;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"![ ::String, ::String, bool ];To;;I" ;T;0;;;I"to_der;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"	to_h;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"Hash[::String, untyped];To;;I" ;T;0;;;I"	to_s;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"
 value;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"value=;F;I"OpenSSL::X509::Extension;T;[o;;I",::String | ::OpenSSL::ASN1::_ToDer data;T;I"String;To;;I" ;T;0;;;I"value_der;F;I"OpenSSL::X509::Extension;T;[o;;I" ;F;I"String;To;;I"ãCreates an X509 extension.
 
 The extension may be created from *der* data or from an extension *oid* and
@@ -52723,7 +52724,7 @@ the distinguished name as an Array.
     name = OpenSSL::X509::Name.new [['CN', 'nobody'], ['DC', 'example']]
 
 ;T;0;	I"OpenSSL::X509::Name;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"EParses the string representation of a distinguished name. Two different forms
+[ ;[I"OpenSSL::Marshal;TI"Comparable;T;0;[ ;[ ;0;0o;;I"EParses the string representation of a distinguished name. Two different forms
 are supported:
 
 *   OpenSSL format (`X509_NAME_oneline()`) used by `#to_s`. For example:
@@ -52817,7 +52818,7 @@ See add_entry for a description of the *distinguished_name* Array's contents
 ;T;0;;;I"initialize;F;I"OpenSSL::X509::Name;T;[o;;I"]::OpenSSL::X509::Name::distinguished_name name, ::OpenSSL::X509::Name::template template;T;I"	void;To;;I"=::Array[::OpenSSL::X509::Name::distinguished_name] names;T;I"	void;To;;I"?::String der;T;I"	void;To;;I" ;T;0;;;I"initialize_copy;F;I"OpenSSL::X509::Name;T;[o;;I"instance;T;I"	void;To;;0;0;	I"#OpenSSL::X509::Name::RFC2253DN;T;
 [ ;[ ;0;[ ;[ o;;0;0;;;I"expand_hexstring;F;I"#OpenSSL::X509::Name::RFC2253DN;T;[o;;I"untyped str;T;I"untyped;To;;0;0;;;I"expand_pair;F;I"#OpenSSL::X509::Name::RFC2253DN;T;[o;;I"untyped str;T;I"untyped;To;;0;0;;;I"expand_value;F;I"#OpenSSL::X509::Name::RFC2253DN;T;[o;;I"-untyped str1, untyped str2, untyped str3;T;I"untyped;To;;0;0;;;I"	scan;F;I"#OpenSSL::X509::Name::RFC2253DN;T;[o;;I"untyped dn;T;I"untyped;To;;I" ;T;0;;;I"expand_hexstring;F;I"#OpenSSL::X509::Name::RFC2253DN;T;[o;;I"untyped str;T;I"untyped;To;;I" ;T;0;;;I"expand_pair;F;I"#OpenSSL::X509::Name::RFC2253DN;T;[o;;I"untyped str;T;I"untyped;To;;I" ;T;0;;;I"expand_value;F;I"#OpenSSL::X509::Name::RFC2253DN;T;[o;;I"-untyped str1, untyped str2, untyped str3;T;I"untyped;To;;I" ;T;0;;;I"	scan;F;I"#OpenSSL::X509::Name::RFC2253DN;T;[o;;I"::String dn;T;I"5Array[::OpenSSL::X509::Name::distinguished_name];To; ;0;0;	I"OpenSSL::X509::NameError;T;
 [ ;[ ;0;[ ;[ ;0;I"OpenSSL::OpenSSLError;To; ;0;0;	I"OpenSSL::X509::Request;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"==;F;I"OpenSSL::X509::Request;T;[o;;I"untyped other;T;I"	bool;To;;I" ;T;0;;;I"add_attribute;F;I"OpenSSL::X509::Request;T;[o;;I")::OpenSSL::X509::Attribute attribute;T;I"OpenSSL::X509::Attribute;To;;I" ;T;0;;;I"attributes;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"&Array[::OpenSSL::X509::Attribute];To;;I" ;T;0;;;I"attributes=;F;I"OpenSSL::X509::Request;T;[o;;I"3::Array[::OpenSSL::X509::Attribute] attributes;T;I"&Array[::OpenSSL::X509::Attribute];To;;I" ;T;0;;;I"public_key;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"OpenSSL::PKey::PKey;To;;I" ;T;0;;;I"public_key=;F;I"OpenSSL::X509::Request;T;[o;;I"%::OpenSSL::PKey::PKey public_key;T;I"OpenSSL::PKey::PKey;To;;I" ;T;0;;;I"	sign;F;I"OpenSSL::X509::Request;T;[o;;I"C::OpenSSL::PKey::PKey key, ::OpenSSL::Digest | ::String digest;T;I"String;To;;I" ;T;0;;;I"signature_algorithm;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"subject;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"OpenSSL::X509::Name;To;;I" ;T;0;;;I"subject=;F;I"OpenSSL::X509::Request;T;[o;;I""::OpenSSL::X509::Name subject;T;I"OpenSSL::X509::Name;To;;I" ;T;0;;;I"to_der;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"to_pem;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"to_text;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"String;To;;I"OChecks that cert signature is made with PRIVversion of this PUBLIC 'key'
+[ ;[I"OpenSSL::Marshal;T;0;[ ;[ ;0;0o;;I" ;T;0;;;I"==;F;I"OpenSSL::X509::Request;T;[o;;I"untyped other;T;I"	bool;To;;I" ;T;0;;;I"add_attribute;F;I"OpenSSL::X509::Request;T;[o;;I")::OpenSSL::X509::Attribute attribute;T;I"OpenSSL::X509::Attribute;To;;I" ;T;0;;;I"attributes;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"&Array[::OpenSSL::X509::Attribute];To;;I" ;T;0;;;I"attributes=;F;I"OpenSSL::X509::Request;T;[o;;I"3::Array[::OpenSSL::X509::Attribute] attributes;T;I"&Array[::OpenSSL::X509::Attribute];To;;I" ;T;0;;;I"public_key;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"OpenSSL::PKey::PKey;To;;I" ;T;0;;;I"public_key=;F;I"OpenSSL::X509::Request;T;[o;;I"%::OpenSSL::PKey::PKey public_key;T;I"OpenSSL::PKey::PKey;To;;I" ;T;0;;;I"	sign;F;I"OpenSSL::X509::Request;T;[o;;I"C::OpenSSL::PKey::PKey key, ::OpenSSL::Digest | ::String digest;T;I"String;To;;I" ;T;0;;;I"signature_algorithm;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"subject;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"OpenSSL::X509::Name;To;;I" ;T;0;;;I"subject=;F;I"OpenSSL::X509::Request;T;[o;;I""::OpenSSL::X509::Name subject;T;I"OpenSSL::X509::Name;To;;I" ;T;0;;;I"to_der;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"to_pem;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"String;To;;I" ;T;0;;;I"to_text;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"String;To;;I"OChecks that cert signature is made with PRIVversion of this PUBLIC 'key'
 
 ;T;0;;;I"verify;F;I"OpenSSL::X509::Request;T;[o;;I"::OpenSSL::PKey::PKey key;T;I"	bool;To;;I" ;T;0;;;I"version;F;I"OpenSSL::X509::Request;T;[o;;I" ;F;I"Integer;To;;I" ;T;0;;;I"version=;F;I"OpenSSL::X509::Request;T;[o;;I"::Integer version;T;I"Integer;To;;I" ;T;0;;;I"initialize;F;I"OpenSSL::X509::Request;T;[o;;I"?::String der;T;I"	void;To;;I" ;T;0;;;I"initialize_copy;F;I"OpenSSL::X509::Request;T;[o;;I"instance;T;I"	void;To; ;0;0;	I" OpenSSL::X509::RequestError;T;
 [ ;[ ;0;[ ;[ ;0;I"OpenSSL::OpenSSLError;To; ;0;0;	I"OpenSSL::X509::Revoked;T;
@@ -53688,7 +53689,7 @@ the rest arguments left unparsed.
 ;T;0;;;I"permute!;F;I"OptionParser::Arguable;T;[o;;I" ;F;I"Array[::String];To; ;I"IHash with completion search feature. See OptionParser::Completion.
 
 ;T;0;	I"!OptionParser::CompletingHash;T;
-[ ;[ ;0;[ ;[ ;0;I"	Hash;To;;I"Completion for hash key.
+[ ;[I"OptionParser::Completion;T;0;[ ;[ ;0;I"	Hash;To;;I"Completion for hash key.
 
 ;T;0;;;I"
 match;F;I"!OptionParser::CompletingHash;T;[o;;I"untyped key;T;I"untyped;To;;I"}Keyword completion module.  This allows partial arguments to be specified and
@@ -53785,7 +53786,7 @@ on every option.
 [ ;[ ;0;[ ;[ ;0;I"OptionParser::ParseError;To; ;I"@Map from option/keyword string to object with completion.
 
 ;T;0;	I"OptionParser::OptionMap;T;
-[ ;[ ;0;[ ;[ ;0;I"	Hash;To; ;I"2Base class of exceptions from OptionParser.
+[ ;[I"OptionParser::Completion;T;0;[ ;[ ;0;I"	Hash;To; ;I"2Base class of exceptions from OptionParser.
 
 ;T;0;	I"OptionParser::ParseError;T;
 [ ;[ ;0;[ ;[ ;0;I"RuntimeError;To;;I" ;T;0;;;I"filter_backtrace;F;I"OptionParser::ParseError;T;[o;;I"untyped array;T;I"untyped;To;;0;0;;;I"additional;F;I"OptionParser::ParseError;T;[o;;I" ;F;I"untyped;To;;0;0;;;I"additional=;F;I"OptionParser::ParseError;T;[o;;I"untyped;T;I"untyped;To;;0;0;;;I"	args;F;I"OptionParser::ParseError;T;[o;;I" ;F;I"untyped;To;;I" ;T;0;;;I"inspect;F;I"OptionParser::ParseError;T;[o;;I" ;F;I"untyped;To;;I"ADefault stringizing method to emit standard error message.
@@ -54826,7 +54827,7 @@ few implementations of generator.
 
 ;T;0;	I"
 Prime;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"ŒIterates the given block over all prime numbers.
+[ ;[I"Singleton;TI"Enumerable;T;0;[ ;[ ;0;0o;;I"ŒIterates the given block over all prime numbers.
 
 ## Parameters
 
@@ -55015,7 +55016,7 @@ Prime;To; ;I"wAn abstract class for enumerating pseudo-prime numbers.
 Concrete subclasses should override succ, next, rewind.
 
 ;T;0;	I" Prime::PseudoPrimeGenerator;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I" ;T;0;;;I"initialize;F;I" Prime::PseudoPrimeGenerator;T;[o;;I"?::Integer?;T;I"	void;To;;I"6Iterates the given block for each prime number.
+[ ;[I"Enumerable;T;0;[ ;[ ;0;0o;;I" ;T;0;;;I"initialize;F;I" Prime::PseudoPrimeGenerator;T;[o;;I"?::Integer?;T;I"	void;To;;I"6Iterates the given block for each prime number.
 
 ;T;0;;;I"	each;F;I" Prime::PseudoPrimeGenerator;T;[o;;I" ;F;I"	void;To;;I"alias of `succ`.
 
@@ -56865,7 +56866,7 @@ For the last example, single-digit versions are automatically extended with a
 zero to give a sensible result.
 
 ;T;0;	I"Gem::Version;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"CTrue if the `version` string matches RubyGems' requirements.
+[ ;[I"Comparable;T;0;[ ;[ ;0;0o;;I"CTrue if the `version` string matches RubyGems' requirements.
 
 ;T;0;;;I"correct?;F;I"Gem::Version;T;[o;;I"::_ToS version;T;I"	bool;To;;I"Factory method to create a Version object. Input may be a Version or a String.
 Intended to simplify client code.
@@ -61588,7 +61589,7 @@ http://tools.ietf.org/html/draft-hoffman-ftp-uri-04
 [ ;[ ;0;[ ;[ ;0;I"URI::Generic;To; ;I"UBase class for all URI classes. Implements generic URI syntax as per RFC 2396.
 
 ;T;0;	I"URI::Generic;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"Returns default port.
+[ ;[I"URI;T;0;[ ;[ ;0;0o;;I"Returns default port.
 
 ;T;0;;;I"default_port;F;I"URI::Generic;T;[o;;I" ;F;I"nil | ::Integer;To;;I"Returns default port.
 
@@ -62284,7 +62285,7 @@ URI::LDAP.
 It contains a Hash set of patterns and Regexp's that match and validate.
 
 ;T;0;	I"URI::RFC2396_Parser;T;
-[ ;[ ;0;[ ;[ ;0;0o;;I"á## Synopsis
+[ ;[I"URI::RFC2396_REGEXP;T;0;[ ;[ ;0;0o;;I"á## Synopsis
 
     URI::Parser.new([opts])
 
