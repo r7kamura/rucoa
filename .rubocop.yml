@@ -38,6 +38,9 @@ Sevencop/AutoloadOrdered:
 Sevencop/HashLiteralOrder:
   Enabled: true
 
+Sevencop/MethodDefinitionKeywordArgumentsOrdered:
+  Enabled: true
+
 Sevencop/MethodDefinitionMultilineArguments:
   Enabled: true
 
