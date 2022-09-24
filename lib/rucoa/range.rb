@@ -41,6 +41,12 @@ module Rucoa
       @including_ending = including_ending
     end
 
+    # @param other [Rucoa::Range]
+    # @return [Boolean]
+    def ==(other)
+      beginning == other.beginning && ending == other.ending
+    end
+
     # @param range [Rucoa::Range]
     # @return [Boolean]
     # @example returns true when the range is contained in self

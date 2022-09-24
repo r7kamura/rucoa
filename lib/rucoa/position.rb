@@ -47,6 +47,12 @@ module Rucoa
       @line = line
     end
 
+    # @param other [Rucoa::Position]
+    # @return [Boolean]
+    def ==(other)
+      column == other.column && line == other.line
+    end
+
     # @param text [String]
     # @return [Integer]
     def to_index_of(text)

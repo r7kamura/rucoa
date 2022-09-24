@@ -51,7 +51,7 @@ module Rucoa
               description: description,
               fully_qualified_name: @node.fully_qualified_name,
               included_module_chained_names: included_module_chained_names,
-              location: Location.from_rucoa_node(@node),
+              location: location,
               module_nesting: @node.module_nesting,
               super_class_chained_name: @node.super_class_chained_name
             )

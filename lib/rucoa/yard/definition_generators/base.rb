@@ -51,6 +51,34 @@ module Rucoa
           end
         end
 
+        # @return [Rucoa::Location]
+        # @example returns source uri and entire range of target node
+        #   definitions = Rucoa::Source.new(
+        #     content: <<~RUBY,
+        #       class Foo
+        #       end
+        #     RUBY
+        #     uri: '/path/to/foo.rb'
+        #   ).definitions
+        #   expect(definitions[0].location).to eq(
+        #     Rucoa::Location.new(
+        #       range: Rucoa::Range.new(
+        #         Rucoa::Position.new(
+        #           column: 0,
+        #           line: 1
+        #         ),
+        #         Rucoa::Position.new(
+        #           column: 3,
+        #           line: 2
+        #         )
+        #       ),
+        #       uri: '/path/to/foo.rb'
+        #     )
+        #   )
+        def location
+          Location.from_rucoa_node(@node)
+        end
+
         # @return [Array<String>]
         # @example returns annotated return types if return tag is provided
         #   definitions = Rucoa::Source.new(
