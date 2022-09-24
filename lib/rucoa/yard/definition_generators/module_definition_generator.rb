@@ -20,7 +20,7 @@ module Rucoa
             Definitions::ModuleDefinition.new(
               description: description,
               fully_qualified_name: @node.fully_qualified_name,
-              location: Location.from_rucoa_node(@node)
+              location: location
             )
           ]
         end

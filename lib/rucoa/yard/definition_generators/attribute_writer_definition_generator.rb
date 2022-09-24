@@ -42,7 +42,7 @@ module Rucoa
             Definitions::MethodDefinition.new(
               description: description,
               kind: :instance,
-              location: Location.from_rucoa_node(@node),
+              location: location,
               method_name: "#{argument.value}=",
               namespace: @node.namespace,
               types: return_types.map do |type|

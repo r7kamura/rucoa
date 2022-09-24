@@ -29,7 +29,7 @@ module Rucoa
             Definitions::MethodDefinition.new(
               description: description,
               kind: @node.singleton? ? :singleton : :instance,
-              location: Location.from_rucoa_node(@node),
+              location: location,
               method_name: @node.name,
               namespace: @node.namespace,
               types: return_types.map do |type|
