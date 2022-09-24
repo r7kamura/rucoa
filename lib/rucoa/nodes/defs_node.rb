@@ -4,7 +4,7 @@ module Rucoa
   module Nodes
     class DefsNode < Base
       # @return [String]
-      def fully_qualified_name
+      def qualified_name
         [
           namespace,
           method_marker,

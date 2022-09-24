@@ -88,7 +88,7 @@ module Rucoa
       #   )
       #   expect(node.module_nesting).to eq(['Foo::Bar', 'Foo'])
       def module_nesting
-        each_ancestor(:class, :module).map(&:fully_qualified_name)
+        each_ancestor(:class, :module).map(&:qualified_name)
       end
 
       private

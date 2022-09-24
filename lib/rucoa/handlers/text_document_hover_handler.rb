@@ -31,7 +31,7 @@ module Rucoa
           case definition
           when Definitions::ClassDefinition, Definitions::ConstantDefinition, Definitions::ModuleDefinition
             [
-              definition.fully_qualified_name,
+              definition.qualified_name,
               definition.description
             ].compact.join("\n")
           when Definitions::MethodDefinition

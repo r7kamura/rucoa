@@ -3,21 +3,21 @@
 module Rucoa
   class DefinitionStore
     def initialize
-      @definition_by_fully_qualified_name = {}
-      @fully_qualified_names_by_uri = ::Hash.new { |hash, key| hash[key] = [] }
+      @definition_by_qualified_name = {}
+      @qualified_names_by_uri = ::Hash.new { |hash, key| hash[key] = [] }
     end
 
     # @return [String]
     def inspect
-      "#<#{self.class} definitions_count=#{@definition_by_fully_qualified_name.count}>"
+      "#<#{self.class} definitions_count=#{@definition_by_qualified_name.count}>"
     end
 
     # @param definitions [Array<Rucoa::Definition::Base>]
     # @return [void]
     def bulk_add(definitions)
       definitions.each do |definition|
-        @fully_qualified_names_by_uri[definition.location.uri] << definition.fully_qualified_name if definition.location
-        @definition_by_fully_qualified_name[definition.fully_qualified_name] = definition
+        @qualified_names_by_uri[definition.location.uri] << definition.qualified_name if definition.location
+        @definition_by_qualified_name[definition.qualified_name] = definition
       end
     end
 
@@ -45,8 +45,8 @@ module Rucoa
     #     uri: 'file:///path/to/a/bar.rb',
     #   )
     #   definition_store.update_from(bar)
-    #   definition = definition_store.find_definition_by_fully_qualified_name('A::Bar')
-    #   expect(definition.super_class_fully_qualified_name).to eq('A::Foo')
+    #   definition = definition_store.find_definition_by_qualified_name('A::Bar')
+    #   expect(definition.super_class_qualified_name).to eq('A::Foo')
     # @example resolves included module names from definitions
     #   definition_store = Rucoa::DefinitionStore.new
     #   foo = Rucoa::Source.new(
@@ -70,18 +70,18 @@ module Rucoa
     #     uri: 'file:///path/to/a/bar.rb',
     #   )
     #   definition_store.update_from(bar)
-    #   definition = definition_store.find_definition_by_fully_qualified_name('A::Bar')
-    #   expect(definition.included_module_fully_qualified_names).to eq(%w[A::Foo])
+    #   definition = definition_store.find_definition_by_qualified_name('A::Bar')
+    #   expect(definition.included_module_qualified_names).to eq(%w[A::Foo])
     def update_from(source)
       delete_definitions_in(source)
       add_definitions_in(source)
       resolve_constants_in(source)
     end
 
-    # @param fully_qualified_name [String]
+    # @param qualified_name [String]
     # @return [Rucoa::Definitions::Base, nil]
-    def find_definition_by_fully_qualified_name(fully_qualified_name)
-      @definition_by_fully_qualified_name[fully_qualified_name]
+    def find_definition_by_qualified_name(qualified_name)
+      @definition_by_qualified_name[qualified_name]
     end
 
     # @param method_name [String]
@@ -108,7 +108,7 @@ module Rucoa
     #     namespace: 'B',
     #     singleton: false
     #   )
-    #   expect(subject.fully_qualified_name).to eq('A#foo')
+    #   expect(subject.qualified_name).to eq('A#foo')
     # @example supports `include`
     #   source = Rucoa::Source.new(
     #     content: <<~RUBY,
@@ -130,7 +130,7 @@ module Rucoa
     #     namespace: 'B',
     #     singleton: false
     #   )
-    #   expect(subject.fully_qualified_name).to eq('A#foo')
+    #   expect(subject.qualified_name).to eq('A#foo')
     # @example supports `prepend`
     #   source = Rucoa::Source.new(
     #     content: <<~RUBY,
@@ -155,23 +155,23 @@ module Rucoa
     #     namespace: 'B',
     #     singleton: false
     #   )
-    #   expect(subject.fully_qualified_name).to eq('A#foo')
+    #   expect(subject.qualified_name).to eq('A#foo')
     def find_method_definition_by(
       method_name:,
       namespace:,
       singleton: false
     )
-      definition = find_definition_by_fully_qualified_name(namespace)
+      definition = find_definition_by_qualified_name(namespace)
       return unless definition
 
       ancestors_of(definition).find do |ancestor|
         method_marker = singleton ? '.' : '#'
-        fully_qualified_method_name = [
-          ancestor.fully_qualified_name,
+        qualified_method_name = [
+          ancestor.qualified_name,
           method_marker,
           method_name
         ].join
-        method_definition = find_definition_by_fully_qualified_name(fully_qualified_method_name)
+        method_definition = find_definition_by_qualified_name(qualified_method_name)
         break method_definition if method_definition
       end
     end
@@ -182,23 +182,23 @@ module Rucoa
     #   definition_store = Rucoa::DefinitionStore.new
     #   definition_store.bulk_add(Rucoa::DefinitionArchiver.load)
     #   subject = definition_store.instance_method_definitions_of('File')
-    #   expect(subject.map(&:fully_qualified_name)).to include('IO#raw')
+    #   expect(subject.map(&:qualified_name)).to include('IO#raw')
     # @example responds to `singleton<File>`
     #   definition_store = Rucoa::DefinitionStore.new
     #   definition_store.bulk_add(Rucoa::DefinitionArchiver.load)
     #   subject = definition_store.instance_method_definitions_of('singleton<File>')
-    #   expect(subject.map(&:fully_qualified_name)).to include('IO.write')
+    #   expect(subject.map(&:qualified_name)).to include('IO.write')
     def instance_method_definitions_of(type)
       singleton_class_name = singleton_class_name_from(type)
       return singleton_method_definitions_of(singleton_class_name) if singleton_class_name
 
-      class_or_module_definition = find_definition_by_fully_qualified_name(type)
+      class_or_module_definition = find_definition_by_qualified_name(type)
       return [] unless class_or_module_definition
 
       method_definitions = instance_method_definitions
       ancestors_of(class_or_module_definition).flat_map do |ancestor|
         method_definitions.select do |method_definition|
-          method_definition.namespace == ancestor.fully_qualified_name
+          method_definition.namespace == ancestor.qualified_name
         end
       end
     end
@@ -209,15 +209,15 @@ module Rucoa
     #   definition_store = Rucoa::DefinitionStore.new
     #   definition_store.bulk_add(Rucoa::DefinitionArchiver.load)
     #   subject = definition_store.singleton_method_definitions_of('File')
-    #   expect(subject.map(&:fully_qualified_name)).to include('IO.write')
+    #   expect(subject.map(&:qualified_name)).to include('IO.write')
     def singleton_method_definitions_of(type)
-      class_or_module_definition = find_definition_by_fully_qualified_name(type)
+      class_or_module_definition = find_definition_by_qualified_name(type)
       return [] unless class_or_module_definition
 
       method_definitions = singleton_method_definitions
       ancestors_of(class_or_module_definition).flat_map do |ancestor|
         method_definitions.select do |method_definition|
-          method_definition.namespace == ancestor.fully_qualified_name
+          method_definition.namespace == ancestor.qualified_name
         end
       end
     end
@@ -242,7 +242,7 @@ module Rucoa
           "#{prefix}::#{chained_name}"
         end + [chained_name]
       ).find do |candidate|
-        find_definition_by_fully_qualified_name(candidate)
+        find_definition_by_qualified_name(candidate)
       end || chained_name
     end
 
@@ -251,10 +251,10 @@ module Rucoa
     # @param source [Rucoa::Source]
     # @return [void]
     def delete_definitions_in(source)
-      @fully_qualified_names_by_uri[source.uri].each do |fully_qualified_name|
-        @definition_by_fully_qualified_name.delete(fully_qualified_name)
+      @qualified_names_by_uri[source.uri].each do |qualified_name|
+        @definition_by_qualified_name.delete(qualified_name)
       end
-      @fully_qualified_names_by_uri.delete(source.uri)
+      @qualified_names_by_uri.delete(source.uri)
     end
 
     # @param type [String]
@@ -279,12 +279,12 @@ module Rucoa
     # @return [Array<Rucoa::Definitions::Class, Rucoa::Definitions::Module>] An array of prepended, itself, and included definitions
     def module_ancestors_of(definition)
       [
-        *definition.prepended_module_fully_qualified_names.filter_map do |fully_qualified_name|
-          find_definition_by_fully_qualified_name(fully_qualified_name)
+        *definition.prepended_module_qualified_names.filter_map do |qualified_name|
+          find_definition_by_qualified_name(qualified_name)
         end.reverse,
         definition,
-        *definition.included_module_fully_qualified_names.filter_map do |fully_qualified_name|
-          find_definition_by_fully_qualified_name(fully_qualified_name)
+        *definition.included_module_qualified_names.filter_map do |qualified_name|
+          find_definition_by_qualified_name(qualified_name)
         end.reverse
       ]
     end
@@ -293,8 +293,8 @@ module Rucoa
     # @return [Array<Rucoa::Definitions::Class>] super "class"es (not including modules) in closest-first order
     def super_class_definitions_of(definition)
       result = []
-      while (super_class_fully_qualified_name = definition.super_class_fully_qualified_name)
-        super_definition = find_definition_by_fully_qualified_name(super_class_fully_qualified_name)
+      while (super_class_qualified_name = definition.super_class_qualified_name)
+        super_definition = find_definition_by_qualified_name(super_class_qualified_name)
         break unless super_definition
 
         result << super_definition
@@ -305,7 +305,7 @@ module Rucoa
 
     # @return [Array<Rucoa::Definitions::Base>]
     def definitions
-      @definition_by_fully_qualified_name.values
+      @definition_by_qualified_name.values
     end
 
     # @return [Array<Rucoa::Definition::MethodDefinition>]
@@ -334,9 +334,9 @@ module Rucoa
       source.definitions.group_by do |definition|
         definition.location.uri
       end.each do |uri, definitions|
-        @fully_qualified_names_by_uri[uri] += definitions.map(&:fully_qualified_name)
+        @qualified_names_by_uri[uri] += definitions.map(&:qualified_name)
         definitions.each do |definition|
-          @definition_by_fully_qualified_name[definition.fully_qualified_name] = definition
+          @definition_by_qualified_name[definition.qualified_name] = definition
         end
       end
     end
@@ -347,9 +347,9 @@ module Rucoa
       source.definitions.each do |definition|
         next unless definition.is_a?(Definitions::ClassDefinition)
 
-        definition.super_class_fully_qualified_name = resolve_super_class_of(definition)
-        definition.included_module_fully_qualified_names = resolve_included_modules_of(definition)
-        definition.prepended_module_fully_qualified_names = resolve_prepended_modules_of(definition)
+        definition.super_class_qualified_name = resolve_super_class_of(definition)
+        definition.included_module_qualified_names = resolve_included_modules_of(definition)
+        definition.prepended_module_qualified_names = resolve_prepended_modules_of(definition)
       end
     end
 
@@ -372,7 +372,7 @@ module Rucoa
         resolve_constant(
           chained_name: chained_name,
           module_nesting: [
-            class_definition.fully_qualified_name,
+            class_definition.qualified_name,
             *class_definition.module_nesting
           ]
         )
@@ -386,7 +386,7 @@ module Rucoa
         resolve_constant(
           chained_name: chained_name,
           module_nesting: [
-            class_definition.fully_qualified_name,
+            class_definition.qualified_name,
             *class_definition.module_nesting
           ]
         )
