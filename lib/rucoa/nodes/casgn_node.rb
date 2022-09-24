@@ -3,7 +3,7 @@
 module Rucoa
   module Nodes
     class CasgnNode < Base
-      include NodeConcerns::FullyQualifiedName
+      include NodeConcerns::QualifiedName
 
       # @return [String]
       def name

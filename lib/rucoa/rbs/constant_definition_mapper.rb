@@ -20,8 +20,8 @@ module Rucoa
       def call
         Definitions::ConstantDefinition.new(
           description: description,
-          fully_qualified_name: fully_qualified_name,
-          location: location
+          location: location,
+          qualified_name: qualified_name
         )
       end
 
@@ -33,7 +33,7 @@ module Rucoa
       end
 
       # @return [String]
-      def fully_qualified_name
+      def qualified_name
         @declaration.name.to_s.delete_prefix('::')
       end
 

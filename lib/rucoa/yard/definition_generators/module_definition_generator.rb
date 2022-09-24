@@ -19,8 +19,8 @@ module Rucoa
           [
             Definitions::ModuleDefinition.new(
               description: description,
-              fully_qualified_name: @node.fully_qualified_name,
-              location: location
+              location: location,
+              qualified_name: @node.qualified_name
             )
           ]
         end

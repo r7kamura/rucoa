@@ -43,8 +43,8 @@ module Rucoa
       #     RUBY
       #     uri: 'file:///path/to/foo/bar/baz.rb',
       #   ).definitions[2]
-      #   expect(definition.fully_qualified_name).to eq('Foo::Bar#foo')
-      def fully_qualified_name
+      #   expect(definition.qualified_name).to eq('Foo::Bar#foo')
+      def qualified_name
         [
           @namespace,
           method_kind_symbol,
@@ -97,9 +97,9 @@ module Rucoa
       def signatures
         @types.map do |type|
           format(
-            '%<fully_qualified_name>s(%<parameters>s) -> %<return_types>s',
-            fully_qualified_name: fully_qualified_name,
+            '%<qualified_name>s(%<parameters>s) -> %<return_types>s',
             parameters: type.parameters_string,
+            qualified_name: qualified_name,
             return_types: type.return_type
           )
         end

@@ -5,15 +5,15 @@ module Rucoa
     # Represents class definition, module definition, or constant assignment.
     class ConstantDefinition < Base
       # @return [String]
-      attr_reader :fully_qualified_name
+      attr_reader :qualified_name
 
-      # @param fully_qualified_name [String]
+      # @param qualified_name [String]
       def initialize(
-        fully_qualified_name:,
+        qualified_name:,
         **keyword_arguments
       )
         super(**keyword_arguments)
-        @fully_qualified_name = fully_qualified_name
+        @qualified_name = qualified_name
       end
 
       # @return [String]
@@ -56,7 +56,7 @@ module Rucoa
 
       # @return [Array<String>]
       def names
-        @names ||= fully_qualified_name.split('::')
+        @names ||= qualified_name.split('::')
       end
     end
   end

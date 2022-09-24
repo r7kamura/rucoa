@@ -49,11 +49,11 @@ module Rucoa
           [
             Definitions::ClassDefinition.new(
               description: description,
-              fully_qualified_name: @node.fully_qualified_name,
               included_module_chained_names: included_module_chained_names,
               location: location,
               module_nesting: @node.module_nesting,
               prepended_module_chained_names: prepended_module_chained_names,
+              qualified_name: @node.qualified_name,
               super_class_chained_name: @node.super_class_chained_name
             )
           ]

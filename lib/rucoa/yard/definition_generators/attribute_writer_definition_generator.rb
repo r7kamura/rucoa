@@ -28,7 +28,7 @@ module Rucoa
         #     RUBY
         #     uri: '/path/to/foo.rb'
         #   ).definitions
-        #   expect(definitions.map(&:fully_qualified_name)).to eq(
+        #   expect(definitions.map(&:qualified_name)).to eq(
         #     %w[
         #       Foo
         #       Foo#bar

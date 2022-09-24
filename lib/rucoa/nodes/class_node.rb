@@ -4,7 +4,7 @@ module Rucoa
   module Nodes
     class ClassNode < Base
       include NodeConcerns::Body
-      include NodeConcerns::FullyQualifiedName
+      include NodeConcerns::QualifiedName
 
       # @return [String]
       def name

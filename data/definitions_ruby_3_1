@@ -561,8 +561,8 @@ Each of these methods removes elements from `self`:
 #sum
 :   Returns a sum of elements according to either `+` or a given block.
 
-:ET:@location0:@fully_qualified_nameI"
-Array;T:#@included_module_chained_names[ :+@included_module_fully_qualified_names[ :@module_nesting0:$@prepended_module_chained_names[ :,@prepended_module_fully_qualified_names[ :@super_class_chained_name0:&@super_class_fully_qualified_nameI"Object;To:)Rucoa::Definitions::MethodDefinition;I"2Returns a new Array.
+:ET:@location0:@qualified_nameI"
+Array;T:#@included_module_chained_names[ :%@included_module_qualified_names[ :@module_nesting0:$@prepended_module_chained_names[ :&@prepended_module_qualified_names[ :@super_class_chained_name0: @super_class_qualified_nameI"Object;To:)Rucoa::Definitions::MethodDefinition;I"2Returns a new Array.
 
 With no block and no arguments, returns a new empty Array object.
 

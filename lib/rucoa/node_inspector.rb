@@ -93,7 +93,7 @@ module Rucoa
     def constant_definition
       return unless @node.is_a?(Nodes::ConstNode)
 
-      @definition_store.find_definition_by_fully_qualified_name(
+      @definition_store.find_definition_by_qualified_name(
         @definition_store.resolve_constant(
           chained_name: @node.chained_name,
           module_nesting: @node.module_nesting
@@ -107,16 +107,16 @@ module Rucoa
     end
 
     # @return [String, nil]
-    def nearest_def_fully_qualified_name
-      @node.each_ancestor(:def).first&.fully_qualified_name
+    def nearest_def_qualified_name
+      @node.each_ancestor(:def).first&.qualified_name
     end
 
     # @return [Array<String>]
     def return_types_for_lvar
-      fully_qualified_name = nearest_def_fully_qualified_name
-      return [] unless fully_qualified_name
+      qualified_name = nearest_def_qualified_name
+      return [] unless qualified_name
 
-      definition = @definition_store.find_definition_by_fully_qualified_name(fully_qualified_name)
+      definition = @definition_store.find_definition_by_qualified_name(qualified_name)
       return [] unless definition
 
       definition.parameters.select do |parameter|
