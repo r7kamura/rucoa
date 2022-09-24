@@ -258,7 +258,7 @@ module Rucoa
     # @param type [String]
     # @return [String, nil]
     def singleton_class_name_from(type)
-      type[/singleton<(\w+)>/, 1]
+      type[/singleton<([\w:]+)>/, 1]
     end
 
     # @param definition [Rucoa::Definitions::Class, Rucoa::Definitions::Module]
