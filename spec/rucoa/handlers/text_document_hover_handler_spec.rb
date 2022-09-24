@@ -288,21 +288,25 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
     context 'when another style of singleton method call is hovered' do
       let(:content) do
         <<~RUBY
-          class Foo
-            class << self
-              def foo
+          class A
+            def foo
+              B.call
+            end
+
+            class B
+              class << self
+                def call
+                end
               end
             end
           end
-
-          Foo.foo
         RUBY
       end
 
       let(:position) do
         Rucoa::Position.new(
-          column: 7,
-          line: 8
+          column: 10,
+          line: 3
         )
       end
 
@@ -313,7 +317,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
             hash_including(
               'id' => 1,
               'result' => hash_including(
-                'contents' => /\AFoo\.foo/
+                'contents' => /\AA::B.call/
               )
             )
           ]

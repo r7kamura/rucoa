@@ -51,7 +51,7 @@ module Rucoa
     def return_types
       case @node.type
       when :const
-        ["singleton<#{@node.name}>"]
+        return_types_for_const
       when :lvar
         return_types_for_lvar
       when :send
@@ -111,6 +111,17 @@ module Rucoa
     # @return [String, nil]
     def nearest_def_qualified_name
       @node.each_ancestor(:def).first&.qualified_name
+    end
+
+    # @return [Array<String>]
+    def return_types_for_const
+      qualified_name = @definition_store.resolve_constant(
+        UnqualifiedName.new(
+          chained_name: @node.chained_name,
+          module_nesting: @node.module_nesting
+        )
+      )
+      ["singleton<#{qualified_name}>"]
     end
 
     # @return [Array<String>]
