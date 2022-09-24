@@ -230,20 +230,16 @@ module Rucoa
       end
     end
 
-    # @param chained_name [String]
-    # @param module_nesting [Array<String>]
+    # @param unqualified_name [Rucoa::UnqualifiedName]
     # @return [String]
-    def resolve_constant(
-      chained_name:,
-      module_nesting:
-    )
+    def resolve_constant(unqualified_name)
       (
-        module_nesting.map do |prefix|
-          "#{prefix}::#{chained_name}"
-        end + [chained_name]
+        unqualified_name.module_nesting.map do |prefix|
+          "#{prefix}::#{unqualified_name.chained_name}"
+        end + [unqualified_name.chained_name]
       ).find do |candidate|
         find_definition_by_qualified_name(candidate)
-      end || chained_name
+      end || unqualified_name.chained_name
     end
 
     private
@@ -347,49 +343,13 @@ module Rucoa
       source.definitions.each do |definition|
         next unless definition.is_a?(Definitions::ClassDefinition)
 
-        definition.super_class_qualified_name = resolve_super_class_of(definition)
-        definition.included_module_qualified_names = resolve_included_modules_of(definition)
-        definition.prepended_module_qualified_names = resolve_prepended_modules_of(definition)
-      end
-    end
-
-    # @param class_definition [Rucoa::Definitions::ClassDefinition]
-    # @return [String]
-    def resolve_super_class_of(class_definition)
-      chained_name = class_definition.super_class_chained_name
-      return 'Object' unless chained_name
-
-      resolve_constant(
-        chained_name: chained_name,
-        module_nesting: class_definition.module_nesting
-      )
-    end
-
-    # @param class_definition [Rucoa::Definitions::ClassDefinition]
-    # @return [Array<String>]
-    def resolve_included_modules_of(class_definition)
-      class_definition.included_module_chained_names.map do |chained_name|
-        resolve_constant(
-          chained_name: chained_name,
-          module_nesting: [
-            class_definition.qualified_name,
-            *class_definition.module_nesting
-          ]
-        )
-      end
-    end
-
-    # @param class_definition [Rucoa::Definitions::ClassDefinition]
-    # @return [Array<String>]
-    def resolve_prepended_modules_of(class_definition)
-      class_definition.prepended_module_chained_names.map do |chained_name|
-        resolve_constant(
-          chained_name: chained_name,
-          module_nesting: [
-            class_definition.qualified_name,
-            *class_definition.module_nesting
-          ]
-        )
+        definition.super_class_qualified_name = resolve_constant(definition.super_class_unqualified_name)
+        definition.included_module_qualified_names = definition.included_module_unqualified_names.map do |unqualified_name|
+          resolve_constant(unqualified_name)
+        end
+        definition.prepended_module_qualified_names = definition.prepended_module_unqualified_names.map do |unqualified_name|
+          resolve_constant(unqualified_name)
+        end
       end
     end
   end

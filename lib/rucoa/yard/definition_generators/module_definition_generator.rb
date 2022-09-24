@@ -19,10 +19,42 @@ module Rucoa
           [
             Definitions::ModuleDefinition.new(
               description: description,
+              included_module_unqualified_names: included_module_unqualified_names,
               location: location,
+              prepended_module_unqualified_names: prepended_module_unqualified_names,
               qualified_name: @node.qualified_name
             )
           ]
+        end
+
+        private
+
+        # @return [Array<Rucoa::UnqualifiedName>]
+        def included_module_unqualified_names
+          unqualified_names_for('include')
+        end
+
+        # @return [Array<Rucoa::UnqualifiedName>]
+        def prepended_module_unqualified_names
+          unqualified_names_for('prepend')
+        end
+
+        # @param method_name [String]
+        # @return [Array<Rucoa::UnqualifiedName>]
+        def unqualified_names_for(method_name)
+          @node.body_children.flat_map do |child|
+            next [] unless child.is_a?(Nodes::SendNode)
+            next [] unless child.name == method_name
+
+            child.arguments.filter_map do |argument|
+              next unless argument.is_a?(Nodes::ConstNode)
+
+              UnqualifiedName.new(
+                chained_name: argument.chained_name,
+                module_nesting: @node.module_nesting
+              )
+            end
+          end
         end
       end
     end

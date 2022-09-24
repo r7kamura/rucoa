@@ -28,5 +28,6 @@ module Rucoa
   autoload :Source, 'rucoa/source'
   autoload :SourceStore, 'rucoa/source_store'
   autoload :Types, 'rucoa/types'
+  autoload :UnqualifiedName, 'rucoa/unqualified_name'
   autoload :Yard, 'rucoa/yard'
 end

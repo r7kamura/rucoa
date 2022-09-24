@@ -95,8 +95,10 @@ module Rucoa
 
       @definition_store.find_definition_by_qualified_name(
         @definition_store.resolve_constant(
-          chained_name: @node.chained_name,
-          module_nesting: @node.module_nesting
+          UnqualifiedName.new(
+            chained_name: @node.chained_name,
+            module_nesting: @node.module_nesting
+          )
         )
       )
     end
