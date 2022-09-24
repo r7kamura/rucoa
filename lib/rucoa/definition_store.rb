@@ -180,16 +180,76 @@ module Rucoa
 
     # @param type [String]
     # @return [Array<Rucoa::Definitions::MethodDefinition>]
-    # @example includes ancestors' methods
+    # @example supports simple instance method
+    #   source = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       class A
+    #         def foo
+    #         end
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/example.rb'
+    #   )
     #   definition_store = Rucoa::DefinitionStore.new
-    #   definition_store.bulk_add(Rucoa::DefinitionArchiver.load)
-    #   subject = definition_store.instance_method_definitions_of('File')
-    #   expect(subject.map(&:qualified_name)).to include('IO#raw')
-    # @example responds to `singleton<File>`
+    #   definition_store.update_from(source)
+    #   subject = definition_store.instance_method_definitions_of('A')
+    #   expect(subject.map(&:qualified_name)).to eq(%w[A#foo])
+    # @example supports inheritance
+    #   source = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       class A
+    #         def foo
+    #         end
+    #       end
+    #
+    #       class B < A
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/example.rb'
+    #   )
     #   definition_store = Rucoa::DefinitionStore.new
-    #   definition_store.bulk_add(Rucoa::DefinitionArchiver.load)
-    #   subject = definition_store.instance_method_definitions_of('singleton<File>')
-    #   expect(subject.map(&:qualified_name)).to include('IO.write')
+    #   definition_store.update_from(source)
+    #   subject = definition_store.instance_method_definitions_of('B')
+    #   expect(subject.map(&:qualified_name)).to eq(%w[A#foo])
+    # @example supports `include`
+    #   source = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       module A
+    #         def foo
+    #         end
+    #       end
+    #
+    #       class B
+    #         include A
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/example.rb'
+    #   )
+    #   definition_store = Rucoa::DefinitionStore.new
+    #   definition_store.update_from(source)
+    #   subject = definition_store.instance_method_definitions_of('B')
+    #   expect(subject.map(&:qualified_name)).to eq(%w[A#foo])
+    # @example supports `prepend`
+    #   source = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       module A
+    #         def foo
+    #         end
+    #       end
+    #
+    #       class B
+    #         prepend A
+    #
+    #         def foo
+    #         end
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/example.rb'
+    #   )
+    #   definition_store = Rucoa::DefinitionStore.new
+    #   definition_store.update_from(source)
+    #   subject = definition_store.instance_method_definitions_of('B')
+    #   expect(subject.map(&:qualified_name)).to eq(%w[A#foo])
     def instance_method_definitions_of(type)
       singleton_class_name = singleton_class_name_from(type)
       return singleton_method_definitions_of(singleton_class_name) if singleton_class_name
@@ -197,12 +257,13 @@ module Rucoa
       class_or_module_definition = find_definition_by_qualified_name(type)
       return [] unless class_or_module_definition
 
-      method_definitions = instance_method_definitions
+      method_definitions = self.method_definitions
       ancestors_of(class_or_module_definition).flat_map do |ancestor|
         method_definitions.select do |method_definition|
-          method_definition.namespace == ancestor.qualified_name
+          method_definition.namespace == ancestor.qualified_name &&
+            method_definition.instance_method?
         end
-      end
+      end.uniq(&:method_name)
     end
 
     # @param type [String]
@@ -238,16 +299,45 @@ module Rucoa
     #   definition_store.update_from(source)
     #   subject = definition_store.singleton_method_definitions_of('B')
     #   expect(subject.map(&:qualified_name)).to include('A.foo')
+    # @example supports extended module's instance method
+    #   source = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       module A
+    #         def foo
+    #         end
+    #       end
+    #
+    #       class B
+    #         def self.foo
+    #         end
+    #       end
+    #
+    #       class C < B
+    #         extend A
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/example.rb'
+    #   )
+    #   definition_store = Rucoa::DefinitionStore.new
+    #   definition_store.update_from(source)
+    #   subject = definition_store.singleton_method_definitions_of('C')
+    #   expect(subject.map(&:qualified_name)).to eq(%w[A#foo])
     def singleton_method_definitions_of(type)
       class_or_module_definition = find_definition_by_qualified_name(type)
       return [] unless class_or_module_definition
 
-      method_definitions = singleton_method_definitions
+      method_definitions = self.method_definitions
       ancestors_of(class_or_module_definition).flat_map do |ancestor|
         method_definitions.select do |method_definition|
-          method_definition.namespace == ancestor.qualified_name
+          method_definition.namespace == ancestor.qualified_name &&
+            method_definition.singleton_method?
+        end + ancestor.extended_module_qualified_names.flat_map do |extended_module_qualified_name|
+          method_definitions.select do |method_definition|
+            method_definition.namespace == extended_module_qualified_name &&
+              method_definition.instance_method?
+          end
         end
-      end
+      end.uniq(&:method_name)
     end
 
     # @param namespace [String]
@@ -374,6 +464,11 @@ module Rucoa
 
         definition.super_class_qualified_name = resolve_constant(definition.super_class_unqualified_name)
         definition.super_class_unqualified_name = nil
+
+        definition.extended_module_qualified_names = definition.extended_module_unqualified_names.map do |unqualified_name|
+          resolve_constant(unqualified_name)
+        end
+        definition.extended_module_unqualified_names = nil
 
         definition.included_module_qualified_names = definition.included_module_unqualified_names.map do |unqualified_name|
           resolve_constant(unqualified_name)

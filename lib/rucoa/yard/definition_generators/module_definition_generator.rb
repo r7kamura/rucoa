@@ -19,6 +19,7 @@ module Rucoa
           [
             Definitions::ModuleDefinition.new(
               description: description,
+              extended_module_unqualified_names: extended_module_unqualified_names,
               included_module_unqualified_names: included_module_unqualified_names,
               location: location,
               prepended_module_unqualified_names: prepended_module_unqualified_names,
@@ -28,6 +29,11 @@ module Rucoa
         end
 
         private
+
+        # @return [Array<Rucoa::UnqualifiedName>]
+        def extended_module_unqualified_names
+          unqualified_names_for('extend')
+        end
 
         # @return [Array<Rucoa::UnqualifiedName>]
         def included_module_unqualified_names

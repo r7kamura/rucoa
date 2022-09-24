@@ -324,5 +324,43 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
         )
       end
     end
+
+    context 'when extended method call is hovered' do
+      let(:content) do
+        <<~RUBY
+          module A
+            def foo
+            end
+          end
+
+          class B
+            extend A
+          end
+
+          B.foo
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 5,
+          line: 10
+        )
+      end
+
+      it 'responds hover' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => hash_including(
+                'contents' => /\AA#foo/
+              )
+            )
+          ]
+        )
+      end
+    end
   end
 end
