@@ -7,13 +7,13 @@ module Rucoa
       attr_accessor :included_module_qualified_names
 
       # @return [Array<Rucoa::UnqualifiedName>]
-      attr_reader :included_module_unqualified_names
+      attr_accessor :included_module_unqualified_names
 
       # @return [Array<String>]
       attr_accessor :prepended_module_qualified_names
 
       # @return [Array<Rucoa::UnqualifiedName>]
-      attr_reader :prepended_module_unqualified_names
+      attr_accessor :prepended_module_unqualified_names
 
       # @param included_module_qualified_names [Array<String>]
       # @param included_module_unqualified_names [Array<String>]
@@ -31,6 +31,16 @@ module Rucoa
         @included_module_unqualified_names = included_module_unqualified_names
         @prepended_module_qualified_names = prepended_module_qualified_names
         @prepended_module_unqualified_names = prepended_module_unqualified_names
+      end
+
+      # @param other [Rucoa::Definitions::ModuleDefinition]
+      # @return [Rucoa::Definitions::ModuleDefinition]
+      def merge!(other)
+        self.included_module_qualified_names |= other.included_module_qualified_names
+        self.included_module_unqualified_names |= other.included_module_unqualified_names
+        self.prepended_module_qualified_names |= other.prepended_module_qualified_names
+        self.prepended_module_unqualified_names |= other.prepended_module_unqualified_names
+        self
       end
     end
   end
