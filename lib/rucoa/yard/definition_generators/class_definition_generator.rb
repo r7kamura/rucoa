@@ -13,17 +13,48 @@ module Rucoa
         #     uri: '/path/to/foo.rb'
         #   ).definitions
         #   expect(definitions[0]).to be_a(Rucoa::Definitions::ClassDefinition)
+        # @example detects single-argument include
+        #   definitions = Rucoa::Source.new(
+        #     content: <<~RUBY,
+        #       class Foo
+        #         include Bar
+        #       end
+        #     RUBY
+        #     uri: '/path/to/foo.rb'
+        #   ).definitions
+        #   expect(definitions[0].included_module_chained_names).to eq(['Bar'])
+        # @example detects multi-arguments include
+        #   definitions = Rucoa::Source.new(
+        #     content: <<~RUBY,
+        #       class Foo
+        #         include Bar, Baz
+        #       end
+        #     RUBY
+        #     uri: '/path/to/foo.rb'
+        #   ).definitions
+        #   expect(definitions[0].included_module_chained_names).to eq(['Bar', 'Baz'])
+        # @example ignores non-simple include
+        #   definitions = Rucoa::Source.new(
+        #     content: <<~RUBY,
+        #       class Foo
+        #         include foo
+        #       end
+        #     RUBY
+        #     uri: '/path/to/foo.rb'
+        #   ).definitions
+        #   expect(definitions[0].included_module_chained_names).to eq([])
         def call
           return [] unless @node.is_a?(Nodes::ClassNode)
 
-          included_module_chained_names = @node.body_children.filter_map do |child|
-            next unless child.is_a?(Nodes::SendNode)
-            next unless child.name == 'include'
+          included_module_chained_names = @node.body_children.flat_map do |child|
+            next [] unless child.is_a?(Nodes::SendNode)
+            next [] unless child.name == 'include'
 
-            includee_node = child.arguments.first
-            next unless includee_node.is_a?(Nodes::ConstNode)
+            child.arguments.filter_map do |includee|
+              next unless includee.is_a?(Nodes::ConstNode)
 
-            includee_node.chained_name
+              includee.chained_name
+            end
           end
 
           [
