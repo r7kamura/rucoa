@@ -46,17 +46,6 @@ module Rucoa
         def call
           return [] unless @node.is_a?(Nodes::ClassNode)
 
-          included_module_chained_names = @node.body_children.flat_map do |child|
-            next [] unless child.is_a?(Nodes::SendNode)
-            next [] unless child.name == 'include'
-
-            child.arguments.filter_map do |includee|
-              next unless includee.is_a?(Nodes::ConstNode)
-
-              includee.chained_name
-            end
-          end
-
           [
             Definitions::ClassDefinition.new(
               description: description,
@@ -67,6 +56,22 @@ module Rucoa
               super_class_chained_name: @node.super_class_chained_name
             )
           ]
+        end
+
+        private
+
+        # @return [Array<String>]
+        def included_module_chained_names
+          @node.body_children.flat_map do |child|
+            next [] unless child.is_a?(Nodes::SendNode)
+            next [] unless child.name == 'include'
+
+            child.arguments.filter_map do |includee|
+              next unless includee.is_a?(Nodes::ConstNode)
+
+              includee.chained_name
+            end
+          end
         end
       end
     end
