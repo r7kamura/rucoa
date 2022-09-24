@@ -22,6 +22,19 @@ module Rucoa
         #     uri: '/path/to/foo.rb'
         #   ).definitions
         #   expect(definitions[0]).to be_a(Rucoa::Definitions::MethodDefinition)
+        # @example returns method definition for another style of singleton def node
+        #   definitions = Rucoa::Source.new(
+        #     content: <<~RUBY,
+        #       class Foo
+        #         class << self
+        #           def bar
+        #           end
+        #         end
+        #       end
+        #     RUBY
+        #     uri: '/path/to/foo.rb'
+        #   ).definitions
+        #   expect(definitions[1].qualified_name).to eq('Foo.bar')
         def call
           return [] unless @node.is_a?(Nodes::DefNode) || @node.is_a?(Nodes::DefsNode)
 

@@ -284,5 +284,41 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
         )
       end
     end
+
+    context 'when another style of singleton method call is hovered' do
+      let(:content) do
+        <<~RUBY
+          class Foo
+            class << self
+              def foo
+              end
+            end
+          end
+
+          Foo.foo
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 7,
+          line: 8
+        )
+      end
+
+      it 'responds hover' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => hash_including(
+                'contents' => /\AFoo\.foo/
+              )
+            )
+          ]
+        )
+      end
+    end
   end
 end
