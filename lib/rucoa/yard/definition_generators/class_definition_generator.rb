@@ -3,7 +3,7 @@
 module Rucoa
   module Yard
     module DefinitionGenerators
-      class ClassDefinitionGenerator < Base
+      class ClassDefinitionGenerator < ModuleDefinitionGenerator
         # @example returns class definition for class node
         #   definitions = Rucoa::Source.new(
         #     content: <<~RUBY,
@@ -22,7 +22,7 @@ module Rucoa
         #     RUBY
         #     uri: '/path/to/foo.rb'
         #   ).definitions
-        #   expect(definitions[0].included_module_chained_names).to eq(['Bar'])
+        #   expect(definitions[0].included_module_unqualified_names.map(&:chained_name)).to eq(%w[Bar])
         # @example detects multi-arguments include
         #   definitions = Rucoa::Source.new(
         #     content: <<~RUBY,
@@ -32,7 +32,7 @@ module Rucoa
         #     RUBY
         #     uri: '/path/to/foo.rb'
         #   ).definitions
-        #   expect(definitions[0].included_module_chained_names).to eq(['Bar', 'Baz'])
+        #   expect(definitions[0].included_module_unqualified_names.map(&:chained_name)).to eq(%w[Bar Baz])
         # @example ignores non-simple include
         #   definitions = Rucoa::Source.new(
         #     content: <<~RUBY,
@@ -42,48 +42,23 @@ module Rucoa
         #     RUBY
         #     uri: '/path/to/foo.rb'
         #   ).definitions
-        #   expect(definitions[0].included_module_chained_names).to eq([])
+        #   expect(definitions[0].included_module_unqualified_names.map(&:chained_name)).to eq([])
         def call
           return [] unless @node.is_a?(Nodes::ClassNode)
 
           [
             Definitions::ClassDefinition.new(
               description: description,
-              included_module_chained_names: included_module_chained_names,
+              included_module_unqualified_names: included_module_unqualified_names,
               location: location,
-              module_nesting: @node.module_nesting,
-              prepended_module_chained_names: prepended_module_chained_names,
+              prepended_module_unqualified_names: prepended_module_unqualified_names,
               qualified_name: @node.qualified_name,
-              super_class_chained_name: @node.super_class_chained_name
+              super_class_unqualified_name: UnqualifiedName.new(
+                chained_name: @node.super_class_chained_name,
+                module_nesting: @node.module_nesting
+              )
             )
           ]
-        end
-
-        private
-
-        # @return [Array<String>]
-        def included_module_chained_names
-          chained_names_for('include')
-        end
-
-        # @return [Array<String>]
-        def prepended_module_chained_names
-          chained_names_for('prepend')
-        end
-
-        # @param method_name [String]
-        # @return [Array<String>]
-        def chained_names_for(method_name)
-          @node.body_children.flat_map do |child|
-            next [] unless child.is_a?(Nodes::SendNode)
-            next [] unless child.name == method_name
-
-            child.arguments.filter_map do |argument|
-              next unless argument.is_a?(Nodes::ConstNode)
-
-              argument.chained_name
-            end
-          end
         end
       end
     end
