@@ -53,6 +53,7 @@ module Rucoa
               included_module_chained_names: included_module_chained_names,
               location: location,
               module_nesting: @node.module_nesting,
+              prepended_module_chained_names: prepended_module_chained_names,
               super_class_chained_name: @node.super_class_chained_name
             )
           ]
@@ -62,14 +63,25 @@ module Rucoa
 
         # @return [Array<String>]
         def included_module_chained_names
+          chained_names_for('include')
+        end
+
+        # @return [Array<String>]
+        def prepended_module_chained_names
+          chained_names_for('prepend')
+        end
+
+        # @param method_name [String]
+        # @return [Array<String>]
+        def chained_names_for(method_name)
           @node.body_children.flat_map do |child|
             next [] unless child.is_a?(Nodes::SendNode)
-            next [] unless child.name == 'include'
+            next [] unless child.name == method_name
 
-            child.arguments.filter_map do |includee|
-              next unless includee.is_a?(Nodes::ConstNode)
+            child.arguments.filter_map do |argument|
+              next unless argument.is_a?(Nodes::ConstNode)
 
-              includee.chained_name
+              argument.chained_name
             end
           end
         end
