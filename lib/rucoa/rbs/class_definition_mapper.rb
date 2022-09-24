@@ -2,46 +2,25 @@
 
 module Rucoa
   module Rbs
-    class ClassDefinitionMapper
-      class << self
-        # @param declaration [RBS::AST::Declarations::Class]
-        # @return [Rucoa::Definitions::ClassDefinition]
-        def call(declaration:)
-          new(declaration: declaration).call
-        end
-      end
-
-      # @param declaration [RBS::AST::Declarations::Class]
-      def initialize(declaration:)
-        @declaration = declaration
-      end
-
+    class ClassDefinitionMapper < ModuleDefinitionMapper
       # @return [Rucoa::Definitions::ClassDefinition]
+      # @example supports `include`
+      #   definition_store = Rucoa::DefinitionStore.new
+      #   definition_store.bulk_add(Rucoa::DefinitionArchiver.load)
+      #   subject = definition_store.find_definition_by_qualified_name('Array')
+      #   expect(subject.included_module_qualified_names).to include('Enumerable')
       def call
         Definitions::ClassDefinition.new(
           description: description,
+          included_module_qualified_names: included_module_qualified_names,
           location: location,
+          prepended_module_qualified_names: prepended_module_qualified_names,
           qualified_name: qualified_name,
           super_class_qualified_name: super_class_qualified_name
         )
       end
 
       private
-
-      # @return [String, nil]
-      def description
-        @declaration.comment&.string&.sub(/\A\s*<!--.*-->\s*/m, '')
-      end
-
-      # @return [String]
-      def qualified_name
-        @declaration.name.to_s.delete_prefix('::')
-      end
-
-      # @return [Rucoa::Location]
-      def location
-        Location.from_rbs_location(@declaration.location)
-      end
 
       # @return [String, nil]
       def super_class_qualified_name

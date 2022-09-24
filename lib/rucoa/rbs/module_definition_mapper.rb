@@ -20,7 +20,9 @@ module Rucoa
       def call
         Definitions::ModuleDefinition.new(
           description: description,
+          included_module_qualified_names: included_module_qualified_names,
           location: location,
+          prepended_module_qualified_names: prepended_module_qualified_names,
           qualified_name: qualified_name
         )
       end
@@ -40,6 +42,26 @@ module Rucoa
       # @return [Rucoa::Location]
       def location
         Location.from_rbs_location(@declaration.location)
+      end
+
+      # @return [Array<String>]
+      def included_module_qualified_names
+        @declaration.members.filter_map do |member|
+          case member
+          when ::RBS::AST::Members::Include
+            member.name.to_s.delete_prefix('::')
+          end
+        end
+      end
+
+      # @return [Array<String>]
+      def prepended_module_qualified_names
+        @declaration.members.filter_map do |member|
+          case member
+          when ::RBS::AST::Members::Prepend
+            member.name.to_s.delete_prefix('::')
+          end
+        end
       end
     end
   end

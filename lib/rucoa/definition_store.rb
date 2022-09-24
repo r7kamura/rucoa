@@ -15,7 +15,9 @@ module Rucoa
     # @param definitions [Array<Rucoa::Definition::Base>]
     # @return [void]
     def bulk_add(definitions)
-      definitions.each do |definition|
+      definitions.group_by(&:qualified_name).each_value.map do |grouped_definitions|
+        grouped_definitions.reduce(:merge!)
+      end.each do |definition|
         @qualified_names_by_uri[definition.location.uri] << definition.qualified_name if definition.location
         @definition_by_qualified_name[definition.qualified_name] = definition
       end
@@ -344,12 +346,17 @@ module Rucoa
         next unless definition.is_a?(Definitions::ClassDefinition)
 
         definition.super_class_qualified_name = resolve_constant(definition.super_class_unqualified_name)
+        definition.super_class_unqualified_name = nil
+
         definition.included_module_qualified_names = definition.included_module_unqualified_names.map do |unqualified_name|
           resolve_constant(unqualified_name)
         end
+        definition.included_module_unqualified_names = []
+
         definition.prepended_module_qualified_names = definition.prepended_module_unqualified_names.map do |unqualified_name|
           resolve_constant(unqualified_name)
         end
+        definition.prepended_module_unqualified_names = []
       end
     end
   end
