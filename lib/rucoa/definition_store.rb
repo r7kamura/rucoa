@@ -428,16 +428,6 @@ module Rucoa
       definitions.grep(Definitions::MethodDefinition)
     end
 
-    # @return [Array<Rucoa::Definition::MethodDefinition>]
-    def instance_method_definitions
-      method_definitions.select(&:instance_method?)
-    end
-
-    # @return [Array<Rucoa::Definition::MethodDefinition>]
-    def singleton_method_definitions
-      method_definitions.select(&:singleton_method?)
-    end
-
     # @return [Array<Rucoa::Definition::ConstantDefinition>]
     def constant_definitions
       definitions.grep(Definitions::ConstantDefinition)
