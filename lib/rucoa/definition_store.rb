@@ -207,11 +207,37 @@ module Rucoa
 
     # @param type [String]
     # @return [Array<Rucoa::Definitions::MethodDefinition>]
-    # @example returns singleton method definitions of File
+    # @example supports simple singleton method
+    #   source = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       class A
+    #         def self.foo
+    #         end
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/example.rb'
+    #   )
     #   definition_store = Rucoa::DefinitionStore.new
-    #   definition_store.bulk_add(Rucoa::DefinitionArchiver.load)
-    #   subject = definition_store.singleton_method_definitions_of('File')
-    #   expect(subject.map(&:qualified_name)).to include('IO.write')
+    #   definition_store.update_from(source)
+    #   subject = definition_store.singleton_method_definitions_of('A')
+    #   expect(subject.map(&:qualified_name)).to include('A.foo')
+    # @example supports super class's singleton method
+    #   source = Rucoa::Source.new(
+    #     content: <<~RUBY,
+    #       class A
+    #         def self.foo
+    #         end
+    #       end
+    #
+    #       class B < A
+    #       end
+    #     RUBY
+    #     uri: 'file:///path/to/example.rb'
+    #   )
+    #   definition_store = Rucoa::DefinitionStore.new
+    #   definition_store.update_from(source)
+    #   subject = definition_store.singleton_method_definitions_of('B')
+    #   expect(subject.map(&:qualified_name)).to include('A.foo')
     def singleton_method_definitions_of(type)
       class_or_module_definition = find_definition_by_qualified_name(type)
       return [] unless class_or_module_definition
