@@ -43,8 +43,8 @@ module Rucoa
     # @param io_in [IO]
     # @param io_out [IO]
     def initialize(
-      io_log: ::StringIO.new,
       io_in: ::StringIO.new,
+      io_log: ::StringIO.new,
       io_out: ::StringIO.new
     )
       @logger = ::Logger.new(io_log)
