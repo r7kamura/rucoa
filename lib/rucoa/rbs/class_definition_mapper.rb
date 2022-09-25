@@ -12,6 +12,7 @@ module Rucoa
       def call
         Definitions::ClassDefinition.new(
           description: description,
+          extended_module_qualified_names: extended_module_qualified_names,
           included_module_qualified_names: included_module_qualified_names,
           location: location,
           prepended_module_qualified_names: prepended_module_qualified_names,

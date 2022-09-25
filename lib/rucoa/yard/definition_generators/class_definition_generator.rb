@@ -49,6 +49,7 @@ module Rucoa
           [
             Definitions::ClassDefinition.new(
               description: description,
+              extended_module_unqualified_names: extended_module_unqualified_names,
               included_module_unqualified_names: included_module_unqualified_names,
               location: location,
               prepended_module_unqualified_names: prepended_module_unqualified_names,
