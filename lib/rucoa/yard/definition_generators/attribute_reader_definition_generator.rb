@@ -35,10 +35,26 @@ module Rucoa
         #       Foo#bar=
         #     ]
         #   )
+        # @example ignores unrecognizable attributes
+        #   definitions = Rucoa::Source.new(
+        #     content: <<~RUBY,
+        #       class Foo
+        #         attr_reader foo
+        #       end
+        #     RUBY
+        #     uri: '/path/to/foo.rb'
+        #   ).definitions
+        #   expect(definitions.map(&:qualified_name)).to eq(
+        #     %w[
+        #       Foo
+        #     ]
+        #   )
         def call
           return [] unless @node.is_a?(Nodes::SendNode) && READER_METHOD_NAMES.include?(@node.name)
 
-          @node.arguments.map do |argument|
+          @node.arguments.filter_map do |argument|
+            next unless argument.respond_to?(:value)
+
             Definitions::MethodDefinition.new(
               description: description,
               kind: :instance,
