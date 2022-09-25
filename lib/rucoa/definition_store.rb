@@ -468,7 +468,7 @@ module Rucoa
         definition.extended_module_qualified_names = definition.extended_module_unqualified_names.map do |unqualified_name|
           resolve_constant(unqualified_name)
         end
-        definition.extended_module_unqualified_names = nil
+        definition.extended_module_unqualified_names = []
 
         definition.included_module_qualified_names = definition.included_module_unqualified_names.map do |unqualified_name|
           resolve_constant(unqualified_name)
