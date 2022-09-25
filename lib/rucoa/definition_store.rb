@@ -232,6 +232,7 @@ module Rucoa
       end
     end
 
+    # @todo Search ancestors.
     # @param unqualified_name [Rucoa::UnqualifiedName]
     # @return [String]
     def resolve_constant(unqualified_name)
