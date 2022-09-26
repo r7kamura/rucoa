@@ -362,5 +362,40 @@ RSpec.describe Rucoa::Handlers::TextDocumentHoverHandler do
         )
       end
     end
+
+    context 'when aliased method call is hovered' do
+      let(:content) do
+        <<~RUBY
+          class A
+            def foo
+            end
+            alias bar foo
+          end
+
+          A.new.bar
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 9,
+          line: 7
+        )
+      end
+
+      it 'responds hover' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => hash_including(
+                'contents' => /\AA#foo/
+              )
+            )
+          ]
+        )
+      end
+    end
   end
 end
