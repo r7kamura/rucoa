@@ -3,6 +3,8 @@
 module Rucoa
   module Handlers
     class TextDocumentSignatureHelpHandler < Base
+      include HandlerConcerns::TextDocumentPositionParameters
+
       def call
         respond(signature_help)
       end
@@ -20,13 +22,6 @@ module Rucoa
       # @return [Rucoa::Nodes::Base, nil]
       def node
         @node ||= source.node_at(position)
-      end
-
-      # @return [Rucoa::Position]
-      def position
-        Position.from_vscode_position(
-          request.dig('params', 'position')
-        )
       end
 
       # @return [Boolean]

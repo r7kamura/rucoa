@@ -3,6 +3,8 @@
 module Rucoa
   module Handlers
     class TextDocumentDefinitionHandler < Base
+      include HandlerConcerns::TextDocumentPositionParameters
+
       def call
         respond(location)
       end
@@ -30,13 +32,6 @@ module Rucoa
       # @return [Rucoa::Nodes::Base]
       def node
         source&.node_at(position)
-      end
-
-      # @return [Rucoa::Position]
-      def position
-        Position.from_vscode_position(
-          request.dig('params', 'position')
-        )
       end
 
       # @return [Boolean]

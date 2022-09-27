@@ -3,6 +3,8 @@
 module Rucoa
   module Handlers
     class TextDocumentCompletionHandler < Base
+      include HandlerConcerns::TextDocumentPositionParameters
+
       COMPLETION_ITEM_KIND_FOR_TEXT = 1
       COMPLETION_ITEM_KIND_FOR_METHOD = 2
       COMPLETION_ITEM_KIND_FOR_FUNCTION = 3
@@ -139,13 +141,6 @@ module Rucoa
       # @return [Rucoa::Node, nil]
       def normal_node
         source.node_at(position)
-      end
-
-      # @return [Rucoa::Position]
-      def position
-        @position ||= Position.from_vscode_position(
-          request.dig('params', 'position')
-        )
       end
 
       # @return [Rucoa::Range]
