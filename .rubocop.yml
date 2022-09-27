@@ -35,13 +35,13 @@ Security/MarshalLoad:
 Sevencop/AutoloadOrdered:
   Enabled: true
 
-Sevencop/HashLiteralOrder:
+Sevencop/HashElementOrdered:
   Enabled: true
 
-Sevencop/MethodDefinitionKeywordArgumentsOrdered:
+Sevencop/MethodDefinitionKeywordArgumentOrdered:
   Enabled: true
 
-Sevencop/MethodDefinitionMultilineArguments:
+Sevencop/MethodDefinitionArgumentsMultiline:
   Enabled: true
 
 Style/Documentation:
