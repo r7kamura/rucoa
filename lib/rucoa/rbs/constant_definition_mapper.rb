@@ -32,14 +32,14 @@ module Rucoa
         @declaration.comment&.string&.sub(/\A\s*<!--.*-->\s*/m, '')
       end
 
-      # @return [String]
-      def qualified_name
-        @declaration.name.to_s.delete_prefix('::')
-      end
-
       # @return [Rucoa::Location]
       def location
         Location.from_rbs_location(@declaration.location)
+      end
+
+      # @return [String]
+      def qualified_name
+        @declaration.name.to_s.delete_prefix('::')
       end
     end
   end

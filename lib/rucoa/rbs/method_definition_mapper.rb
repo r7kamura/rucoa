@@ -42,28 +42,9 @@ module Rucoa
 
       private
 
-      # @return [Array<Rucoa::Types::MethodType>]
-      def types
-        @method_definition.types.map do |method_type|
-          MethodTypeMapper.call(
-            method_type: method_type
-          )
-        end
-      end
-
       # @return [String, nil]
       def description
         @method_definition.comment&.string&.sub(/\A\s*<!--.*-->\s*/m, '')
-      end
-
-      # @return [String]
-      def namespace
-        @declaration.name.to_s.delete_prefix('::')
-      end
-
-      # @return [String]
-      def method_name
-        @method_definition.name.to_s
       end
 
       # @return [Symbol]
@@ -74,6 +55,25 @@ module Rucoa
       # @return [Rucoa::Location]
       def location
         Location.from_rbs_location(@method_definition.location)
+      end
+
+      # @return [String]
+      def method_name
+        @method_definition.name.to_s
+      end
+
+      # @return [String]
+      def namespace
+        @declaration.name.to_s.delete_prefix('::')
+      end
+
+      # @return [Array<Rucoa::Types::MethodType>]
+      def types
+        @method_definition.types.map do |method_type|
+          MethodTypeMapper.call(
+            method_type: method_type
+          )
+        end
       end
 
       class MethodTypeMapper

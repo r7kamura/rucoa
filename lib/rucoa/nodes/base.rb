@@ -14,16 +14,6 @@ module Rucoa
         end
       end
 
-      # @return [Rucoa::Nodes::Base, nil]
-      def parent
-        @mutable_attributes[:parent]
-      end
-
-      # @param node [Rucoa::Nodes::Base]
-      def parent=(node)
-        @mutable_attributes[:parent] = node
-      end
-
       # @return [Array<Rucoa::Nodes::Base>]
       def ancestors
         each_ancestor.to_a
@@ -73,29 +63,35 @@ module Rucoa
         self
       end
 
-      # @note Override.
-      #   Some nodes change their type depending on the context.
-      #   For example, `const` node can be `casgn` node.
-      # @return [Rucoa::Nodes::Base]
-      def updated(
-        type = nil,
-        children = nil,
-        properties = {}
-      )
-        properties[:location] ||= @location
-        ParserBuilder.node_class_for(type || @type).new(
-          type || @type,
-          children || @children,
-          properties
-        )
-      end
-
       # @param position [Rucoa::Position]
       # @return [Boolean]
       def include_position?(position)
         return false unless location.expression
 
         Range.from_parser_range(location.expression).include?(position)
+      end
+
+      # @return [Array<String>]
+      # @example return ["Bar::Foo", "Foo"] for class Foo::Bar::Baz
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       module Foo
+      #         module Bar
+      #           module Baz
+      #           end
+      #         end
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/foo/bar/baz.rb'
+      #   ).node_at(
+      #     Rucoa::Position.new(
+      #       column: 4,
+      #       line: 3
+      #     )
+      #   )
+      #   expect(node.module_nesting).to eq(['Foo::Bar', 'Foo'])
+      def module_nesting
+        each_ancestor(:class, :module).map(&:qualified_name)
       end
 
       # @note namespace is a String representation of `Module.nesting`.
@@ -130,27 +126,31 @@ module Rucoa
         module_nesting.first || 'Object'
       end
 
-      # @return [Array<String>]
-      # @example return ["Bar::Foo", "Foo"] for class Foo::Bar::Baz
-      #   node = Rucoa::Source.new(
-      #     content: <<~RUBY,
-      #       module Foo
-      #         module Bar
-      #           module Baz
-      #           end
-      #         end
-      #       end
-      #     RUBY
-      #     uri: 'file:///path/to/foo/bar/baz.rb'
-      #   ).node_at(
-      #     Rucoa::Position.new(
-      #       column: 4,
-      #       line: 3
-      #     )
-      #   )
-      #   expect(node.module_nesting).to eq(['Foo::Bar', 'Foo'])
-      def module_nesting
-        each_ancestor(:class, :module).map(&:qualified_name)
+      # @return [Rucoa::Nodes::Base, nil]
+      def parent
+        @mutable_attributes[:parent]
+      end
+
+      # @param node [Rucoa::Nodes::Base]
+      def parent=(node)
+        @mutable_attributes[:parent] = node
+      end
+
+      # @note Override.
+      #   Some nodes change their type depending on the context.
+      #   For example, `const` node can be `casgn` node.
+      # @return [Rucoa::Nodes::Base]
+      def updated(
+        type = nil,
+        children = nil,
+        properties = {}
+      )
+        properties[:location] ||= @location
+        ParserBuilder.node_class_for(type || @type).new(
+          type || @type,
+          children || @children,
+          properties
+        )
       end
 
       protected

@@ -9,6 +9,18 @@ module Rucoa
 
       private
 
+      # @return [Array<RuboCop::Cop::Corrector>]
+      def correctable_offenses
+        offenses.select(&:corrector)
+      end
+
+      # @return [Array(Rucoa::Range, String)]
+      def correctable_replacements
+        replacements.select do |replacement_range, _|
+          range.contain?(replacement_range)
+        end
+      end
+
       # @return [Array<Hash>]
       def edits
         return [] unless formattable?
@@ -28,14 +40,9 @@ module Rucoa
           Rubocop::ConfigurationChecker.call
       end
 
-      # @return [Rucoa::Source]
-      def source
-        @source ||= source_store.get(uri)
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
+      # @return [Array<RuboCop::Cop::Offense>]
+      def offenses
+        Rubocop::Investigator.call(source: source)
       end
 
       # @return [Rucoa::Range]
@@ -43,23 +50,6 @@ module Rucoa
         @range ||= Range.from_vscode_range(
           request.dig('params', 'range')
         )
-      end
-
-      # @return [Array<RuboCop::Cop::Corrector>]
-      def correctable_offenses
-        offenses.select(&:corrector)
-      end
-
-      # @return [Array(Rucoa::Range, String)]
-      def correctable_replacements
-        replacements.select do |replacement_range, _|
-          range.contain?(replacement_range)
-        end
-      end
-
-      # @return [Array<RuboCop::Cop::Offense>]
-      def offenses
-        Rubocop::Investigator.call(source: source)
       end
 
       # @return [Array(Rucoa::Range, String)]
@@ -70,6 +60,16 @@ module Rucoa
             replacement
           ]
         end
+      end
+
+      # @return [Rucoa::Source]
+      def source
+        @source ||= source_store.get(uri)
+      end
+
+      # @return [String]
+      def uri
+        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

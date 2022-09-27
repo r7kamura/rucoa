@@ -35,16 +35,6 @@ module Rucoa
         @declaration.comment&.string&.sub(/\A\s*<!--.*-->\s*/m, '')
       end
 
-      # @return [String]
-      def qualified_name
-        @declaration.name.to_s.delete_prefix('::')
-      end
-
-      # @return [Rucoa::Location]
-      def location
-        Location.from_rbs_location(@declaration.location)
-      end
-
       # @return [Array<String>]
       def extended_module_qualified_names
         module_qualified_names_for(::RBS::AST::Members::Extend)
@@ -55,9 +45,9 @@ module Rucoa
         module_qualified_names_for(::RBS::AST::Members::Include)
       end
 
-      # @return [Array<String>]
-      def prepended_module_qualified_names
-        module_qualified_names_for(::RBS::AST::Members::Prepend)
+      # @return [Rucoa::Location]
+      def location
+        Location.from_rbs_location(@declaration.location)
       end
 
       def module_qualified_names_for(member_class)
@@ -67,6 +57,16 @@ module Rucoa
             member.name.to_s.delete_prefix('::')
           end
         end
+      end
+
+      # @return [Array<String>]
+      def prepended_module_qualified_names
+        module_qualified_names_for(::RBS::AST::Members::Prepend)
+      end
+
+      # @return [String]
+      def qualified_name
+        @declaration.name.to_s.delete_prefix('::')
       end
     end
   end

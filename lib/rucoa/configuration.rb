@@ -59,18 +59,6 @@ module Rucoa
     end
 
     # @return [Boolean]
-    # @example returns false if the configuration is empty
-    #   configuration = Rucoa::Configuration.new
-    #   expect(configuration).not_to be_enables_debug
-    # @example returns true if the configuration enables debug
-    #   configuration = Rucoa::Configuration.new
-    #   configuration.update('base' => { 'debug' => true })
-    #   expect(configuration).to be_enables_debug
-    def enables_debug?
-      fetch('base', 'debug', default: false)
-    end
-
-    # @return [Boolean]
     # @example returns true if the configuration is empty
     #   configuration = Rucoa::Configuration.new
     #   expect(configuration).to be_enables_code_action
@@ -85,6 +73,18 @@ module Rucoa
     # @return [Boolean]
     def enables_completion?
       enables_feature?('completion')
+    end
+
+    # @return [Boolean]
+    # @example returns false if the configuration is empty
+    #   configuration = Rucoa::Configuration.new
+    #   expect(configuration).not_to be_enables_debug
+    # @example returns true if the configuration enables debug
+    #   configuration = Rucoa::Configuration.new
+    #   configuration.update('base' => { 'debug' => true })
+    #   expect(configuration).to be_enables_debug
+    def enables_debug?
+      fetch('base', 'debug', default: false)
     end
 
     # @return [Boolean]

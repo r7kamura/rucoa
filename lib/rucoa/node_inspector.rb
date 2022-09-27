@@ -103,11 +103,6 @@ module Rucoa
       )
     end
 
-    # @return [Boolean]
-    def singleton_method_call?
-      @node.is_a?(Nodes::ConstNode)
-    end
-
     # @return [String, nil]
     def nearest_def_qualified_name
       @node.each_ancestor(:def).first&.qualified_name
@@ -146,6 +141,11 @@ module Rucoa
           singleton: singleton_method_call?
         )&.return_types
       end.compact
+    end
+
+    # @return [Boolean]
+    def singleton_method_call?
+      @node.is_a?(Nodes::ConstNode)
     end
   end
 end

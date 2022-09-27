@@ -4,17 +4,17 @@ module Rucoa
   module Nodes
     class DefsNode < Base
       # @return [String]
+      def name
+        children[1].to_s
+      end
+
+      # @return [String]
       def qualified_name
         [
           namespace,
           method_marker,
           name
         ].join
-      end
-
-      # @return [String]
-      def name
-        children[1].to_s
       end
 
       # @return [Boolean]

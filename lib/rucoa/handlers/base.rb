@@ -41,15 +41,6 @@ module Rucoa
       # @return [Rucoa::Server]
       attr_reader :server
 
-      # @param message [Hash]
-      # @return [void]
-      def respond(message)
-        write(
-          id: request['id'],
-          result: message
-        )
-      end
-
       # @return [Rucoa::Configuration]
       def configuration
         @server.configuration
@@ -58,6 +49,15 @@ module Rucoa
       # @return [Rucoa::DefinitionStore]
       def definition_store
         @server.definition_store
+      end
+
+      # @param message [Hash]
+      # @return [void]
+      def respond(message)
+        write(
+          id: request['id'],
+          result: message
+        )
       end
 
       # @return [Rucoa::SourceStore]

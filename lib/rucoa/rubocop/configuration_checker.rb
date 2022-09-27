@@ -19,13 +19,6 @@ module Rucoa
 
       private
 
-      # @return [Boolean]
-      def rubocop_configured_for_current_directory?
-        each_current_and_ancestor_pathname.any? do |pathname|
-          pathname.join('.rubocop.yml').exist?
-        end
-      end
-
       # @return [Enumerable<Pathname>]
       def each_current_and_ancestor_pathname
         return to_enum(__method__) unless block_given?
@@ -38,6 +31,13 @@ module Rucoa
           pathname = pathname.parent
         end
         self
+      end
+
+      # @return [Boolean]
+      def rubocop_configured_for_current_directory?
+        each_current_and_ancestor_pathname.any? do |pathname|
+          pathname.join('.rubocop.yml').exist?
+        end
       end
     end
   end
