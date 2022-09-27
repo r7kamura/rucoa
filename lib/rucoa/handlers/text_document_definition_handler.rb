@@ -29,11 +29,6 @@ module Rucoa
         }
       end
 
-      # @return [Rucoa::Nodes::Base]
-      def node
-        source&.node_at(position)
-      end
-
       # @return [Boolean]
       def reponsible?
         configuration.enables_definition? &&

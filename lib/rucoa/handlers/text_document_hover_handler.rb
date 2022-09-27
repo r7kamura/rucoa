@@ -48,11 +48,6 @@ module Rucoa
         }
       end
 
-      # @return [Rucoa::Nodes::Base, nil]
-      def node
-        @node ||= source&.node_at(position)
-      end
-
       # @return [Rucoa::Range]
       def range
         Range.from_parser_range(node.location.expression)

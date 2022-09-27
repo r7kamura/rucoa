@@ -19,11 +19,6 @@ module Rucoa
         ).method_definitions
       end
 
-      # @return [Rucoa::Nodes::Base, nil]
-      def node
-        @node ||= source.node_at(position)
-      end
-
       # @return [Boolean]
       def responsible?
         configuration.enables_signature_help? &&
