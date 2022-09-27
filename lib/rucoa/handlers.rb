@@ -13,6 +13,7 @@ module Rucoa
     autoload :TextDocumentDidChangeHandler, 'rucoa/handlers/text_document_did_change_handler'
     autoload :TextDocumentDidCloseHandler, 'rucoa/handlers/text_document_did_close_handler'
     autoload :TextDocumentDidOpenHandler, 'rucoa/handlers/text_document_did_open_handler'
+    autoload :TextDocumentDocumentHighlightHandler, 'rucoa/handlers/text_document_document_highlight_handler'
     autoload :TextDocumentDocumentSymbolHandler, 'rucoa/handlers/text_document_document_symbol_handler'
     autoload :TextDocumentFormattingHandler, 'rucoa/handlers/text_document_formatting_handler'
     autoload :TextDocumentHoverHandler, 'rucoa/handlers/text_document_hover_handler'

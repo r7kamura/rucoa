@@ -37,6 +37,11 @@ module Rucoa
     end
 
     # @return [void]
+    def disable_highlight
+      disable_feature('highlight')
+    end
+
+    # @return [void]
     def disable_hover
       disable_feature('hover')
     end
@@ -105,6 +110,11 @@ module Rucoa
     # @return [Boolean]
     def enables_formatting?
       enables_feature?('formatting')
+    end
+
+    # @return [Boolean]
+    def enables_highlight?
+      enables_feature?('highlight')
     end
 
     # @return [Boolean]

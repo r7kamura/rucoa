@@ -5,7 +5,7 @@ module Rucoa
     module Body
       # @return [Rucoa::Nodes::BeginNode, nil]
       def body
-        children[2]
+        children.last
       end
 
       # @return [Array<Rucoa::Nodes::Base>]

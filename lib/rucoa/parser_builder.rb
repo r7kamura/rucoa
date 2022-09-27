@@ -6,18 +6,32 @@ module Rucoa
   class ParserBuilder < ::Parser::Builders::Default
     NODE_CLASS_BY_TYPE = {
       begin: Nodes::BeginNode,
+      block: Nodes::BlockNode,
+      case: Nodes::CaseNode,
       casgn: Nodes::CasgnNode,
       cbase: Nodes::CbaseNode,
       class: Nodes::ClassNode,
       const: Nodes::ConstNode,
+      csend: Nodes::SendNode,
       def: Nodes::DefNode,
       defs: Nodes::DefNode,
+      ensure: Nodes::EnsureNode,
+      for: Nodes::ForNode,
+      if: Nodes::IfNode,
+      kwbegin: Nodes::BeginNode,
       lvar: Nodes::LvarNode,
       module: Nodes::ModuleNode,
+      resbody: Nodes::ResbodyNode,
+      rescue: Nodes::RescueNode,
       sclass: Nodes::SclassNode,
       send: Nodes::SendNode,
       str: Nodes::StrNode,
-      sym: Nodes::SymNode
+      super: Nodes::SendNode,
+      sym: Nodes::SymNode,
+      until: Nodes::UntilNode,
+      when: Nodes::WhenNode,
+      while: Nodes::WhileNode,
+      zsuper: Nodes::SendNode
     }.freeze
 
     class << self
