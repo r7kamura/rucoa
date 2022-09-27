@@ -38,10 +38,10 @@ Sevencop/AutoloadOrdered:
 Sevencop/HashElementOrdered:
   Enabled: true
 
-Sevencop/MethodDefinitionKeywordArgumentOrdered:
+Sevencop/MethodDefinitionArgumentsMultiline:
   Enabled: true
 
-Sevencop/MethodDefinitionArgumentsMultiline:
+Sevencop/MethodDefinitionKeywordArgumentOrdered:
   Enabled: true
 
 Style/Documentation:
