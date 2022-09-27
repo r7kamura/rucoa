@@ -18,6 +18,13 @@ module Rucoa
 
       private
 
+      # @return [Array<Rucoa::Position>]
+      def positions
+        request.dig('params', 'positions').map do |position|
+          Position.from_vscode_position(position)
+        end
+      end
+
       # @return [Boolean]
       def responsible?
         configuration.enables_selection_range? &&
@@ -27,13 +34,6 @@ module Rucoa
       # @return [Rucoa::Source]
       def source
         @source ||= source_store.get(uri)
-      end
-
-      # @return [Array<Rucoa::Position>]
-      def positions
-        request.dig('params', 'positions').map do |position|
-          Position.from_vscode_position(position)
-        end
       end
 
       # @return [String]
@@ -129,16 +129,16 @@ module Rucoa
           private
 
           # @return [Rucoa::Range]
+          def expression_range
+            Range.from_parser_range(@node.location.expression)
+          end
+
+          # @return [Rucoa::Range]
           def inner_range
             Range.new(
               Position.from_parser_range_ending(@node.location.begin),
               Position.from_parser_range_beginning(@node.location.end)
             )
-          end
-
-          # @return [Rucoa::Range]
-          def expression_range
-            Range.from_parser_range(@node.location.expression)
           end
         end
       end

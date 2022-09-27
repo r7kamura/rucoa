@@ -38,6 +38,42 @@ module Rucoa
 
       private
 
+      # @return [Array<String>]
+      def callable_method_definitions
+        receiver_types.flat_map do |type|
+          definition_store.instance_method_definitions_of(type)
+        end
+      end
+
+      # @return [Array<String>]
+      def callable_method_names
+        callable_method_definitions.map(&:method_name).uniq
+      end
+
+      # @return [Array<String>]
+      def completable_constant_names
+        referrable_constant_names.select do |constant_name|
+          constant_name.start_with?(completion_head)
+        end.sort
+      end
+
+      # @return [Array<String>]
+      def completable_method_names
+        callable_method_names.select do |method_name|
+          method_name.start_with?(completion_head)
+        end.sort
+      end
+
+      # @return [String] e.g. "SE" to `File::SE|`, "ba" to `foo.ba|`
+      def completion_head
+        @completion_head ||=
+          if @repaired
+            ''
+          else
+            node.name
+          end
+      end
+
       # @return [Array<Hash>, nil]
       def completion_items
         return unless responsible?
@@ -56,27 +92,18 @@ module Rucoa
         end
       end
 
-      # @return [Boolean]
-      def responsible?
-        configuration.enables_completion? &&
-          !source.nil?
-      end
-
-      # @return [Rucoa::Source, nil]
-      def source
-        @source ||= source_store.get(uri)
-      end
-
-      # @return [Rucoa::Position]
-      def position
-        @position ||= Position.from_vscode_position(
-          request.dig('params', 'position')
-        )
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
+      # @return [Array<Hash>]
+      def completion_items_for_constant
+        completable_constant_names.map do |constant_name|
+          {
+            kind: COMPLETION_ITEM_KIND_FOR_CONSTANT,
+            label: constant_name,
+            textEdit: {
+              newText: constant_name,
+              range: range.to_vscode_range
+            }
+          }
+        end
       end
 
       # @return [Array<Hash>]
@@ -93,71 +120,9 @@ module Rucoa
         end
       end
 
-      # @return [Array<Hash>]
-      def completion_items_for_constant
-        completable_constant_names.map do |constant_name|
-          {
-            kind: COMPLETION_ITEM_KIND_FOR_CONSTANT,
-            label: constant_name,
-            textEdit: {
-              newText: constant_name,
-              range: range.to_vscode_range
-            }
-          }
-        end
-      end
-
-      # @return [Array<String>]
-      def completable_constant_names
-        referrable_constant_names.select do |constant_name|
-          constant_name.start_with?(completion_head)
-        end.sort
-      end
-
-      # @return [String] e.g. "SE" to `File::SE|`, "ba" to `foo.ba|`
-      def completion_head
-        @completion_head ||=
-          if @repaired
-            ''
-          else
-            node.name
-          end
-      end
-
-      def referrable_constant_names
-        definition_store.constant_definitions_under(constant_namespace).map(&:name).uniq
-      end
-
       # @return [String] e.g. "Foo::Bar" to `Foo::Bar.baz|`.
       def constant_namespace
         node.each_child_node(:const).map(&:name).reverse.join('::')
-      end
-
-      # @return [Array<String>]
-      def completable_method_names
-        callable_method_names.select do |method_name|
-          method_name.start_with?(completion_head)
-        end.sort
-      end
-
-      # @return [Array<String>]
-      def callable_method_names
-        callable_method_definitions.map(&:method_name).uniq
-      end
-
-      # @return [Array<String>]
-      def callable_method_definitions
-        receiver_types.flat_map do |type|
-          definition_store.instance_method_definitions_of(type)
-        end
-      end
-
-      # @return [Array<String>]
-      def receiver_types
-        NodeInspector.new(
-          definition_store: definition_store,
-          node: node
-        ).method_receiver_types
       end
 
       # @return [Rucoa::Node, nil]
@@ -176,29 +141,10 @@ module Rucoa
         source.node_at(position)
       end
 
-      # @return [Rucoa::Node, nil]
-      def repaired_node
-        repaired_source.node_at(position)
-      end
-
-      # @return [void]
-      def repair
-        @repaired = true
-      end
-
-      # @return [String]
-      def repaired_content
-        source.content.dup.insert(
-          position.to_index_of(source.content),
-          EXAMPLE_IDENTIFIER
-        )
-      end
-
-      # @return [Rucoa::Source]
-      def repaired_source
-        Source.new(
-          content: repaired_content,
-          uri: source.uri
+      # @return [Rucoa::Position]
+      def position
+        @position ||= Position.from_vscode_position(
+          request.dig('params', 'position')
         )
       end
 
@@ -217,6 +163,60 @@ module Rucoa
               end
             )
           end
+      end
+
+      # @return [Array<String>]
+      def receiver_types
+        NodeInspector.new(
+          definition_store: definition_store,
+          node: node
+        ).method_receiver_types
+      end
+
+      def referrable_constant_names
+        definition_store.constant_definitions_under(constant_namespace).map(&:name).uniq
+      end
+
+      # @return [void]
+      def repair
+        @repaired = true
+      end
+
+      # @return [String]
+      def repaired_content
+        source.content.dup.insert(
+          position.to_index_of(source.content),
+          EXAMPLE_IDENTIFIER
+        )
+      end
+
+      # @return [Rucoa::Node, nil]
+      def repaired_node
+        repaired_source.node_at(position)
+      end
+
+      # @return [Rucoa::Source]
+      def repaired_source
+        Source.new(
+          content: repaired_content,
+          uri: source.uri
+        )
+      end
+
+      # @return [Boolean]
+      def responsible?
+        configuration.enables_completion? &&
+          !source.nil?
+      end
+
+      # @return [Rucoa::Source, nil]
+      def source
+        @source ||= source_store.get(uri)
+      end
+
+      # @return [String]
+      def uri
+        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

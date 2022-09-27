@@ -59,6 +59,16 @@ module Rucoa
 
         private
 
+        # @return [String]
+        def cop_name
+          @diagnostic.dig('data', 'cop_name')
+        end
+
+        # @return [Array]
+        def diagnostics
+          [@diagnostic]
+        end
+
         # @return [Hash]
         def edit
           {
@@ -75,23 +85,13 @@ module Rucoa
         end
 
         # @return [String]
-        def cop_name
-          @diagnostic.dig('data', 'cop_name')
-        end
-
-        # @return [Array]
-        def diagnostics
-          [@diagnostic]
+        def kind
+          'quickfix'
         end
 
         # @return [Boolean]
         def preferred?
           true
-        end
-
-        # @return [String]
-        def kind
-          'quickfix'
         end
 
         # @return [String]

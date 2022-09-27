@@ -9,6 +9,14 @@ module Rucoa
 
       private
 
+      # @return [Rucoa::Definitions::Base, nil]
+      def definition
+        @definition ||= NodeInspector.new(
+          definition_store: definition_store,
+          node: node
+        ).definitions.first
+      end
+
       # @return [Hash, nil]
       def location
         return unless reponsible?
@@ -19,10 +27,9 @@ module Rucoa
         }
       end
 
-      # @return [Boolean]
-      def reponsible?
-        configuration.enables_definition? &&
-          !definition&.location.nil?
+      # @return [Rucoa::Nodes::Base]
+      def node
+        source&.node_at(position)
       end
 
       # @return [Rucoa::Position]
@@ -32,9 +39,10 @@ module Rucoa
         )
       end
 
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
+      # @return [Boolean]
+      def reponsible?
+        configuration.enables_definition? &&
+          !definition&.location.nil?
       end
 
       # @return [Rucoa::Source, nil]
@@ -42,17 +50,9 @@ module Rucoa
         source_store.get(uri)
       end
 
-      # @return [Rucoa::Nodes::Base]
-      def node
-        source&.node_at(position)
-      end
-
-      # @return [Rucoa::Definitions::Base, nil]
-      def definition
-        @definition ||= NodeInspector.new(
-          definition_store: definition_store,
-          node: node
-        ).definitions.first
+      # @return [String]
+      def uri
+        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

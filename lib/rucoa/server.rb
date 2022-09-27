@@ -63,6 +63,19 @@ module Rucoa
     end
 
     # @return [void]
+    def finish
+      exit(0)
+    end
+
+    # @note This method is for testing.
+    # @return [Array<Hash>]
+    def responses
+      io = @writer.io
+      io.rewind
+      MessageReader.new(io).read.to_a
+    end
+
+    # @return [void]
     def start
       @reader.read do |message|
         debug do
@@ -73,11 +86,6 @@ module Rucoa
         end
         handle(message)
       end
-    end
-
-    # @return [void]
-    def finish
-      exit(0)
     end
 
     # @yieldparam response [Hash]
@@ -94,15 +102,18 @@ module Rucoa
       end
     end
 
-    # @note This method is for testing.
-    # @return [Array<Hash>]
-    def responses
-      io = @writer.io
-      io.rewind
-      MessageReader.new(io).read.to_a
+    private
+
+    # @yieldparam log [String]
+    def debug(&block)
+      @logger.debug(&block) if configuration.enables_debug?
     end
 
-    private
+    # @param request_method [String]
+    # @return [Class, nil]
+    def find_client_request_handler(request_method)
+      METHOD_TO_HANDLER_MAP[request_method]
+    end
 
     # @param request [Hash]
     # @return [void]
@@ -112,11 +123,6 @@ module Rucoa
       elsif request['id']
         handle_client_response(request)
       end
-    end
-
-    # @yieldparam log [String]
-    def debug(&block)
-      @logger.debug(&block) if configuration.enables_debug?
     end
 
     # @param request [Hash]
@@ -132,12 +138,6 @@ module Rucoa
     # @return [void]
     def handle_client_response(response)
       @client_response_handlers.delete(response['id'])&.call(response)
-    end
-
-    # @param request_method [String]
-    # @return [Class, nil]
-    def find_client_request_handler(request_method)
-      METHOD_TO_HANDLER_MAP[request_method]
     end
 
     # @param message [Hash]

@@ -8,6 +8,13 @@ module Rucoa
       private
 
       # @return [void]
+      def publish_diagnostics_on_each_source
+        source_store.each_uri do |uri|
+          publish_diagnostics_on(uri)
+        end
+      end
+
+      # @return [void]
       def request_workspace_configuration
         write(
           method: 'workspace/configuration',
@@ -21,13 +28,6 @@ module Rucoa
         ) do |response|
           configuration.update(response['result'][0])
           publish_diagnostics_on_each_source
-        end
-      end
-
-      # @return [void]
-      def publish_diagnostics_on_each_source
-        source_store.each_uri do |uri|
-          publish_diagnostics_on(uri)
         end
       end
     end

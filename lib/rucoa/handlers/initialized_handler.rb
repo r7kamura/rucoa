@@ -13,18 +13,14 @@ module Rucoa
 
       private
 
-      # @return [void]
-      def update_definition_store
-        sources.each do |source|
-          definition_store.update_from(source)
-        end
+      # @return [String]
+      def glob
+        ::File.expand_path('{app,lib}/**/*.rb')
       end
 
-      # @return [void]
-      def update_source_store
-        sources.each do |source|
-          source_store.update(source)
-        end
+      # @return [Array<Pathname>]
+      def pathnames
+        ::Pathname.glob(glob)
       end
 
       # @return [Array<Rucoa::Source>]
@@ -37,14 +33,18 @@ module Rucoa
         end
       end
 
-      # @return [Array<Pathname>]
-      def pathnames
-        ::Pathname.glob(glob)
+      # @return [void]
+      def update_definition_store
+        sources.each do |source|
+          definition_store.update_from(source)
+        end
       end
 
-      # @return [String]
-      def glob
-        ::File.expand_path('{app,lib}/**/*.rb')
+      # @return [void]
+      def update_source_store
+        sources.each do |source|
+          source_store.update(source)
+        end
       end
     end
   end

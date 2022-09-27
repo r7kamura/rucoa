@@ -47,51 +47,6 @@ module Rucoa
 
       private
 
-      # @return [Array<Hash>]
-      def document_symbols
-        visit(source.root_node)
-        document_symbol_stack.first[:children]
-      end
-
-      # @param node [Rucoa::Nodes::Base]
-      # @return [void]
-      def visit(node)
-        document_symbols = create_document_symbols_for(node)
-        document_symbol_stack.last[:children].push(*document_symbols)
-        with_document_symbol_stack(document_symbols.first) do
-          with_singleton_class_stack(node) do
-            node.each_child_node do |child_node|
-              visit(child_node)
-            end
-          end
-        end
-      end
-
-      # @param document_symbol [Hash, nil]
-      # @return [void]
-      def with_document_symbol_stack(document_symbol)
-        unless document_symbol
-          yield
-          return
-        end
-
-        document_symbol_stack.push(document_symbol)
-        yield
-        document_symbol_stack.pop
-      end
-
-      # @param node [Rucoa::Nodes::Base]
-      def with_singleton_class_stack(node)
-        unless node.is_a?(Rucoa::Nodes::SclassNode)
-          yield
-          return
-        end
-
-        singleton_class_stack.push(node)
-        yield
-        singleton_class_stack.pop
-      end
-
       # @param node [Rucoa::Nodes::Base]
       # @return [Array<Hash>]
       def create_document_symbols_for(node)
@@ -141,20 +96,6 @@ module Rucoa
         ]
       end
 
-      # @param node [Rucoa::Nodes::ModuleNode]
-      # @return [Array<Hash>]
-      def create_document_symbols_for_module(node)
-        [
-          {
-            children: [],
-            kind: DOCUMENT_SYMBOL_KIND_FOR_MODULE,
-            name: node.name,
-            range: Range.from_parser_range(node.location.expression).to_vscode_range,
-            selectionRange: Range.from_parser_range(node.location.name).to_vscode_range
-          }
-        ]
-      end
-
       # @param node [Rucoa::Nodes::DefNode]
       # @return [Array<Hash>]
       def create_document_symbols_for_def(node)
@@ -183,6 +124,20 @@ module Rucoa
         ]
       end
 
+      # @param node [Rucoa::Nodes::ModuleNode]
+      # @return [Array<Hash>]
+      def create_document_symbols_for_module(node)
+        [
+          {
+            children: [],
+            kind: DOCUMENT_SYMBOL_KIND_FOR_MODULE,
+            name: node.name,
+            range: Range.from_parser_range(node.location.expression).to_vscode_range,
+            selectionRange: Range.from_parser_range(node.location.name).to_vscode_range
+          }
+        ]
+      end
+
       # @param node [Rucoa::Nodes::SendNode]
       # @return [Array<Hash>]
       def create_document_symbols_for_send(node)
@@ -205,10 +160,33 @@ module Rucoa
         end
       end
 
+      # @return [Arrah<Hash>]
+      def document_symbol_stack
+        @document_symbol_stack ||= [dummy_document_symbol]
+      end
+
+      # @return [Array<Hash>]
+      def document_symbols
+        visit(source.root_node)
+        document_symbol_stack.first[:children]
+      end
+
+      # @return [Hash]
+      def dummy_document_symbol
+        {
+          children: []
+        }
+      end
+
       # @return [Boolean]
       def responsible?
         configuration.enables_document_symbol? &&
           !source.nil?
+      end
+
+      # @return [Array<Rucoa::Nodes::SclassNode>]
+      def singleton_class_stack
+        @singleton_class_stack ||= []
       end
 
       # @return [Rucoa::Source]
@@ -221,21 +199,43 @@ module Rucoa
         request.dig('params', 'textDocument', 'uri')
       end
 
-      # @return [Arrah<Hash>]
-      def document_symbol_stack
-        @document_symbol_stack ||= [dummy_document_symbol]
+      # @param node [Rucoa::Nodes::Base]
+      # @return [void]
+      def visit(node)
+        document_symbols = create_document_symbols_for(node)
+        document_symbol_stack.last[:children].push(*document_symbols)
+        with_document_symbol_stack(document_symbols.first) do
+          with_singleton_class_stack(node) do
+            node.each_child_node do |child_node|
+              visit(child_node)
+            end
+          end
+        end
       end
 
-      # @return [Hash]
-      def dummy_document_symbol
-        {
-          children: []
-        }
+      # @param document_symbol [Hash, nil]
+      # @return [void]
+      def with_document_symbol_stack(document_symbol)
+        unless document_symbol
+          yield
+          return
+        end
+
+        document_symbol_stack.push(document_symbol)
+        yield
+        document_symbol_stack.pop
       end
 
-      # @return [Array<Rucoa::Nodes::SclassNode>]
-      def singleton_class_stack
-        @singleton_class_stack ||= []
+      # @param node [Rucoa::Nodes::Base]
+      def with_singleton_class_stack(node)
+        unless node.is_a?(Rucoa::Nodes::SclassNode)
+          yield
+          return
+        end
+
+        singleton_class_stack.push(node)
+        yield
+        singleton_class_stack.pop
       end
     end
   end

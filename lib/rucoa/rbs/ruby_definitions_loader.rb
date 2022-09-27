@@ -43,11 +43,6 @@ module Rucoa
 
       private
 
-      # @return [Array<RBS::AST::Declarations::Base>]
-      def declarations
-        class_declarations + constant_declarations
-      end
-
       # @return [Array<RBS::AST::Declarations::Class>]
       def class_declarations
         environment.class_decls.values.flat_map do |multi_entry|
@@ -58,6 +53,11 @@ module Rucoa
       # @return [Array<RBS::AST::Declarations::Constant>]
       def constant_declarations
         environment.constant_decls.values.map(&:decl)
+      end
+
+      # @return [Array<RBS::AST::Declarations::Base>]
+      def declarations
+        class_declarations + constant_declarations
       end
 
       # @return [RBS::Environment]

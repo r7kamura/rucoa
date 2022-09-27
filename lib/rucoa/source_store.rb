@@ -6,10 +6,10 @@ module Rucoa
       @data = {}
     end
 
-    # @param source [Rucoa::Source]
-    # @return [void]
-    def update(source)
-      @data[source.uri] = source
+    # @yieldparam uri [String]
+    # @return [Enumerable<String>]
+    def each_uri(&block)
+      @data.each_key(&block)
     end
 
     # @param uri [String]
@@ -18,10 +18,10 @@ module Rucoa
       @data[uri]
     end
 
-    # @yieldparam uri [String]
-    # @return [Enumerable<String>]
-    def each_uri(&block)
-      @data.each_key(&block)
+    # @param source [Rucoa::Source]
+    # @return [void]
+    def update(source)
+      @data[source.uri] = source
     end
   end
 end

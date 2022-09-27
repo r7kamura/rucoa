@@ -62,6 +62,11 @@ module Rucoa
         end
     end
 
+    # @return [Boolean]
+    def failed_to_parse?
+      parse_result.failed?
+    end
+
     # @return [String, nil]
     # @example returns path for file URI
     #   source = Rucoa::Source.new(
@@ -94,11 +99,6 @@ module Rucoa
     # @return [Rucoa::Nodes::Base, nil]
     def root_node
       parse_result.root_node
-    end
-
-    # @return [Boolean]
-    def failed_to_parse?
-      parse_result.failed?
     end
 
     # @return [Boolean]

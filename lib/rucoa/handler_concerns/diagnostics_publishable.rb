@@ -6,17 +6,6 @@ module Rucoa
       private
 
       # @param uri [String]
-      # @return [Array<Hash>]
-      def diagnostics_on(uri)
-        return [] unless configuration.enables_diagnostics?
-
-        DiagnosticProvider.call(
-          source: source_store.get(uri),
-          uri: uri
-        )
-      end
-
-      # @param uri [String]
       # @return [void]
       def clear_diagnostics_on(uri)
         write(
@@ -25,6 +14,17 @@ module Rucoa
             diagnostics: [],
             uri: uri
           }
+        )
+      end
+
+      # @param uri [String]
+      # @return [Array<Hash>]
+      def diagnostics_on(uri)
+        return [] unless configuration.enables_diagnostics?
+
+        DiagnosticProvider.call(
+          source: source_store.get(uri),
+          uri: uri
         )
       end
 

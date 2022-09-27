@@ -9,31 +9,6 @@ module Rucoa
 
       private
 
-      # @return [Hash]
-      def signature_help
-        return unless responsible?
-
-        {
-          signatures: signature_informations
-        }
-      end
-
-      # @return [Boolean]
-      def responsible?
-        configuration.enables_signature_help? &&
-          node.is_a?(Nodes::SendNode)
-      end
-
-      # @return [Array<Hash>]
-      def signature_informations
-        method_definitions.map do |method_definition|
-          {
-            documentation: method_definition.description,
-            label: method_definition.signatures.join("\n")
-          }
-        end
-      end
-
       # @return [Array<Rucoa::Definitions::MethodDefinition>]
       def method_definitions
         NodeInspector.new(
@@ -52,6 +27,31 @@ module Rucoa
         Position.from_vscode_position(
           request.dig('params', 'position')
         )
+      end
+
+      # @return [Boolean]
+      def responsible?
+        configuration.enables_signature_help? &&
+          node.is_a?(Nodes::SendNode)
+      end
+
+      # @return [Hash]
+      def signature_help
+        return unless responsible?
+
+        {
+          signatures: signature_informations
+        }
+      end
+
+      # @return [Array<Hash>]
+      def signature_informations
+        method_definitions.map do |method_definition|
+          {
+            documentation: method_definition.description,
+            label: method_definition.signatures.join("\n")
+          }
+        end
       end
 
       # @return [Rucoa::Source]

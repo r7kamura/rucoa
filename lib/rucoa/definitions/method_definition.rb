@@ -30,6 +30,17 @@ module Rucoa
         @types = types
       end
 
+      # @return [Boolean]
+      def instance_method?
+        @kind == :instance
+      end
+
+      # @todo
+      # @return [Array<Rucoa::Definitions::MethodParameter>]
+      def parameters
+        []
+      end
+
       # @return [String]
       # @example returns qualified name of method
       #   definition = Rucoa::Source.new(
@@ -50,12 +61,6 @@ module Rucoa
           method_kind_symbol,
           @method_name
         ].join
-      end
-
-      # @todo
-      # @return [Array<Rucoa::Definitions::MethodParameter>]
-      def parameters
-        []
       end
 
       # @return [Array<String>]
@@ -103,11 +108,6 @@ module Rucoa
             return_types: type.return_type
           )
         end
-      end
-
-      # @return [Boolean]
-      def instance_method?
-        @kind == :instance
       end
 
       # @return [Boolean]

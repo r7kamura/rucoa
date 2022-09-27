@@ -9,22 +9,6 @@ module Rucoa
 
       private
 
-      # @return [Hash, nil]
-      def hover
-        return unless responsible?
-
-        {
-          contents: contents,
-          range: range.to_vscode_range
-        }
-      end
-
-      # @return [Boolean]
-      def responsible?
-        configuration.enables_hover? &&
-          !contents.nil?
-      end
-
       # @return [String, nil]
       def contents
         @contents ||=
@@ -42,14 +26,47 @@ module Rucoa
           end
       end
 
-      # @return [Rucoa::Range]
-      def range
-        Range.from_parser_range(node.location.expression)
+      # @return [Rucoa::Definitions::Base, nil]
+      def definition
+        return unless node
+
+        @definition ||= NodeInspector.new(
+          definition_store: definition_store,
+          node: node
+        ).definitions.first
+      end
+
+      # @return [Hash, nil]
+      def hover
+        return unless responsible?
+
+        {
+          contents: contents,
+          range: range.to_vscode_range
+        }
       end
 
       # @return [Rucoa::Nodes::Base, nil]
       def node
         @node ||= source&.node_at(position)
+      end
+
+      # @return [Rucoa::Position]
+      def position
+        Position.from_vscode_position(
+          request.dig('params', 'position')
+        )
+      end
+
+      # @return [Rucoa::Range]
+      def range
+        Range.from_parser_range(node.location.expression)
+      end
+
+      # @return [Boolean]
+      def responsible?
+        configuration.enables_hover? &&
+          !contents.nil?
       end
 
       # @return [Rucoa::Source, nil]
@@ -60,23 +77,6 @@ module Rucoa
       # @return [String]
       def uri
         request.dig('params', 'textDocument', 'uri')
-      end
-
-      # @return [Rucoa::Position]
-      def position
-        Position.from_vscode_position(
-          request.dig('params', 'position')
-        )
-      end
-
-      # @return [Rucoa::Definitions::Base, nil]
-      def definition
-        return unless node
-
-        @definition ||= NodeInspector.new(
-          definition_store: definition_store,
-          node: node
-        ).definitions.first
       end
     end
   end
