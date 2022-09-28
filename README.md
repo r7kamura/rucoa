@@ -35,6 +35,12 @@ Run "Format Document" command or enable "Format On Save" in the settings to auto
 
 ![demo](images/document-formatting.gif)
 
+### Highlight
+
+Highlights corresponding keywords.
+
+![demo](images/document-highlight.gif)
+
 ### Selection
 
 Run "Expand Selection" command to select appropriate ranges.
@@ -65,10 +71,6 @@ Provides completion items for constant names and method names.
 ### Definition
 
 Provides "Go to Definition" command to jump to the definition.
-
-### Highlight
-
-Highlights corresponding keywords.
 
 ### Hover
 
