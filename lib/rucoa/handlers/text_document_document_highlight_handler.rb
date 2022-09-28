@@ -175,6 +175,7 @@ module Rucoa
           # @return [Array<Parser::Source::Range>]
           def call
             return AnyMapper.call(@node.parent) if @node.elsif?
+            return [] if @node.modifier?
 
             [
               @node.location.keyword,
@@ -244,6 +245,8 @@ module Rucoa
         class WhileMapper < Base
           # @return [Array<Parser::Source::Range>]
           def call
+            return [] if @node.modifier?
+
             [
               @node.location.keyword,
               @node.location.end

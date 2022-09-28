@@ -3,6 +3,7 @@
 module Rucoa
   module Nodes
     class UntilNode < Base
+      include NodeConcerns::Modifier
     end
   end
 end

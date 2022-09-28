@@ -720,5 +720,59 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
         )
       end
     end
+
+    context 'when one-lined if is detected' do
+      let(:content) do
+        <<~RUBY
+          1 if foo
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 2,
+          line: 1
+        )
+      end
+
+      it 'returns empty' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => []
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when one-lined while is detected' do
+      let(:content) do
+        <<~RUBY
+          1 while true
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 2,
+          line: 1
+        )
+      end
+
+      it 'returns empty' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => []
+            )
+          ]
+        )
+      end
+    end
   end
 end

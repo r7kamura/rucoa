@@ -3,6 +3,8 @@
 module Rucoa
   module Nodes
     class IfNode < Base
+      include NodeConcerns::Modifier
+
       # @return [Rucoa::Nodes::Base, nil]
       def branch_else
         children[2]
