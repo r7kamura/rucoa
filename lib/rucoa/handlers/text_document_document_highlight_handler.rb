@@ -6,10 +6,6 @@ module Rucoa
       include HandlerConcerns::TextDocumentPositionParameters
       include HandlerConcerns::TextDocumentUriParameters
 
-      DOCUMENT_HIGHLIGHT_KIND_READ = 2
-      DOCUMENT_HIGHLIGHT_KIND_TEXT = 1
-      DOCUMENT_HIGHLIGHT_KIND_WRITE = 3
-
       # @return [void]
       def call
         respond(document_highlights)
@@ -17,21 +13,11 @@ module Rucoa
 
       private
 
-      # @return [Array<Hash>]
+      # @return [Array]
       def document_highlights
-        parser_ranges.map do |parser_range|
-          {
-            'kind' => DOCUMENT_HIGHLIGHT_KIND_TEXT,
-            'range' => Range.from_parser_range(parser_range).to_vscode_range
-          }
-        end
-      end
-
-      # @return [Array<Parser::Source::Range>]
-      def parser_ranges
         return [] unless reponsible?
 
-        NodeToRangesMappers::AnyMapper.call(node)
+        NodeToHighlightsMappers::AnyMapper.call(node).map(&:to_vscode_highlight)
       end
 
       # @return [Boolean]
@@ -39,11 +25,57 @@ module Rucoa
         configuration.enables_highlight?
       end
 
-      module NodeToRangesMappers
+      module Highlights
+        class Base
+          # @param parser_range [Parser::Source::Range]
+          def initialize(parser_range:)
+            @parser_range = parser_range
+          end
+
+          private
+
+          # @return [Hash]
+          def vscode_range
+            Range.from_parser_range(@parser_range).to_vscode_range
+          end
+        end
+
+        class TextHighlight < Base
+          # @return [Hash]
+          def to_vscode_highlight
+            {
+              kind: 1,
+              range: vscode_range
+            }
+          end
+        end
+
+        class ReadHighlight < Base
+          # @return [Hash]
+          def to_vscode_highlight
+            {
+              kind: 2,
+              range: vscode_range
+            }
+          end
+        end
+
+        class WriteHighlight < Base
+          # @return [Hash]
+          def to_vscode_highlight
+            {
+              kind: 3,
+              range: vscode_range
+            }
+          end
+        end
+      end
+
+      module NodeToHighlightsMappers
         class Base
           class << self
             # @param node [Rucoa::Nodes::Base]
-            # @return [Array<Parser::Source::Range>]
+            # @return [Array]
             def call(node)
               new(node).call
             end
@@ -54,14 +86,14 @@ module Rucoa
             @node = node
           end
 
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             raise ::NotImplementedError
           end
         end
 
         class AnyMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             case @node
             when Nodes::BeginNode, Nodes::BlockNode
@@ -70,14 +102,20 @@ module Rucoa
               CaseMapper.call(@node)
             when Nodes::ClassNode, Nodes::ModuleNode
               ModuleMapper.call(@node)
+            when Nodes::CvarNode, Nodes::CvasgnNode
+              ClassVariableMapper.call(@node)
             when Nodes::DefNode
               DefMapper.call(@node)
             when Nodes::EnsureNode, Nodes::ResbodyNode, Nodes::RescueNode, Nodes::WhenNode
               AnyMapper.call(@node.parent)
             when Nodes::ForNode
               ForMapper.call(@node)
+            when Nodes::GvarNode, Nodes::GvasgnNode
+              GlobalVariableMapper.call(@node)
             when Nodes::IfNode
               IfMapper.call(@node)
+            when Nodes::IvarNode, Nodes::IvasgnNode
+              InstanceVariableMapper.call(@node)
             when Nodes::SendNode
               SendMapper.call(@node)
             when Nodes::UntilNode, Nodes::WhileNode
@@ -89,7 +127,7 @@ module Rucoa
         end
 
         class BeginMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             [
               range_begin,
@@ -97,7 +135,9 @@ module Rucoa
               range_else,
               range_ensure,
               range_end
-            ].compact
+            ].compact.map do |parser_range|
+              Highlights::TextHighlight.new(parser_range: parser_range)
+            end
           end
 
           private
@@ -126,7 +166,7 @@ module Rucoa
             @node.ensure.location.keyword
           end
 
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def ranges_resbody
             return [] unless rescue_node
 
@@ -151,19 +191,21 @@ module Rucoa
         end
 
         class CaseMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             [
               @node.location.keyword,
               *ranges_when,
               @node.location.else,
               @node.location.end
-            ].compact
+            ].compact.map do |parser_range|
+              Highlights::TextHighlight.new(parser_range: parser_range)
+            end
           end
 
           private
 
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def ranges_when
             @node.whens.map do |when_node|
               when_node.location.keyword
@@ -172,23 +214,35 @@ module Rucoa
         end
 
         class IfMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             return AnyMapper.call(@node.parent) if @node.elsif?
             return [] if @node.modifier?
 
             [
-              @node.location.keyword,
-              *ranges_elsif,
-              @node.location.else,
-              @node.location.end
+              highlight_keyword,
+              *highlights_elsif,
+              highlight_else,
+              highlight_end
             ].compact
           end
 
           private
 
-          # @return [Array<Parser::Source::Range>]
-          def ranges_elsif
+          def highlight_else
+            Highlights::TextHighlight.new(parser_range: @node.location.else) if @node.location.else
+          end
+
+          def highlight_end
+            Highlights::TextHighlight.new(parser_range: @node.location.end)
+          end
+
+          def highlight_keyword
+            Highlights::TextHighlight.new(parser_range: @node.location.keyword)
+          end
+
+          # @return [Array]
+          def highlights_elsif
             return [] unless @node.elsif
 
             ElsifMapper.call(@node.elsif)
@@ -196,38 +250,126 @@ module Rucoa
         end
 
         class ElsifMapper < IfMapper
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             [
-              *ranges_elsif,
-              @node.location.else
+              *highlights_elsif,
+              highlight_else
             ].compact
           end
         end
 
         class ForMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             [
               @node.location.keyword,
               @node.location.in,
               @node.location.end
-            ].compact
+            ].compact.map do |parser_range|
+              Highlights::TextHighlight.new(parser_range: parser_range)
+            end
+          end
+        end
+
+        class GlobalVariableMapper < Base
+          # @return [Array]
+          def call
+            return [] unless nodes.any?
+
+            nodes.map do |node|
+              case node
+              when Nodes::GvarNode
+                Highlights::ReadHighlight
+              when Nodes::GvasgnNode
+                Highlights::WriteHighlight
+              end.new(parser_range: node.location.name)
+            end
+          end
+
+          private
+
+          # @return [Rucoa::Nodes::Base, nil]
+          def global_variable_scopable_node
+            @node.ancestors.last
+          end
+
+          # @return [Enumerable<Rucoa::Nodes::Base>]
+          def nodes
+            @nodes ||= global_variable_scopable_node&.each_descendant(:gvar, :gvasgn) || []
+          end
+        end
+
+        class InstanceVariableMapper < Base
+          # @return [Array]
+          def call
+            return [] unless nodes.any?
+
+            nodes.map do |node|
+              case node
+              when Nodes::IvarNode
+                Highlights::ReadHighlight
+              when Nodes::IvasgnNode
+                Highlights::WriteHighlight
+              end.new(parser_range: node.location.name)
+            end
+          end
+
+          private
+
+          # @return [Rucoa::Nodes::Base, nil]
+          def instance_variable_scopable_node
+            @node.each_ancestor(:class, :module).first
+          end
+
+          # @return [Enumerable<Rucoa::Nodes::Base>]
+          def nodes
+            @nodes ||= instance_variable_scopable_node&.each_descendant(:ivar, :ivasgn) || []
+          end
+        end
+
+        class ClassVariableMapper < Base
+          # @return [Array]
+          def call
+            return [] unless nodes.any?
+
+            nodes.map do |node|
+              case node
+              when Nodes::CvarNode
+                Highlights::ReadHighlight
+              when Nodes::CvasgnNode
+                Highlights::WriteHighlight
+              end.new(parser_range: node.location.name)
+            end
+          end
+
+          private
+
+          # @return [Rucoa::Nodes::Base, nil]
+          def instance_variable_scopable_node
+            @node.each_ancestor(:class, :module).first
+          end
+
+          # @return [Enumerable<Rucoa::Nodes::Base>]
+          def nodes
+            @nodes ||= instance_variable_scopable_node&.each_descendant(:cvar, :cvasgn) || []
           end
         end
 
         class ModuleMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             [
               @node.location.keyword,
               @node.location.end
-            ]
+            ].map do |parser_range|
+              Highlights::TextHighlight.new(parser_range: parser_range)
+            end
           end
         end
 
         class SendMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             return [] unless @node.block
 
@@ -236,21 +378,23 @@ module Rucoa
         end
 
         class WhenMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             CaseMapper.call(@node.parent)
           end
         end
 
         class WhileMapper < Base
-          # @return [Array<Parser::Source::Range>]
+          # @return [Array]
           def call
             return [] if @node.modifier?
 
             [
               @node.location.keyword,
               @node.location.end
-            ]
+            ].map do |parser_range|
+              Highlights::TextHighlight.new(parser_range: parser_range)
+            end
           end
         end
       end
