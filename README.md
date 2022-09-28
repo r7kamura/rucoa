@@ -66,6 +66,10 @@ Provides completion items for constant names and method names.
 
 Provides "Go to Definition" command to jump to the definition.
 
+### Highlight
+
+Highlights corresponding keywords.
+
 ### Hover
 
 Shows documentation for the symbol under the cursor.
@@ -76,5 +80,4 @@ Shows method signature help when you start to type method arguments like `"100".
 
 ## Coming soon
 
-- Highlight
 - Semantic Tokens

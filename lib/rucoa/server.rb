@@ -17,6 +17,7 @@ module Rucoa
       'textDocument/didChange' => Handlers::TextDocumentDidChangeHandler,
       'textDocument/didClose' => Handlers::TextDocumentDidCloseHandler,
       'textDocument/didOpen' => Handlers::TextDocumentDidOpenHandler,
+      'textDocument/documentHighlight' => Handlers::TextDocumentDocumentHighlightHandler,
       'textDocument/documentSymbol' => Handlers::TextDocumentDocumentSymbolHandler,
       'textDocument/formatting' => Handlers::TextDocumentFormattingHandler,
       'textDocument/hover' => Handlers::TextDocumentHoverHandler,

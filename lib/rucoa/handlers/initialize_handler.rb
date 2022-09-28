@@ -15,6 +15,7 @@ module Rucoa
             },
             definitionProvider: true,
             documentFormattingProvider: true,
+            documentHighlightProvider: true,
             documentRangeFormattingProvider: true,
             documentSymbolProvider: true,
             hoverProvider: true,

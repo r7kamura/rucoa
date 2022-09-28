@@ -3,10 +3,8 @@
 module Rucoa
   module Nodes
     class DefNode < Base
-      # @return [Rucoa::Nodes::Base, nil]
-      def exception_handler
-        children.last
-      end
+      include NodeConcerns::Body
+      include NodeConcerns::Rescue
 
       # @return [String]
       def method_marker
