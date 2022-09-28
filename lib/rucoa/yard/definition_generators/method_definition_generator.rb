@@ -36,7 +36,7 @@ module Rucoa
         #   ).definitions
         #   expect(definitions[1].qualified_name).to eq('Foo.bar')
         def call
-          return [] unless @node.is_a?(Nodes::DefNode) || @node.is_a?(Nodes::DefsNode)
+          return [] unless @node.is_a?(Nodes::DefNode)
 
           [
             Definitions::MethodDefinition.new(

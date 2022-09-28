@@ -59,8 +59,6 @@ module Rucoa
           create_document_symbols_for_class(node)
         when Nodes::DefNode
           create_document_symbols_for_def(node)
-        when Nodes::DefsNode
-          create_document_symbols_for_defs(node)
         when Nodes::ModuleNode
           create_document_symbols_for_module(node)
         when Nodes::SendNode
@@ -105,7 +103,7 @@ module Rucoa
           {
             children: [],
             kind: DOCUMENT_SYMBOL_KIND_FOR_METHOD,
-            name: singleton_class_stack.empty? ? "##{node.name}" : ".#{node.name}",
+            name: "#{node.method_marker}#{node.name}",
             range: Range.from_parser_range(node.location.expression).to_vscode_range,
             selectionRange: Range.from_parser_range(node.location.name).to_vscode_range
           }
@@ -186,21 +184,14 @@ module Rucoa
           !source.nil?
       end
 
-      # @return [Array<Rucoa::Nodes::SclassNode>]
-      def singleton_class_stack
-        @singleton_class_stack ||= []
-      end
-
       # @param node [Rucoa::Nodes::Base]
       # @return [void]
       def visit(node)
         document_symbols = create_document_symbols_for(node)
         document_symbol_stack.last[:children].push(*document_symbols)
         with_document_symbol_stack(document_symbols.first) do
-          with_singleton_class_stack(node) do
-            node.each_child_node do |child_node|
-              visit(child_node)
-            end
+          node.each_child_node do |child_node|
+            visit(child_node)
           end
         end
       end
@@ -216,18 +207,6 @@ module Rucoa
         document_symbol_stack.push(document_symbol)
         yield
         document_symbol_stack.pop
-      end
-
-      # @param node [Rucoa::Nodes::Base]
-      def with_singleton_class_stack(node)
-        unless node.is_a?(Rucoa::Nodes::SclassNode)
-          yield
-          return
-        end
-
-        singleton_class_stack.push(node)
-        yield
-        singleton_class_stack.pop
       end
     end
   end

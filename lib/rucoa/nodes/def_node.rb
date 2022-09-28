@@ -3,6 +3,20 @@
 module Rucoa
   module Nodes
     class DefNode < Base
+      # @return [Rucoa::Nodes::Base, nil]
+      def exception_handler
+        children.last
+      end
+
+      # @return [String]
+      def method_marker
+        if singleton?
+          '.'
+        else
+          '#'
+        end
+      end
+
       # @return [String]
       # @example returns method name
       #   node = Rucoa::Source.new(
@@ -23,7 +37,7 @@ module Rucoa
       #   )
       #   expect(node.name).to eq('baz')
       def name
-        children[0].to_s
+        children[-3].to_s
       end
 
       # @return [String]
@@ -55,18 +69,7 @@ module Rucoa
 
       # @return [Boolean]
       def singleton?
-        each_ancestor(:sclass).any?
-      end
-
-      private
-
-      # @return [String]
-      def method_marker
-        if singleton?
-          '.'
-        else
-          '#'
-        end
+        type == :defs || each_ancestor(:sclass).any?
       end
     end
   end

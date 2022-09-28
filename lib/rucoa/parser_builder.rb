@@ -11,7 +11,7 @@ module Rucoa
       class: Nodes::ClassNode,
       const: Nodes::ConstNode,
       def: Nodes::DefNode,
-      defs: Nodes::DefsNode,
+      defs: Nodes::DefNode,
       lvar: Nodes::LvarNode,
       module: Nodes::ModuleNode,
       sclass: Nodes::SclassNode,
