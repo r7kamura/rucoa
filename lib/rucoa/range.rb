@@ -103,6 +103,12 @@ module Rucoa
     #   )
     #   expect(range).to include(
     #     Rucoa::Position.new(
+    #       column: 1,
+    #       line: 1
+    #     )
+    #   )
+    #   expect(range).to include(
+    #     Rucoa::Position.new(
     #       column: 0,
     #       line: 2
     #     )
@@ -116,9 +122,9 @@ module Rucoa
     def include?(position)
       return false if position.line > @ending.line
       return false if position.line < @beginning.line
-      return false if position.column < @beginning.column
-      return false if position.column > @ending.column
-      return false if position.column == @ending.column && !@including_ending
+      return false if position.line == @beginning.line && position.column < @beginning.column
+      return false if position.line == @ending.line && position.column > @ending.column
+      return false if position.line == @ending.line && position.column == @ending.column && !@including_ending
 
       true
     end
