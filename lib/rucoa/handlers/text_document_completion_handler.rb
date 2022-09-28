@@ -4,6 +4,7 @@ module Rucoa
   module Handlers
     class TextDocumentCompletionHandler < Base
       include HandlerConcerns::TextDocumentPositionParameters
+      include HandlerConcerns::TextDocumentUriParameters
 
       COMPLETION_ITEM_KIND_FOR_TEXT = 1
       COMPLETION_ITEM_KIND_FOR_METHOD = 2
@@ -202,16 +203,6 @@ module Rucoa
       def responsible?
         configuration.enables_completion? &&
           !source.nil?
-      end
-
-      # @return [Rucoa::Source, nil]
-      def source
-        @source ||= source_store.get(uri)
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

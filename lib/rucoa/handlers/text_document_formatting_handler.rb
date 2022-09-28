@@ -3,6 +3,8 @@
 module Rucoa
   module Handlers
     class TextDocumentFormattingHandler < Base
+      include HandlerConcerns::TextDocumentUriParameters
+
       def call
         respond(edits)
       end
@@ -42,22 +44,12 @@ module Rucoa
         ).to_vscode_range
       end
 
-      # @return [Rucoa::Source, nil]
-      def source
-        @source ||= source_store.get(uri)
-      end
-
       # @return [Hash]
       def text_edit
         {
           newText: new_text,
           range: range
         }
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

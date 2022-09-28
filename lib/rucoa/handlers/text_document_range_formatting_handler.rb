@@ -3,6 +3,8 @@
 module Rucoa
   module Handlers
     class TextDocumentRangeFormattingHandler < Base
+      include HandlerConcerns::TextDocumentUriParameters
+
       def call
         respond(edits)
       end
@@ -60,16 +62,6 @@ module Rucoa
             replacement
           ]
         end
-      end
-
-      # @return [Rucoa::Source]
-      def source
-        @source ||= source_store.get(uri)
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

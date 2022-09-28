@@ -3,6 +3,8 @@
 module Rucoa
   module Handlers
     class TextDocumentSelectionRangeHandler < Base
+      include HandlerConcerns::TextDocumentUriParameters
+
       def call
         return unless responsible?
 
@@ -29,16 +31,6 @@ module Rucoa
       def responsible?
         configuration.enables_selection_range? &&
           !source.nil?
-      end
-
-      # @return [Rucoa::Source]
-      def source
-        @source ||= source_store.get(uri)
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
       end
 
       class SelectionRangeProvider

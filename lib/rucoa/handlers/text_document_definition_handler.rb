@@ -4,6 +4,7 @@ module Rucoa
   module Handlers
     class TextDocumentDefinitionHandler < Base
       include HandlerConcerns::TextDocumentPositionParameters
+      include HandlerConcerns::TextDocumentUriParameters
 
       def call
         respond(location)
@@ -33,16 +34,6 @@ module Rucoa
       def reponsible?
         configuration.enables_definition? &&
           !definition&.location.nil?
-      end
-
-      # @return [Rucoa::Source, nil]
-      def source
-        source_store.get(uri)
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

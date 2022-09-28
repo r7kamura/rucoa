@@ -4,16 +4,10 @@ module Rucoa
   module Handlers
     class TextDocumentDidCloseHandler < Base
       include HandlerConcerns::DiagnosticsPublishable
+      include HandlerConcerns::TextDocumentUriParameters
 
       def call
-        clear_diagnostics_on(uri)
-      end
-
-      private
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
+        clear_diagnostics_on(parameter_uri)
       end
     end
   end

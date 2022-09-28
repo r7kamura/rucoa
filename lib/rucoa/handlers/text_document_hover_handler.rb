@@ -4,6 +4,7 @@ module Rucoa
   module Handlers
     class TextDocumentHoverHandler < Base
       include HandlerConcerns::TextDocumentPositionParameters
+      include HandlerConcerns::TextDocumentUriParameters
 
       def call
         respond(hover)
@@ -57,16 +58,6 @@ module Rucoa
       def responsible?
         configuration.enables_hover? &&
           !contents.nil?
-      end
-
-      # @return [Rucoa::Source, nil]
-      def source
-        @source ||= source_store.get(uri)
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

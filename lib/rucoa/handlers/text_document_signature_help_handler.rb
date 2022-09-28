@@ -4,6 +4,7 @@ module Rucoa
   module Handlers
     class TextDocumentSignatureHelpHandler < Base
       include HandlerConcerns::TextDocumentPositionParameters
+      include HandlerConcerns::TextDocumentUriParameters
 
       def call
         respond(signature_help)
@@ -42,16 +43,6 @@ module Rucoa
             label: method_definition.signatures.join("\n")
           }
         end
-      end
-
-      # @return [Rucoa::Source]
-      def source
-        source_store.get(uri)
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
       end
     end
   end

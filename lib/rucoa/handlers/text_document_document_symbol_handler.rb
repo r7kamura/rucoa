@@ -5,6 +5,8 @@ require 'set'
 module Rucoa
   module Handlers
     class TextDocumentDocumentSymbolHandler < Base
+      include HandlerConcerns::TextDocumentUriParameters
+
       DOCUMENT_SYMBOL_KIND_FOR_FILE = 1
       DOCUMENT_SYMBOL_KIND_FOR_MODULE = 2
       DOCUMENT_SYMBOL_KIND_FOR_NAMESPACE = 3
@@ -187,16 +189,6 @@ module Rucoa
       # @return [Array<Rucoa::Nodes::SclassNode>]
       def singleton_class_stack
         @singleton_class_stack ||= []
-      end
-
-      # @return [Rucoa::Source]
-      def source
-        @source ||= source_store.get(uri)
-      end
-
-      # @return [String]
-      def uri
-        request.dig('params', 'textDocument', 'uri')
       end
 
       # @param node [Rucoa::Nodes::Base]
