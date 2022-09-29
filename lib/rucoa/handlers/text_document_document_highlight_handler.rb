@@ -402,7 +402,7 @@ module Rucoa
                     end
                     break target if target
                   else
-                    target = node.previous_siblings.find do |sibling|
+                    target = node.previous_siblings.reverse.find do |sibling|
                       case sibling
                       when Nodes::LvasgnNode
                         sibling.name == @node.name
