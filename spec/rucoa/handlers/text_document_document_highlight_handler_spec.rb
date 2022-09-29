@@ -1185,7 +1185,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
       end
     end
 
-    context 'when local variable is referenced before shadowing' do
+    context 'when local variable is referenced after shadowing' do
       let(:content) do
         <<~RUBY
           a
@@ -1210,6 +1210,62 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
               'result' => Array.new(2) do
                 a_kind_of(Hash)
               end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when local variable is referenced with 2 assignments' do
+      let(:content) do
+        <<~RUBY
+          a = 1
+          a = 2
+          a
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 0,
+          line: 3
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => [
+                {
+                  'kind' => 3,
+                  'range' => {
+                    'end' => {
+                      'character' => 1,
+                      'line' => 1
+                    },
+                    'start' => {
+                      'character' => 0,
+                      'line' => 1
+                    }
+                  }
+                },
+                {
+                  'kind' => 2,
+                  'range' => {
+                    'end' => {
+                      'character' => 1,
+                      'line' => 2
+                    },
+                    'start' => {
+                      'character' => 0,
+                      'line' => 2
+                    }
+                  }
+                }
+              ]
             )
           ]
         )
