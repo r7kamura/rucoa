@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 module Rucoa
   module Handlers
     class TextDocumentDocumentHighlightHandler < Base
@@ -359,6 +361,13 @@ module Rucoa
         end
 
         class LocalVariableMapper < Base
+          SCOPE_BOUNDARY_NODE_TYPES = ::Set[
+            :class,
+            :def,
+            :defs,
+            :module,
+          ]
+
           # @return [Array]
           def call
             return [] unless nodes.any?
@@ -382,15 +391,9 @@ module Rucoa
               when Nodes::ArgNode, Nodes::LvasgnNode
                 @node
               when Nodes::LvarNode
-                scope_boundary_node_types = ::Set[
-                  :class,
-                  :def,
-                  :defs,
-                  :module,
-                ]
                 (
                   [@node] + @node.ancestors.take_while do |node|
-                    !scope_boundary_node_types.include?(node.type)
+                    !SCOPE_BOUNDARY_NODE_TYPES.include?(node.type)
                   end
                 ).find do |node|
                   case node
