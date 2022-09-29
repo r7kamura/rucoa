@@ -126,6 +126,32 @@ module Rucoa
         module_nesting.first || 'Object'
       end
 
+      # @return [Array<Rucoa::Nodes::Base>]
+      # @example returns next siblings
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       def foo
+      #         a
+      #         b
+      #         c
+      #         d
+      #         e
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/example.rb'
+      #   ).node_at(
+      #     Rucoa::Position.new(
+      #       column: 2,
+      #       line: 4
+      #     )
+      #   )
+      #   expect(node.next_siblings.map(&:name)).to eq(%w[d e])
+      def next_siblings
+        return [] unless parent
+
+        parent.children[(sibling_index + 1)..]
+      end
+
       # @return [Rucoa::Nodes::Base, nil]
       def parent
         @mutable_attributes[:parent]
@@ -134,6 +160,32 @@ module Rucoa
       # @param node [Rucoa::Nodes::Base]
       def parent=(node)
         @mutable_attributes[:parent] = node
+      end
+
+      # @return [Array<Rucoa::Nodes::Base>]
+      # @example returns previous siblings
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       def foo
+      #         a
+      #         b
+      #         c
+      #         d
+      #         e
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/example.rb'
+      #   ).node_at(
+      #     Rucoa::Position.new(
+      #       column: 2,
+      #       line: 4
+      #     )
+      #   )
+      #   expect(node.previous_siblings.map(&:name)).to eq(%w[a b])
+      def previous_siblings
+        return [] unless parent
+
+        parent.children[0...sibling_index]
       end
 
       # @note Override.
@@ -169,6 +221,13 @@ module Rucoa
       end
 
       private
+
+      # @return [Integer, nil]
+      def sibling_index
+        parent&.children&.index do |child|
+          child.eql?(self)
+        end
+      end
 
       # Visits all ancestors.
       # @param types [Array<Symbol>]

@@ -2,6 +2,8 @@
 
 module Rucoa
   module Nodes
+    autoload :ArgNode, 'rucoa/nodes/arg_node'
+    autoload :ArgsNode, 'rucoa/nodes/args_node'
     autoload :Base, 'rucoa/nodes/base'
     autoload :BeginNode, 'rucoa/nodes/begin_node'
     autoload :BlockNode, 'rucoa/nodes/block_node'
@@ -21,6 +23,7 @@ module Rucoa
     autoload :IvarNode, 'rucoa/nodes/ivar_node'
     autoload :IvasgnNode, 'rucoa/nodes/ivasgn_node'
     autoload :LvarNode, 'rucoa/nodes/lvar_node'
+    autoload :LvasgnNode, 'rucoa/nodes/lvasgn_node'
     autoload :ModuleNode, 'rucoa/nodes/module_node'
     autoload :ResbodyNode, 'rucoa/nodes/resbody_node'
     autoload :RescueNode, 'rucoa/nodes/rescue_node'

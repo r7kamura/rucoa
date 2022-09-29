@@ -116,6 +116,8 @@ module Rucoa
               IfMapper.call(@node)
             when Nodes::IvarNode, Nodes::IvasgnNode
               InstanceVariableMapper.call(@node)
+            when Nodes::ArgNode, Nodes::LvarNode, Nodes::LvasgnNode
+              LocalVariableMapper.call(@node)
             when Nodes::SendNode
               SendMapper.call(@node)
             when Nodes::UntilNode, Nodes::WhileNode
@@ -353,6 +355,101 @@ module Rucoa
           # @return [Enumerable<Rucoa::Nodes::Base>]
           def nodes
             @nodes ||= instance_variable_scopable_node&.each_descendant(:cvar, :cvasgn) || []
+          end
+        end
+
+        class LocalVariableMapper < Base
+          # @return [Array]
+          def call
+            return [] unless nodes.any?
+
+            nodes.map do |node|
+              case node
+              when Nodes::LvarNode
+                Highlights::ReadHighlight
+              when Nodes::ArgNode, Nodes::LvasgnNode
+                Highlights::WriteHighlight
+              end.new(parser_range: node.location.name)
+            end
+          end
+
+          private
+
+          # @return [Rucoa::Nodes::ArgNode, Rucoa::Nodes::LvasgnNode, nil]
+          def assignment_node
+            @assignment_node ||=
+              case @node
+              when Nodes::ArgNode, Nodes::LvasgnNode
+                @node
+              when Nodes::LvarNode
+                scope_boundary_node_types = ::Set[
+                  :class,
+                  :def,
+                  :defs,
+                  :module,
+                ]
+                (
+                  [@node] + @node.ancestors.take_while do |node|
+                    !scope_boundary_node_types.include?(node.type)
+                  end
+                ).find do |node|
+                  case node
+                  when Nodes::ArgNode, Nodes::LvasgnNode
+                    node.name == @node.name
+                  when Nodes::BlockNode, Nodes::DefNode
+                    target = node.arguments.find do |argument|
+                      argument.name == @node.name
+                    end
+                    break target if target
+                  else
+                    target = node.previous_siblings.find do |sibling|
+                      case sibling
+                      when Nodes::LvasgnNode
+                        sibling.name == @node.name
+                      end
+                    end
+                    break target if target
+                  end
+                end || @node.each_ancestor(:def, :defs).first&.then do |node|
+                  break node.arguments.find do |argument|
+                    argument.name == @node.name
+                  end
+                end
+              end
+          end
+
+          # @return [Enumerable<Rucoa::Nodes::ArgNode, Rucoa::Nodes::LvarNode, Rucoa::Nodes::LvasgnNode>]
+          def nodes
+            [
+              assignment_node,
+              *reference_nodes
+            ].compact
+          end
+
+          # @todo Support shadowing.
+          # @return [Enumerable<Rucoa::Nodes::LvarNode>]
+          def reference_nodes
+            return [] unless assignment_node
+
+            case assignment_node
+            when Nodes::ArgNode
+              assignment_node.each_ancestor(:block, :def, :defs).first.body_children
+            when Nodes::LvasgnNode
+              [
+                assignment_node,
+                *assignment_node.next_siblings
+              ]
+            end.flat_map do |node|
+              [
+                node,
+                *node.descendants
+              ]
+            end.select do |node|
+              case node
+              when Nodes::LvarNode
+                node.name == @node.name
+              end
+            end
           end
         end
 

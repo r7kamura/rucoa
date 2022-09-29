@@ -803,7 +803,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
         )
       end
 
-      it 'returns read and write highlights' do
+      it 'returns highlights' do
         subject
         expect(server.responses).to match(
           [
@@ -875,7 +875,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
         )
       end
 
-      it 'returns read and write highlights' do
+      it 'returns highlights' do
         subject
         expect(server.responses).to match(
           [
@@ -922,7 +922,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
         )
       end
 
-      it 'returns read and write highlights' do
+      it 'returns highlights' do
         subject
         expect(server.responses).to match(
           [
@@ -969,13 +969,245 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
         )
       end
 
-      it 'returns read and write highlights' do
+      it 'returns highlights' do
         subject
         expect(server.responses).to match(
           [
             hash_including(
               'id' => 1,
               'result' => Array.new(4) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when method argument is detected' do
+      let(:content) do
+        <<~RUBY
+          def a(foo)
+            foo
+          end
+
+          def b(foo)
+            foo
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 6,
+          line: 1
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when method argument reference is detected' do
+      let(:content) do
+        <<~RUBY
+          def a(foo)
+            foo
+          end
+
+          def b(foo)
+            foo
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 2,
+          line: 2
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when local variable reference is detected' do
+      let(:content) do
+        <<~RUBY
+          def a
+            foo = 1
+            foo
+          end
+
+          def b
+            foo = 2
+            foo
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 2,
+          line: 3
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when lvasgn is detected' do
+      let(:content) do
+        <<~RUBY
+          def a
+            foo = 1
+            foo
+          end
+
+          def b
+            foo = 2
+            foo
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 2,
+          line: 2
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when local variable is assigned out of def' do
+      let(:content) do
+        <<~RUBY
+          foo = 1
+
+          def a
+            foo
+          end
+        RUBY
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => []
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when local variable is referenced at receiver' do
+      let(:content) do
+        <<~RUBY
+          foo.bar do |foo|
+            foo
+          end.baz do |foo|
+            foo
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 2,
+          line: 4
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when local variable is referenced before shadowing' do
+      let(:content) do
+        <<~RUBY
+          a
+          a = 1
+          a
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 0,
+          line: 3
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
                 a_kind_of(Hash)
               end
             )
