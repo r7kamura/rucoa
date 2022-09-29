@@ -279,8 +279,6 @@ module Rucoa
         class GlobalVariableMapper < Base
           # @return [Array]
           def call
-            return [] unless nodes.any?
-
             nodes.map do |node|
               case node
               when Nodes::GvarNode
@@ -300,15 +298,13 @@ module Rucoa
 
           # @return [Enumerable<Rucoa::Nodes::Base>]
           def nodes
-            @nodes ||= global_variable_scopable_node&.each_descendant(:gvar, :gvasgn) || []
+            global_variable_scopable_node&.each_descendant(:gvar, :gvasgn) || []
           end
         end
 
         class InstanceVariableMapper < Base
           # @return [Array]
           def call
-            return [] unless nodes.any?
-
             nodes.map do |node|
               case node
               when Nodes::IvarNode
@@ -328,15 +324,13 @@ module Rucoa
 
           # @return [Enumerable<Rucoa::Nodes::Base>]
           def nodes
-            @nodes ||= instance_variable_scopable_node&.each_descendant(:ivar, :ivasgn) || []
+            instance_variable_scopable_node&.each_descendant(:ivar, :ivasgn) || []
           end
         end
 
         class ClassVariableMapper < Base
           # @return [Array]
           def call
-            return [] unless nodes.any?
-
             nodes.map do |node|
               case node
               when Nodes::CvarNode
@@ -356,7 +350,7 @@ module Rucoa
 
           # @return [Enumerable<Rucoa::Nodes::Base>]
           def nodes
-            @nodes ||= instance_variable_scopable_node&.each_descendant(:cvar, :cvasgn) || []
+            instance_variable_scopable_node&.each_descendant(:cvar, :cvasgn) || []
           end
         end
 
@@ -370,8 +364,6 @@ module Rucoa
 
           # @return [Array]
           def call
-            return [] unless nodes.any?
-
             nodes.map do |node|
               case node
               when Nodes::LvarNode
