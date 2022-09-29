@@ -408,7 +408,7 @@ module Rucoa
                     target = node.previous_siblings.reverse.find do |sibling|
                       lvasgn_node = [
                         sibling,
-                        *sibling.descendants # sendの場合はblockの内部まで踏み込まない等の制限が必要
+                        *sibling.descendants
                       ].reverse.find do |sibling_or_sibling_descendant|
                         case sibling_or_sibling_descendant
                         when Nodes::LvasgnNode
