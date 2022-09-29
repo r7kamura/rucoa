@@ -774,5 +774,214 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
         )
       end
     end
+
+    context 'when ivasgn is detected' do
+      let(:content) do
+        <<~RUBY
+          class A
+            def initialize
+              @x = 1
+            end
+
+            def foo
+              @x
+            end
+          end
+
+          class B
+            def foo
+              @x
+            end
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 4,
+          line: 3
+        )
+      end
+
+      it 'returns read and write highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => [
+                {
+                  'kind' => 3,
+                  'range' => {
+                    'end' => {
+                      'character' => 6,
+                      'line' => 2
+                    },
+                    'start' => {
+                      'character' => 4,
+                      'line' => 2
+                    }
+                  }
+                },
+                {
+                  'kind' => 2,
+                  'range' => {
+                    'end' => {
+                      'character' => 6,
+                      'line' => 6
+                    },
+                    'start' => {
+                      'character' => 4,
+                      'line' => 6
+                    }
+                  }
+                }
+              ]
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when ivar is detected' do
+      let(:content) do
+        <<~RUBY
+          class A
+            def initialize
+              @x = 1
+            end
+
+            def foo
+              @x
+            end
+
+            def bar
+              @x ||= 2
+            end
+          end
+
+          class B
+            def foo
+              @x
+            end
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 4,
+          line: 7
+        )
+      end
+
+      it 'returns read and write highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(3) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when cvar is detected' do
+      let(:content) do
+        <<~RUBY
+          class A
+            def initialize
+              @@x = 1
+            end
+
+            def foo
+              @@x
+            end
+
+            def bar
+              @@x ||= 2
+            end
+          end
+
+          class B
+            def foo
+              @@x
+            end
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 4,
+          line: 7
+        )
+      end
+
+      it 'returns read and write highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(3) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when gvar is detected' do
+      let(:content) do
+        <<~RUBY
+          class A
+            def initialize
+              $x = 1
+            end
+
+            def foo
+              $x
+            end
+
+            def bar
+              $x ||= 2
+            end
+          end
+
+          class B
+            def foo
+              $x
+            end
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 4,
+          line: 7
+        )
+      end
+
+      it 'returns read and write highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(4) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
   end
 end
