@@ -26,6 +26,7 @@ module Rucoa
       if: Nodes::IfNode,
       ivar: Nodes::IvarNode,
       ivasgn: Nodes::IvasgnNode,
+      kwarg: Nodes::ArgNode,
       kwbegin: Nodes::BeginNode,
       lvar: Nodes::LvarNode,
       lvasgn: Nodes::LvasgnNode,
