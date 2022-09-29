@@ -230,7 +230,7 @@ module Rucoa
       # @return [Integer, nil]
       def sibling_index
         parent&.child_nodes&.index do |child|
-          child.eql?(self)
+          child.equal?(self)
         end
       end
 
