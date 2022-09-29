@@ -406,10 +406,16 @@ module Rucoa
                     break target if target
                   else
                     target = node.previous_siblings.reverse.find do |sibling|
-                      case sibling
-                      when Nodes::LvasgnNode
-                        sibling.name == @node.name
+                      lvasgn_node = [
+                        sibling,
+                        *sibling.descendants # sendの場合はblockの内部まで踏み込まない等の制限が必要
+                      ].reverse.find do |sibling_or_sibling_descendant|
+                        case sibling_or_sibling_descendant
+                        when Nodes::LvasgnNode
+                          break sibling_or_sibling_descendant if sibling_or_sibling_descendant.name == @node.name
+                        end
                       end
+                      break lvasgn_node if lvasgn_node
                     end
                     break target if target
                   end
@@ -438,10 +444,11 @@ module Rucoa
             when Nodes::ArgNode
               assignment_node.each_ancestor(:block, :def, :defs).first.body_children
             when Nodes::LvasgnNode
-              [
-                assignment_node,
-                *assignment_node.next_siblings
-              ]
+              (
+                [assignment_node] + assignment_node.ancestors.take_while do |node|
+                  !SCOPE_BOUNDARY_NODE_TYPES.include?(node.type)
+                end
+              ).flat_map(&:next_siblings)
             end.flat_map do |node|
               [
                 node,

@@ -20,6 +20,11 @@ module Rucoa
       end
 
       # @return [Array<Rucoa::Nodes::Base>]
+      def child_nodes
+        each_child_node.to_a
+      end
+
+      # @return [Array<Rucoa::Nodes::Base>]
       def descendants
         each_descendant.to_a
       end
@@ -149,7 +154,7 @@ module Rucoa
       def next_siblings
         return [] unless parent
 
-        parent.children[(sibling_index + 1)..]
+        parent.child_nodes[(sibling_index + 1)..]
       end
 
       # @return [Rucoa::Nodes::Base, nil]
@@ -185,7 +190,7 @@ module Rucoa
       def previous_siblings
         return [] unless parent
 
-        parent.children[0...sibling_index]
+        parent.child_nodes[0...sibling_index]
       end
 
       # @note Override.
@@ -224,7 +229,7 @@ module Rucoa
 
       # @return [Integer, nil]
       def sibling_index
-        parent&.children&.index do |child|
+        parent&.child_nodes&.index do |child|
           child.eql?(self)
         end
       end
