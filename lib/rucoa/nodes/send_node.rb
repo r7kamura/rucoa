@@ -97,7 +97,7 @@ module Rucoa
 
       # @return [Boolean]
       def called_with_block?
-        parent.is_a?(Nodes::BlockNode) && eql?(parent.send_node)
+        parent.is_a?(Nodes::BlockNode) && equal?(parent.send_node)
       end
     end
   end

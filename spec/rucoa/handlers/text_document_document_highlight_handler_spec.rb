@@ -1272,6 +1272,38 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
       end
     end
 
+    context 'when local variable is referenced with 2 assignments and 2 reference' do
+      let(:content) do
+        <<~RUBY
+          a = 1
+          a
+          a = 2
+          a
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 0,
+          line: 4
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
     context 'when local variable is referenced with complex assignment' do
       let(:content) do
         <<~RUBY

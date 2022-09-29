@@ -27,7 +27,7 @@ module Rucoa
 
       # @return [Boolean]
       def elsif?
-        parent.is_a?(Nodes::IfNode) && eql?(parent.elsif)
+        parent.is_a?(Nodes::IfNode) && equal?(parent.elsif)
       end
     end
   end
