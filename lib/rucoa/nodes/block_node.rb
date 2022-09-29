@@ -6,6 +6,20 @@ module Rucoa
       include NodeConcerns::Body
       include NodeConcerns::Rescue
 
+      # @return [Array<Rucoa::Nodes::ArgNode>]
+      # @example returns arguments
+      #   node = Rucoa::Source.new(
+      #     content: <<~RUBY,
+      #       foo do |bar, baz|
+      #       end
+      #     RUBY
+      #     uri: 'file:///path/to/example.rb'
+      #   ).root_node
+      #   expect(node.arguments.map(&:name)).to eq(%w[bar baz])
+      def arguments
+        children[-2]
+      end
+
       # @return [Rucoa::Nodes::SendNode]
       # @example returns send node
       #   node = Rucoa::Source.new(

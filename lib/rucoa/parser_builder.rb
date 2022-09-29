@@ -5,6 +5,8 @@ require 'parser/current'
 module Rucoa
   class ParserBuilder < ::Parser::Builders::Default
     NODE_CLASS_BY_TYPE = {
+      arg: Nodes::ArgNode,
+      args: Nodes::ArgsNode,
       begin: Nodes::BeginNode,
       block: Nodes::BlockNode,
       case: Nodes::CaseNode,
@@ -26,6 +28,7 @@ module Rucoa
       ivasgn: Nodes::IvasgnNode,
       kwbegin: Nodes::BeginNode,
       lvar: Nodes::LvarNode,
+      lvasgn: Nodes::LvasgnNode,
       module: Nodes::ModuleNode,
       resbody: Nodes::ResbodyNode,
       rescue: Nodes::RescueNode,
