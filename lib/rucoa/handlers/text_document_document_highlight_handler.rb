@@ -427,7 +427,6 @@ module Rucoa
             ].compact
           end
 
-          # @todo Support shadowing.
           # @return [Enumerable<Rucoa::Nodes::LvarNode>]
           def reference_nodes
             return [] unless assignment_node
@@ -446,11 +445,28 @@ module Rucoa
                 node,
                 *node.descendants
               ]
+            end.take_while do |node| # FIXME: flat_map and take_while are not correct solution for shadowing.
+              case node
+              when Nodes::ArgNode, Nodes::LvasgnNode
+                node.equal?(assignment_node) || node.name != assignment_node.name
+              else
+                true
+              end
             end.select do |node|
               case node
               when Nodes::LvarNode
                 node.name == @node.name
               end
+            end
+          end
+
+          class UnshadowedNodeVisitor
+            def initialize(
+              node:,
+              &block
+            )
+              @block = block
+              @node = node
             end
           end
         end

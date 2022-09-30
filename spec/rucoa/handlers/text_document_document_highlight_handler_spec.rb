@@ -1335,5 +1335,71 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
         )
       end
     end
+
+    context 'when local variable is shadowed by local variable assignment' do
+      let(:content) do
+        <<~RUBY
+          a = 1
+          b = 2
+          a
+          a = 2
+          a
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 0,
+          line: 1
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
+
+    context 'when local variable is shadowed by block argument' do
+      let(:content) do
+        <<~RUBY
+          a = 1
+          a
+          foo do |a|
+            a
+          end
+        RUBY
+      end
+
+      let(:position) do
+        Rucoa::Position.new(
+          column: 0,
+          line: 1
+        )
+      end
+
+      it 'returns highlights' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => Array.new(2) do
+                a_kind_of(Hash)
+              end
+            )
+          ]
+        )
+      end
+    end
   end
 end
