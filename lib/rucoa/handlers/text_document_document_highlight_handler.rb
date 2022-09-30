@@ -300,7 +300,7 @@ module Rucoa
           def nodes
             return [] unless global_variable_scopable_node
 
-            global_variable_scopable_node.each_descendant(:gvar, :gvasgn).select do |node|
+            global_variable_scopable_node.each_descendant_node(:gvar, :gvasgn).select do |node|
               node.name == @node.name
             end
           end
@@ -331,7 +331,7 @@ module Rucoa
           def nodes
             return [] unless instance_variable_scopable_node
 
-            instance_variable_scopable_node.each_descendant(:ivar, :ivasgn).select do |node|
+            instance_variable_scopable_node.each_descendant_node(:ivar, :ivasgn).select do |node|
               node.name == @node.name
             end
           end
@@ -361,7 +361,7 @@ module Rucoa
           def nodes
             return [] unless instance_variable_scopable_node
 
-            instance_variable_scopable_node.each_descendant(:cvar, :cvasgn).select do |node|
+            instance_variable_scopable_node.each_descendant_node(:cvar, :cvasgn).select do |node|
               node.name == @node.name
             end
           end
@@ -410,10 +410,10 @@ module Rucoa
                     end
                     break target if target
                   else
-                    target = node.previous_siblings.reverse.find do |sibling|
+                    target = node.previous_sibling_nodes.reverse.find do |sibling_node|
                       lvasgn_node = [
-                        sibling,
-                        *sibling.descendants
+                        sibling_node,
+                        *sibling_node.descendant_nodes
                       ].reverse.find do |sibling_or_sibling_descendant|
                         case sibling_or_sibling_descendant
                         when Nodes::LvasgnNode
@@ -452,11 +452,11 @@ module Rucoa
                 [assignment_node] + assignment_node.ancestors.take_while do |node|
                   !SCOPE_BOUNDARY_NODE_TYPES.include?(node.type)
                 end
-              ).flat_map(&:next_siblings)
+              ).flat_map(&:next_sibling_nodes)
             end.flat_map do |node|
               [
                 node,
-                *node.descendants
+                *node.descendant_nodes
               ]
             end.take_while do |node| # FIXME: flat_map and take_while are not correct solution for shadowing.
               case node

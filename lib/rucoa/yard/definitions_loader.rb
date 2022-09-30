@@ -35,7 +35,7 @@ module Rucoa
       def call
         [
           @root_node,
-          *@root_node.descendants
+          *@root_node.descendant_nodes
         ].flat_map do |node|
           [
             DefinitionGenerators::ClassDefinitionGenerator,

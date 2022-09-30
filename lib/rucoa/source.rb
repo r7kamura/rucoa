@@ -122,7 +122,7 @@ module Rucoa
     def root_and_descendant_nodes
       return [] unless root_node
 
-      [root_node, *root_node.descendants]
+      [root_node, *root_node.descendant_nodes]
     end
 
     # @return [URI]

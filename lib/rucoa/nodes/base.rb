@@ -25,8 +25,8 @@ module Rucoa
       end
 
       # @return [Array<Rucoa::Nodes::Base>]
-      def descendants
-        each_descendant.to_a
+      def descendant_nodes
+        each_descendant_node.to_a
       end
 
       # @param types [Array<Symbol>]
@@ -58,13 +58,13 @@ module Rucoa
       # @param types [Array<Symbol>]
       # @return [Rucoa::Nodes::Base] if a block is given
       # @return [Enumerator] if no block is given
-      def each_descendant(
+      def each_descendant_node(
         *types,
         &block
       )
         return to_enum(__method__, *types) unless block
 
-        visit_descendants(types, &block)
+        visit_descendant_nodes(types, &block)
         self
       end
 
@@ -150,11 +150,11 @@ module Rucoa
       #       line: 4
       #     )
       #   )
-      #   expect(node.next_siblings.map(&:name)).to eq(%w[d e])
-      def next_siblings
+      #   expect(node.next_sibling_nodes.map(&:name)).to eq(%w[d e])
+      def next_sibling_nodes
         return [] unless parent
 
-        parent.child_nodes[(sibling_index + 1)..]
+        parent.child_nodes[(sibling_node_index + 1)..]
       end
 
       # @return [Rucoa::Nodes::Base, nil]
@@ -186,11 +186,11 @@ module Rucoa
       #       line: 4
       #     )
       #   )
-      #   expect(node.previous_siblings.map(&:name)).to eq(%w[a b])
-      def previous_siblings
+      #   expect(node.previous_sibling_nodes.map(&:name)).to eq(%w[a b])
+      def previous_sibling_nodes
         return [] unless parent
 
-        parent.child_nodes[0...sibling_index]
+        parent.child_nodes[0...sibling_node_index]
       end
 
       # @note Override.
@@ -212,23 +212,23 @@ module Rucoa
 
       protected
 
-      # Visit all descendants.
+      # Visit all descendant_nodes.
       # @param types [Array<Symbol>]
       # @return [void]
-      def visit_descendants(
+      def visit_descendant_nodes(
         types,
         &block
       )
         each_child_node do |child|
           yield(child) if types.empty? || types.include?(child.type)
-          child.visit_descendants(types, &block)
+          child.visit_descendant_nodes(types, &block)
         end
       end
 
       private
 
       # @return [Integer, nil]
-      def sibling_index
+      def sibling_node_index
         parent&.child_nodes&.index do |child|
           child.equal?(self)
         end
