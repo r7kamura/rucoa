@@ -858,6 +858,10 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
             def bar
               @x ||= 2
             end
+
+            def baz
+              @y = 3
+            end
           end
 
           class B
@@ -905,6 +909,10 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
             def bar
               @@x ||= 2
             end
+
+            def baz
+              @@y = 3
+            end
           end
 
           class B
@@ -951,6 +959,10 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
 
             def bar
               $x ||= 2
+            end
+
+            def baz
+              $y = 3
             end
           end
 
@@ -1097,6 +1109,7 @@ RSpec.describe Rucoa::Handlers::TextDocumentDocumentHighlightHandler do
           def a
             foo = 1
             foo
+            baz
           end
 
           def b
