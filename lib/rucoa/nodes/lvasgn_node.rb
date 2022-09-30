@@ -3,10 +3,7 @@
 module Rucoa
   module Nodes
     class LvasgnNode < Base
-      # @return [String]
-      def name
-        children[0].to_s
-      end
+      include NodeConcerns::Variable
     end
   end
 end

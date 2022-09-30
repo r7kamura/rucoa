@@ -298,7 +298,11 @@ module Rucoa
 
           # @return [Enumerable<Rucoa::Nodes::Base>]
           def nodes
-            global_variable_scopable_node&.each_descendant(:gvar, :gvasgn) || []
+            return [] unless global_variable_scopable_node
+
+            global_variable_scopable_node.each_descendant(:gvar, :gvasgn).select do |node|
+              node.name == @node.name
+            end
           end
         end
 
@@ -319,12 +323,17 @@ module Rucoa
 
           # @return [Rucoa::Nodes::Base, nil]
           def instance_variable_scopable_node
-            @node.each_ancestor(:class, :module).first
+            @instance_variable_scopable_node ||= @node.each_ancestor(:class, :module).first
           end
 
+          # @todo Stop descendant searching if scope boundary node is found (e.g. class, def, etc.).
           # @return [Enumerable<Rucoa::Nodes::Base>]
           def nodes
-            instance_variable_scopable_node&.each_descendant(:ivar, :ivasgn) || []
+            return [] unless instance_variable_scopable_node
+
+            instance_variable_scopable_node.each_descendant(:ivar, :ivasgn).select do |node|
+              node.name == @node.name
+            end
           end
         end
 
@@ -350,7 +359,11 @@ module Rucoa
 
           # @return [Enumerable<Rucoa::Nodes::Base>]
           def nodes
-            instance_variable_scopable_node&.each_descendant(:cvar, :cvasgn) || []
+            return [] unless instance_variable_scopable_node
+
+            instance_variable_scopable_node.each_descendant(:cvar, :cvasgn).select do |node|
+              node.name == @node.name
+            end
           end
         end
 
