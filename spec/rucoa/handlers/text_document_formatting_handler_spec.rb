@@ -106,6 +106,28 @@ RSpec.describe Rucoa::Handlers::TextDocumentFormattingHandler do
       end
     end
 
+    context 'when content is empty' do
+      include_context 'when RuboCop is configured'
+
+      let(:content) do
+        ''
+      end
+
+      it 'returns empty edits' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => [
+                a_kind_of(Hash)
+              ]
+            )
+          ]
+        )
+      end
+    end
+
     context 'when URI is for untitled file' do
       include_context 'when RuboCop is configured'
       include_context 'with some offenses'
