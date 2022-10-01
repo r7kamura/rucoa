@@ -38,7 +38,7 @@ module Rucoa
             line: 1
           ),
           Position.new(
-            column: @source.content.lines.last.length,
+            column: @source.content.lines.last&.length || 0,
             line: @source.content.lines.count + 1
           )
         ).to_vscode_range
