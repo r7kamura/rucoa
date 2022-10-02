@@ -195,5 +195,35 @@ RSpec.describe Rucoa::Handlers::TextDocumentDidOpenHandler do
         )
       end
     end
+
+    context 'when obsolete setting is written in .rubocop.yml' do
+      include_context 'when RuboCop is configured'
+
+      before do
+        File.write(
+          "#{temporary_directory_path}/.rubocop.yml",
+          <<~YAML
+            Style/MethodMissingSuper:
+              Enabled: true
+          YAML
+        )
+      end
+
+      it 'publishes empty diagnostics' do
+        subject
+        expect(server.responses).to match(
+          [
+            {
+              'jsonrpc' => '2.0',
+              'method' => 'textDocument/publishDiagnostics',
+              'params' => {
+                'diagnostics' => [],
+                'uri' => uri
+              }
+            }
+          ]
+        )
+      end
+    end
   end
 end

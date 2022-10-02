@@ -162,5 +162,32 @@ RSpec.describe Rucoa::Handlers::TextDocumentRangeFormattingHandler do
         )
       end
     end
+
+    context 'when obsolete setting is written in .rubocop.yml' do
+      include_context 'when RuboCop is configured'
+      include_context 'with some offenses'
+
+      before do
+        File.write(
+          "#{temporary_directory_path}/.rubocop.yml",
+          <<~YAML
+            Style/MethodMissingSuper:
+              Enabled: true
+          YAML
+        )
+      end
+
+      it 'responds empty result' do
+        subject
+        expect(server.responses).to match(
+          [
+            hash_including(
+              'id' => 1,
+              'result' => []
+            )
+          ]
+        )
+      end
+    end
   end
 end
