@@ -22,12 +22,13 @@ module Rucoa
       def formattable?
         configuration.enables_formatting? &&
           source &&
-          Rubocop::ConfigurationChecker.call
+          Rubocop::ConfigurationChecker.call &&
+          new_text
       end
 
-      # @return [String]
+      # @return [String, nil]
       def new_text
-        Rubocop::Autocorrector.call(source: source)
+        @new_text ||= Rubocop::Autocorrector.call(source: source)
       end
 
       # @return [Hash]

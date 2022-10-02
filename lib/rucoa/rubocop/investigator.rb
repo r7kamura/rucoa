@@ -34,6 +34,8 @@ module Rucoa
         @options[:stdin] = @source.content
         run([path])
         @offenses
+      rescue ::RuboCop::Error
+        []
       end
 
       private

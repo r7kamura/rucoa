@@ -29,11 +29,13 @@ module Rucoa
         )
       end
 
-      # @return [String]
+      # @return [String, nil]
       def call
         @options[:stdin] = @source.content
         run([path])
         @options[:stdin]
+      rescue ::RuboCop::Error
+        nil
       end
 
       private
