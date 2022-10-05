@@ -52,7 +52,7 @@ module Rucoa
             next [] unless child.is_a?(Nodes::SendNode)
             next [] unless child.name == method_name
 
-            child.arguments.filter_map do |argument|
+            child.arguments.reverse.filter_map do |argument|
               next unless argument.is_a?(Nodes::ConstNode)
 
               UnqualifiedName.new(
