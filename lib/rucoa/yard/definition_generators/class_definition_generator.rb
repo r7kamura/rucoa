@@ -32,7 +32,7 @@ module Rucoa
         #     RUBY
         #     uri: '/path/to/foo.rb'
         #   ).definitions
-        #   expect(definitions[0].included_module_unqualified_names.map(&:chained_name)).to eq(%w[Bar Baz])
+        #   expect(definitions[0].included_module_unqualified_names.map(&:chained_name)).to eq(%w[Baz Bar])
         # @example ignores non-simple include
         #   definitions = Rucoa::Source.new(
         #     content: <<~RUBY,
